@@ -25,3 +25,23 @@ body {
   color: var(--foreground);
   font-family: 'Satoshi', sans-serif;
 }
+
+/* Nav item entrance — used with an inline animationDelay for stagger */
+@keyframes nav-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Users who prefer reduced motion should never see movement — only a simple fade */
+@media (prefers-reduced-motion: reduce) {
+  @keyframes nav-enter {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+}
