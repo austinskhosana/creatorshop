@@ -1,0 +1,210 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────────
+
+enum Role {
+  CREATOR
+  BRAND
+  BOTH
+}
+
+enum ShopStatus {
+  PENDING
+  APPROVED
+  DENIED
+  DELIVERED
+  COMPLETED
+  REVOKED
+}
+
+enum DeliverableType {
+  INSTAGRAM_POST
+  INSTAGRAM_REEL
+  INSTAGRAM_STORY
+  TIKTOK_VIDEO
+  YOUTUBE_VIDEO
+  YOUTUBE_SHORT
+  TWEET
+  LINKEDIN_POST
+  BLOG_POST
+  OTHER
+}
+
+// ─────────────────────────────────────────────
+// USER
+// Clerk handles auth — we store a reference
+// to the Clerk user ID and extend it here
+// ─────────────────────────────────────────────
+
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  email     String   @unique
+  role      Role     @default(CREATOR)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  creatorProfile CreatorProfile?
+  brandProfile   BrandProfile?
+  shopsAsCreator Shop[]          @relation("CreatorShops")
+  shopsAsBrand   Shop[]          @relation("BrandShops")
+
+  @@map("users")
+}
+
+// ─────────────────────────────────────────────
+// CREATOR PROFILE
+// Set up during creator onboarding
+// ─────────────────────────────────────────────
+
+model CreatorProfile {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  displayName  String
+  bio          String?
+  avatarUrl    String?
+  location     String?
+  niche        String?
+  services     String[]
+
+  instagramUrl String?
+  tiktokUrl    String?
+  youtubeUrl   String?
+  twitterUrl   String?
+  linkedinUrl  String?
+  websiteUrl   String?
+  audienceSize String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("creator_profiles")
+}
+
+// ─────────────────────────────────────────────
+// BRAND PROFILE
+// Set up during brand onboarding
+// ─────────────────────────────────────────────
+
+model BrandProfile {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  brandName  String
+  bio        String?
+  logoUrl    String?
+  websiteUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  listings SoftwareListing[]
+
+  @@map("brand_profiles")
+}
+
+// ─────────────────────────────────────────────
+// SOFTWARE LISTING
+// A software tool a brand is offering for barter
+// ─────────────────────────────────────────────
+
+model SoftwareListing {
+  id             String       @id @default(cuid())
+  brandProfileId String
+  brandProfile   BrandProfile @relation(fields: [brandProfileId], references: [id], onDelete: Cascade)
+
+  name        String
+  tagline     String?
+  description String?
+  logoUrl     String?
+  websiteUrl  String?
+  category    String?
+
+  planName     String
+  planValue    Float?
+  billingCycle String?
+
+  brief                 String
+  preferredDeliverables DeliverableType[]
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  accessKeys AccessKey[]
+  shops      Shop[]
+
+  @@map("software_listings")
+}
+
+// ─────────────────────────────────────────────
+// ACCESS KEY
+// One key = one slot. Brand uploads a batch.
+// Consumed one-at-a-time on approval.
+// IMPORTANT: encryptedValue must never be plain text.
+// ─────────────────────────────────────────────
+
+model AccessKey {
+  id                String          @id @default(cuid())
+  softwareListingId String
+  softwareListing   SoftwareListing @relation(fields: [softwareListingId], references: [id], onDelete: Cascade)
+
+  encryptedValue String
+  isConsumed     Boolean   @default(false)
+  consumedAt     DateTime?
+
+  shop Shop?
+
+  createdAt DateTime @default(now())
+
+  @@map("access_keys")
+}
+
+// ─────────────────────────────────────────────
+// SHOP
+// The core unit — one barter exchange between
+// a creator and a software brand
+// ─────────────────────────────────────────────
+
+model Shop {
+  id String @id @default(cuid())
+
+  creatorId String
+  creator   User   @relation("CreatorShops", fields: [creatorId], references: [id])
+  brandId   String
+  brand     User   @relation("BrandShops", fields: [brandId], references: [id])
+
+  softwareListingId String
+  softwareListing   SoftwareListing @relation(fields: [softwareListingId], references: [id])
+
+  accessKeyId String?    @unique
+  accessKey   AccessKey? @relation(fields: [accessKeyId], references: [id])
+
+  status ShopStatus @default(PENDING)
+
+  deliverable DeliverableType
+  pitch       String
+
+  deliveryLink String?
+  deliveryNote String?
+  deliveredAt  DateTime?
+  completedAt  DateTime?
+  revokedAt    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("shops")
+}

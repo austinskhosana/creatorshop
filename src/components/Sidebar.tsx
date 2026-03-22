@@ -1,8 +1,9 @@
 "use client";
-// "use client" is needed because we're tracking which nav item is active using state —
-// that kind of interactivity only works in the browser, not on the server.
+// "use client" is needed because usePathname (which reads the current URL)
+// only works in the browser, not on the server.
 
-import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 // ── Icon components ───────────────────────────────────────────────────────────
 // Each one is a small SVG wrapped in a function so we can reuse it cleanly.
@@ -41,6 +42,14 @@ function InfluencersIcon() {
   );
 }
 
+function AdminIcon() {
+  return (
+    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+      <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z" clipRule="evenodd" />
+    </svg>
+  );
+}
+
 function SignOutIcon() {
   return (
     <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
@@ -55,21 +64,23 @@ function SignOutIcon() {
 type NavItem = {
   id: string;
   label: string;
+  href: string;
   icon: React.ReactNode; // ReactNode means "anything React can render" — JSX, text, null, etc.
 };
 
 const navItems: NavItem[] = [
-  { id: "home",        label: "Home",        icon: <HomeIcon /> },
-  { id: "shop",        label: "Shop",        icon: <ShopIcon /> },
-  { id: "campaigns",   label: "Campaigns",   icon: <CampaignsIcon /> },
-  { id: "influencers", label: "Influencers", icon: <InfluencersIcon /> },
+  { id: "home",        label: "Home",        href: "/",            icon: <HomeIcon /> },
+  { id: "shop",        label: "Shop",        href: "/shop",        icon: <ShopIcon /> },
+  { id: "campaigns",   label: "Campaigns",   href: "/campaigns",   icon: <CampaignsIcon /> },
+  { id: "influencers", label: "Influencers", href: "/influencers", icon: <InfluencersIcon /> },
+  { id: "admin",       label: "Admin",       href: "/admin",       icon: <AdminIcon /> },
 ];
 
 // ── Sidebar component ─────────────────────────────────────────────────────────
 export default function Sidebar() {
-  // activeId tracks which nav item is currently selected.
-  // We default to "home" so it starts highlighted on first render.
-  const [activeId, setActiveId] = useState("home");
+  // usePathname returns the current URL path (e.g. "/admin").
+  // We use it to highlight whichever nav item matches the current page.
+  const pathname = usePathname();
 
   return (
     // The sidebar is a tall flex column with a light gray background.
@@ -120,7 +131,8 @@ export default function Sidebar() {
       {/* flex-1 makes this section grow to fill available space, pushing Sign Out to the bottom */}
       <ul className="flex flex-col gap-1 flex-1">
         {navItems.map((item, index) => {
-          const isActive = item.id === activeId;
+          // Match "/" exactly so the Home link doesn't stay active on every page.
+          const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
 
           return (
             // Each item staggered 40ms apart — items cascade in rather than all appearing at once.
@@ -132,8 +144,8 @@ export default function Sidebar() {
                 animationDelay: `${index * 40}ms`,
               }}
             >
-              <button
-                onClick={() => setActiveId(item.id)}
+              <Link
+                href={item.href}
                 className={[
                   "flex items-center gap-3 w-full text-left px-4 py-3 rounded-lg text-[16px]",
                   // Specific properties only — no transition-all.
@@ -152,7 +164,7 @@ export default function Sidebar() {
               >
                 {item.icon}
                 {item.label}
-              </button>
+              </Link>
             </li>
           );
         })}
