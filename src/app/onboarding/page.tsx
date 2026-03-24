@@ -2,30 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import CreatorCard from "@/components/CreatorCard";
+import BrandCard from "@/components/BrandCard";
 
 type Role = "CREATOR" | "BRAND";
-
-const roles: {
-  value: Role;
-  label: string;
-  description: string;
-  detail: string;
-}[] = [
-  {
-    value: "CREATOR",
-    label: "Creator",
-    description: "I create content",
-    detail:
-      "Browse software listings and offer a post, video, or article in exchange for access.",
-  },
-  {
-    value: "BRAND",
-    label: "Brand",
-    description: "I offer software",
-    detail:
-      "List your software tool and receive quality content from creators in exchange for access.",
-  },
-];
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -55,10 +35,11 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-16">
-      <div className="w-full max-w-md">
+    <div className="h-[calc(100vh-64px)] flex flex-col items-center justify-center px-6">
+      <div className="flex flex-col items-center w-full max-w-3xl">
+
         {/* Header */}
-        <div className="mb-10">
+        <div className="mb-12 text-center">
           <p className="text-xs font-medium tracking-widest uppercase text-neutral-400 mb-3">
             Welcome to Creatorshop
           </p>
@@ -71,42 +52,15 @@ export default function OnboardingPage() {
         </div>
 
         {/* Role cards */}
-        <div className="flex flex-col gap-3 mb-8">
-          {roles.map((role) => {
-            const isSelected = selected === role.value;
-            return (
-              <button
-                key={role.value}
-                onClick={() => setSelected(role.value)}
-                className={[
-                  "text-left w-full rounded-xl border px-5 py-4 transition-all duration-150 outline-none",
-                  isSelected
-                    ? "border-neutral-900 bg-neutral-900 text-white"
-                    : "border-neutral-200 bg-white text-neutral-900 hover:border-neutral-400",
-                ].join(" ")}
-              >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="font-semibold text-base">{role.label}</span>
-                  <span
-                    className={[
-                      "text-xs font-medium",
-                      isSelected ? "text-neutral-300" : "text-neutral-400",
-                    ].join(" ")}
-                  >
-                    {role.description}
-                  </span>
-                </div>
-                <p
-                  className={[
-                    "text-sm leading-relaxed",
-                    isSelected ? "text-neutral-300" : "text-neutral-500",
-                  ].join(" ")}
-                >
-                  {role.detail}
-                </p>
-              </button>
-            );
-          })}
+        <div className="flex gap-6 mb-10">
+          <CreatorCard
+            isSelected={selected === "CREATOR"}
+            onClick={() => setSelected("CREATOR")}
+          />
+          <BrandCard
+            isSelected={selected === "BRAND"}
+            onClick={() => setSelected("BRAND")}
+          />
         </div>
 
         {/* Error */}
@@ -118,10 +72,11 @@ export default function OnboardingPage() {
         <button
           onClick={handleContinue}
           disabled={!selected || loading}
-          className="w-full py-3 rounded-xl bg-neutral-900 text-white font-semibold text-sm tracking-wide transition-opacity disabled:opacity-40 hover:opacity-90"
+          className="w-full max-w-xs py-3 rounded-xl bg-neutral-900 text-white font-semibold text-sm tracking-wide transition-opacity disabled:opacity-40 hover:opacity-90"
         >
           {loading ? "Setting up…" : "Continue"}
         </button>
+
       </div>
     </div>
   );

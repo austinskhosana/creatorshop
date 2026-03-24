@@ -6,7 +6,12 @@ import { useState } from "react";
 // useState is a React hook — it lets us store and update values inside a component.
 // When the value changes, React re-renders the component automatically.
 
-export default function CreatorCard() {
+interface CreatorCardProps {
+  isSelected?: boolean;
+  onClick?: () => void;
+}
+
+export default function CreatorCard({ isSelected, onClick }: CreatorCardProps) {
   // These two state values store the current tilt angle in degrees.
   // rotateX tilts forward/back, rotateY tilts left/right.
   const [rotateX, setRotateX] = useState(0);
@@ -34,6 +39,7 @@ export default function CreatorCard() {
     // perspective() creates the 3D space — without it, rotateX/Y have no visible depth.
     // transition makes the tilt animate smoothly instead of jumping.
     <div
+      onClick={onClick}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{
@@ -41,7 +47,10 @@ export default function CreatorCard() {
         transition: "transform 0.15s ease-out",
         transformStyle: "preserve-3d",
       }}
-      className="relative w-[360px] h-[360px] rounded-3xl bg-white overflow-hidden border border-gray-200 font-sans cursor-pointer"
+      className={[
+        "relative w-[360px] h-[360px] rounded-3xl bg-white overflow-hidden font-sans cursor-pointer",
+        isSelected ? "border-2 border-black" : "border border-gray-200",
+      ].join(" ")}
     >
       {/* ── Top section: lime green gradient ──────────────────────────────── */}
       <div className="flex items-end justify-center h-44 pb-4 bg-gradient-to-b from-[#A3FF38] to-white">
