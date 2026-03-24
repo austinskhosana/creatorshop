@@ -1,4 +1,4 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { clerkMiddleware, clerkClient, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 const isPublicRoute = createRouteMatcher([
@@ -16,15 +16,16 @@ export default clerkMiddleware(async (auth, req) => {
     await auth.protect();
   }
 
-  // Redirect signed-in users who haven't completed onboarding
-  const { userId, sessionClaims } = await auth();
-  const metadata = sessionClaims?.metadata as
-    | { role?: string; onboardingComplete?: boolean }
-    | undefined;
-  if (userId && !metadata?.onboardingComplete) {
+  const { userId } = await auth();
+  if (userId) {
     const url = req.nextUrl;
     if (!url.pathname.startsWith("/onboarding") && !url.pathname.startsWith("/api")) {
-      return NextResponse.redirect(new URL("/onboarding", req.url));
+      const client = await clerkClient();
+      const user = await client.users.getUser(userId);
+      const onboardingComplete = user.publicMetadata?.onboardingComplete;
+      if (!onboardingComplete) {
+        return NextResponse.redirect(new URL("/onboarding", req.url));
+      }
     }
   }
 });
