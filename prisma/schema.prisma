@@ -1,3 +1,7 @@
+// Creatorshop — Prisma Schema
+// Phase 1: Software subscription barter marketplace
+// Stack: Next.js + Supabase + Clerk + Prisma
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -17,12 +21,12 @@ enum Role {
 }
 
 enum ShopStatus {
-  PENDING
-  APPROVED
-  DENIED
-  DELIVERED
-  COMPLETED
-  REVOKED
+  PENDING     // Applied, waiting on brand
+  APPROVED    // Brand said yes, access key revealed
+  DENIED      // Brand passed
+  DELIVERED   // Creator submitted content link
+  COMPLETED   // Brand confirmed, shop is done
+  REVOKED     // Creator didn't deliver, access burned
 }
 
 enum DeliverableType {
@@ -83,6 +87,7 @@ model CreatorProfile {
   twitterUrl   String?
   linkedinUrl  String?
   websiteUrl   String?
+
   audienceSize String?
 
   createdAt DateTime @default(now())
@@ -137,6 +142,7 @@ model SoftwareListing {
 
   brief                 String
   preferredDeliverables DeliverableType[]
+  deliveryDays          Int               @default(14)
 
   isActive Boolean @default(true)
 
@@ -196,6 +202,9 @@ model Shop {
 
   deliverable DeliverableType
   pitch       String
+
+  // Set on approval as approvedAt + listing.deliveryDays
+  deadline    DateTime?
 
   deliveryLink String?
   deliveryNote String?

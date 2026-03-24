@@ -11,6 +11,11 @@
       "sourceType": "github",
       "computedHash": "41c2416e08bc9ec3c696585d31bd1243481a7a81615b810b1b8a32aded9360b5"
     },
+    "supabase-postgres-best-practices": {
+      "source": "supabase/agent-skills",
+      "sourceType": "github",
+      "computedHash": "9c87c315aed143ee3b34bec8117100f5035e0df09e6b23e1ecc772cff434c9ad"
+    },
     "userinterface-wiki": {
       "source": "raphaelsalaja/userinterface-wiki",
       "sourceType": "github",
