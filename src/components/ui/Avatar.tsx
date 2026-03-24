@@ -29,7 +29,7 @@ export default function Avatar({ src, name, size = "md", className = "" }: Avata
         src={src}
         alt={name ?? "Avatar"}
         className={[
-          "rounded-full object-cover border border-gray-200",
+          "rounded-full object-cover ring-2 ring-white border border-gray-200",
           sizes[size],
           className,
         ].join(" ")}
@@ -40,7 +40,7 @@ export default function Avatar({ src, name, size = "md", className = "" }: Avata
   return (
     <div
       className={[
-        "rounded-full bg-neutral-900 text-white flex items-center justify-center font-semibold border border-gray-200",
+        "rounded-full bg-neutral-900 text-white flex items-center justify-center font-semibold ring-2 ring-white border border-gray-200",
         sizes[size],
         className,
       ].join(" ")}

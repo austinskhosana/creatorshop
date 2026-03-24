@@ -12,14 +12,14 @@ interface EmptyStateProps {
 export default function EmptyState({ title, description, action }: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-      <div className="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center mb-4">
+      <div className="w-12 h-12 rounded-2xl bg-[#A3FF38]/20 flex items-center justify-center mb-4">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="w-6 h-6 text-gray-400"
+          className="w-6 h-6 text-neutral-900"
         >
           <path
             strokeLinecap="round"
@@ -34,7 +34,7 @@ export default function EmptyState({ title, description, action }: EmptyStatePro
       )}
       {action && (
         <div className="mt-5">
-          <Button onClick={action.onClick}>{action.label}</Button>
+          <Button variant="primary" onClick={action.onClick}>{action.label}</Button>
         </div>
       )}
     </div>

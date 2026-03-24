@@ -1,36 +1,25 @@
-type BadgeVariant =
-  | "PENDING"
-  | "APPROVED"
-  | "DENIED"
-  | "DELIVERED"
-  | "COMPLETED"
-  | "REVOKED"
-  | "default";
+type ShopStatus = "PENDING" | "APPROVED" | "DENIED" | "DELIVERED" | "COMPLETED" | "REVOKED";
+type BadgeVariant = ShopStatus | "count" | "tag" | "stat" | "default";
 
 interface BadgeProps {
   variant?: BadgeVariant;
-  label?: string;
+  label: string;
   className?: string;
 }
 
 const styles: Record<BadgeVariant, string> = {
+  // Shop statuses
   PENDING:   "bg-yellow-50 text-yellow-700 border border-yellow-200",
-  APPROVED:  "bg-green-50 text-green-700 border border-green-200",
+  APPROVED:  "bg-[#A3FF38]/20 text-green-800 border border-[#A3FF38]/40",
   DENIED:    "bg-red-50 text-red-600 border border-red-200",
   DELIVERED: "bg-blue-50 text-blue-700 border border-blue-200",
-  COMPLETED: "bg-neutral-900 text-white border border-neutral-900",
+  COMPLETED: "bg-neutral-900 text-white",
   REVOKED:   "bg-gray-100 text-gray-500 border border-gray-200",
-  default:   "bg-gray-100 text-gray-600 border border-gray-200",
-};
-
-const labels: Record<BadgeVariant, string> = {
-  PENDING:   "Pending",
-  APPROVED:  "Approved",
-  DENIED:    "Denied",
-  DELIVERED: "Delivered",
-  COMPLETED: "Completed",
-  REVOKED:   "Revoked",
-  default:   "Unknown",
+  // UI variants
+  count:   "bg-[#A3FF38] text-black",
+  tag:     "bg-white text-gray-600 border border-gray-200",
+  stat:    "bg-neutral-900 text-white",
+  default: "bg-gray-100 text-gray-600 border border-gray-200",
 };
 
 export default function Badge({ variant = "default", label, className = "" }: BadgeProps) {
@@ -42,7 +31,7 @@ export default function Badge({ variant = "default", label, className = "" }: Ba
         className,
       ].join(" ")}
     >
-      {label ?? labels[variant]}
+      {label}
     </span>
   );
 }
