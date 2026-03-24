@@ -49,7 +49,8 @@ export default function CreatorCard({ isSelected, onClick }: CreatorCardProps) {
       }}
       className={[
         "relative w-[360px] h-[360px] rounded-3xl bg-white overflow-hidden font-sans cursor-pointer",
-        isSelected ? "border-2 border-black" : "border border-gray-200",
+        "border border-gray-200",
+        isSelected ? "ring-2 ring-black ring-offset-4" : "",
       ].join(" ")}
     >
       {/* ── Top section: lime green gradient ──────────────────────────────── */}

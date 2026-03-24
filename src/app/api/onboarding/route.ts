@@ -13,17 +13,50 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid role" }, { status: 400 });
   }
 
-  // Update Clerk publicMetadata — middleware reads this
-  const client = await clerkClient();
-  await client.users.updateUser(userId, {
-    publicMetadata: { role, onboardingComplete: true },
-  });
+  // Get Clerk user — needed for email if we have to create the DB record
+  let clerk;
+  let clerkUser;
+  try {
+    clerk = await clerkClient();
+    clerkUser = await clerk.users.getUser(userId);
+  } catch (err) {
+    console.error("[onboarding] Clerk user fetch failed:", err);
+    return NextResponse.json({ error: "Something went wrong — please try again." }, { status: 500 });
+  }
 
-  // Sync role to our DB
-  await prisma.user.update({
-    where: { clerkId: userId },
-    data: { role },
-  });
+  const primaryEmail = clerkUser.emailAddresses.find(
+    (e) => e.id === clerkUser.primaryEmailAddressId
+  )?.emailAddress;
+
+  if (!primaryEmail) {
+    return NextResponse.json({ error: "No email on account." }, { status: 400 });
+  }
+
+  // Upsert — create the DB record if the webhook hasn't fired yet
+  try {
+    await prisma.user.upsert({
+      where: { clerkId: userId },
+      update: { role },
+      create: { clerkId: userId, email: primaryEmail, role },
+    });
+  } catch (err) {
+    console.error("[onboarding] DB upsert failed:", err);
+    return NextResponse.json({ error: "Database error — please try again." }, { status: 500 });
+  }
+
+  // Update Clerk metadata — if this fails, revert the DB role
+  try {
+    await clerk.users.updateUser(userId, {
+      publicMetadata: { role, onboardingComplete: true },
+    });
+  } catch (err) {
+    console.error("[onboarding] Clerk update failed:", err);
+    await prisma.user.update({
+      where: { clerkId: userId },
+      data: { role: "CREATOR" },
+    });
+    return NextResponse.json({ error: "Something went wrong — please try again." }, { status: 500 });
+  }
 
   return NextResponse.json({ ok: true });
 }

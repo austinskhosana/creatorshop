@@ -1,10 +1,19 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
 
 function createPrismaClient() {
-  const adapter = new PrismaPg({
-    connectionString: process.env.DATABASE_URL!,
+  const rawUrl = process.env.DATABASE_URL!.replace("?pgbouncer=true", "");
+  const url = new URL(rawUrl);
+  const pool = new Pool({
+    host: url.hostname,
+    port: parseInt(url.port),
+    user: decodeURIComponent(url.username),
+    password: decodeURIComponent(url.password),
+    database: url.pathname.slice(1),
+    ssl: { rejectUnauthorized: false },
   });
+  const adapter = new PrismaPg(pool);
   return new PrismaClient({ adapter });
 }
 

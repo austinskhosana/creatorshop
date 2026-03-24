@@ -27,7 +27,7 @@ export default function OnboardingPage() {
 
       if (!res.ok) throw new Error("Something went wrong");
 
-      router.push("/dashboard");
+      window.location.href = "/dashboard";
     } catch {
       setError("Something went wrong — please try again.");
       setLoading(false);
