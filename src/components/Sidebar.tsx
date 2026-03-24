@@ -4,6 +4,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { UserButton, useUser } from "@clerk/nextjs";
 
 // ── Icon components ───────────────────────────────────────────────────────────
 // Each one is a small SVG wrapped in a function so we can reuse it cleanly.
@@ -75,6 +76,27 @@ const navItems: NavItem[] = [
   { id: "influencers", label: "Influencers", href: "/influencers", icon: <InfluencersIcon /> },
   { id: "admin",       label: "Admin",       href: "/admin",       icon: <AdminIcon /> },
 ];
+
+// ── User profile ──────────────────────────────────────────────────────────────
+function UserProfile() {
+  const { user } = useUser();
+  return (
+    <div className="flex items-center gap-3 px-4 py-3">
+      <UserButton
+        afterSignOutUrl="/"
+        appearance={{
+          elements: {
+            avatarBox: "w-8 h-8 ring-2 ring-[#A3FF38]",
+            userButtonTrigger: "focus:shadow-none",
+          },
+        }}
+      />
+      <span className="text-[15px] font-medium text-gray-700 truncate">
+        {user?.firstName} {user?.lastName}
+      </span>
+    </div>
+  );
+}
 
 // ── Sidebar component ─────────────────────────────────────────────────────────
 export default function Sidebar() {
@@ -170,12 +192,8 @@ export default function Sidebar() {
         })}
       </ul>
 
-      {/* ── Sign Out ─────────────────────────────────────────────────────── */}
-      {/* Same transition and press feel as nav items — interactive elements should be consistent */}
-      <button className="flex items-center gap-3 px-4 py-3 text-[16px] text-gray-500 hover:text-gray-700 hover:bg-black/[0.03] transition-[color,background-color,transform] duration-[160ms] ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.96] rounded-lg">
-        <SignOutIcon />
-        Sign Out
-      </button>
+      {/* ── User profile ─────────────────────────────────────────────────── */}
+      <UserProfile />
 
     </nav>
   );
