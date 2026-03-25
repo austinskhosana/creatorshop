@@ -129,6 +129,7 @@ model SoftwareListing {
   brandProfileId String
   brandProfile   BrandProfile @relation(fields: [brandProfileId], references: [id], onDelete: Cascade)
 
+  slug        String  @unique
   name        String
   tagline     String?
   description String?
@@ -200,8 +201,8 @@ model Shop {
 
   status ShopStatus @default(PENDING)
 
-  deliverable DeliverableType
-  pitch       String
+  deliverable DeliverableType?
+  pitch       String?
 
   // Set on approval as approvedAt + listing.deliveryDays
   deadline    DateTime?

@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState } from "react";
+import { use, useState, useRef, useLayoutEffect, useEffect } from "react";
 import Link from "next/link";
 
 // ── Mock data ─────────────────────────────────────────────────────────────────
@@ -119,6 +119,23 @@ export default function ProductGridPage({
 
   const [activeSubcategory, setActiveSubcategory] = useState("All");
 
+  // Sliding pill refs
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [pill, setPill] = useState({ left: 0, width: 0, ready: false });
+
+  // Set pill position without animation on first render
+  useLayoutEffect(() => {
+    const el = tabRefs.current[0];
+    if (el) setPill({ left: el.offsetLeft, width: el.offsetWidth, ready: false });
+  }, []);
+
+  // Animate pill when active tab changes
+  useEffect(() => {
+    const idx = data.subcategories.indexOf(activeSubcategory);
+    const el = tabRefs.current[idx];
+    if (el) setPill({ left: el.offsetLeft, width: el.offsetWidth, ready: true });
+  }, [activeSubcategory, data.subcategories]);
+
   const filtered = activeSubcategory === "All"
     ? data.products
     : data.products.filter((p) => p.subcategory === activeSubcategory);
@@ -142,15 +159,32 @@ export default function ProductGridPage({
       </div>
 
       {/* ── Subcategory filter tabs ──────────────────────────────────── */}
-      <div className="flex gap-1 mb-8 border border-gray-200 rounded-xl p-1 w-fit">
-        {data.subcategories.map((sub) => (
+      <div className="relative flex gap-1 mb-8 border border-gray-200 rounded-xl p-1 w-fit">
+        {/* Sliding pill — transform is GPU-composited, no layout thrash */}
+        <div
+          className="absolute top-1 bottom-1 rounded-lg bg-gray-900 will-change-transform"
+          style={{
+            left: 0,
+            width: pill.width,
+            transform: `translateX(${pill.left}px)`,
+            transition: pill.ready
+              ? [
+                  "transform 320ms cubic-bezier(0.34, 1.1, 0.64, 1)",
+                  "width 280ms cubic-bezier(0.34, 1.1, 0.64, 1)",
+                ].join(", ")
+              : "none",
+          }}
+        />
+        {data.subcategories.map((sub, i) => (
           <button
             key={sub}
+            ref={(el) => { tabRefs.current[i] = el; }}
             onClick={() => setActiveSubcategory(sub)}
             className={[
-              "px-4 py-2 rounded-lg text-[14px] font-medium transition-all duration-[140ms]",
+              "relative z-10 px-4 py-2 rounded-lg text-[14px] font-medium",
+              "transition-colors duration-[200ms]",
               activeSubcategory === sub
-                ? "bg-gray-900 text-white"
+                ? "text-white"
                 : "text-gray-500 hover:text-gray-800",
             ].join(" ")}
           >

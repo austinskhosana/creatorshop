@@ -38,3 +38,47 @@ body {
     to   { opacity: 1; }
   }
 }
+
+/* Listing card entrance — staggered via inline animationDelay */
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes card-enter {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+}
+
+/* Card shine — diagonal glare sweep on hover */
+@keyframes card-shine {
+  from { transform: translateX(-100%) skewX(-20deg); }
+  to   { transform: translateX(400%) skewX(-20deg); }
+}
+
+.card-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 50%;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.55), transparent);
+  transform: translateX(-200%) skewX(-20deg);
+  pointer-events: none;
+}
+
+.card-shine:hover::after {
+  animation: card-shine 0.55s ease forwards;
+}

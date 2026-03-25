@@ -16,7 +16,7 @@ const styles: Record<BadgeVariant, string> = {
   COMPLETED: "bg-neutral-900 text-white",
   REVOKED:   "bg-gray-100 text-gray-500 border border-gray-200",
   // UI variants
-  count:   "bg-[#A3FF38] text-black",
+  count:   "bg-[#A3FF38]/40 text-[#3E7300]",
   tag:     "bg-white text-gray-600 border border-gray-200",
   stat:    "bg-neutral-900 text-white",
   default: "bg-gray-100 text-gray-600 border border-gray-200",

@@ -5,8 +5,9 @@ interface ListingCardProps {
   slug: string;
   name: string;
   logoUrl?: string | null;
-  tagline?: string | null;
   planName: string;
+  months: number;
+  postsRequired: number;
   slotsRemaining: number;
   category?: string | null;
 }
@@ -15,15 +16,16 @@ export default function ListingCard({
   slug,
   name,
   logoUrl,
-  tagline,
   planName,
+  months,
+  postsRequired,
   slotsRemaining,
 }: ListingCardProps) {
   return (
-    <div className="flex flex-col rounded-2xl border border-gray-200 overflow-hidden bg-white">
+    <div className="card-shine flex flex-col rounded-3xl border border-gray-200 bg-white p-3 gap-3 h-full">
 
-      {/* ── Logo area ── */}
-      <div className="flex items-center justify-center h-44 bg-gray-50">
+      {/* ── Logo area — inset rounded rectangle ── */}
+      <div className="flex items-center justify-center h-36 bg-gray-100 rounded-2xl">
         {logoUrl ? (
           <img
             src={logoUrl}
@@ -31,38 +33,34 @@ export default function ListingCard({
             className="w-20 h-20 object-contain"
           />
         ) : (
-          <div className="w-20 h-20 rounded-2xl bg-gray-200 flex items-center justify-center">
-            <span className="text-2xl font-bold text-gray-400">
-              {name[0]}
-            </span>
+          <div className="w-16 h-16 rounded-2xl bg-gray-200 flex items-center justify-center">
+            <span className="text-2xl font-bold text-gray-400">{name[0]}</span>
           </div>
         )}
       </div>
 
       {/* ── Info ── */}
-      <div className="p-4 flex flex-col gap-3">
-        <div className="flex items-start justify-between gap-2">
-          <div>
-            <p className="font-semibold text-neutral-900 leading-snug">{name}</p>
-            <p className="text-xs text-gray-400 mt-0.5">{planName}</p>
-          </div>
+      <div className="flex flex-col gap-2 px-1 flex-1">
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-lg font-semibold text-neutral-900 leading-snug">{name}</p>
           <Badge
             variant="count"
-            label={`${slotsRemaining} slot${slotsRemaining !== 1 ? "s" : ""}`}
+            label={`${postsRequired} ${postsRequired === 1 ? "post" : "posts"}`}
           />
         </div>
 
-        {tagline && (
-          <p className="text-sm text-gray-400 leading-snug line-clamp-2">{tagline}</p>
-        )}
-
-        <Link
-          href={`/software/${slug}`}
-          className="w-full bg-neutral-900 text-white text-sm font-semibold text-center py-2.5 rounded-xl hover:opacity-90 transition-opacity"
-        >
-          View Listing
-        </Link>
+        <p className="text-sm text-gray-400 leading-snug">
+          Get {months} {months === 1 ? "month" : "months"} of {name} {planName}
+        </p>
       </div>
+
+      {/* ── Button ── */}
+      <Link
+        href={`/software/${slug}`}
+        className="w-full bg-neutral-900 text-white text-sm font-semibold text-center py-3 rounded-xl hover:opacity-90 transition-opacity"
+      >
+        View Brief
+      </Link>
 
     </div>
   );

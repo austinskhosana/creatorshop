@@ -70,8 +70,7 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  { id: "home",        label: "Home",        href: "/",            icon: <HomeIcon /> },
-  { id: "shop",        label: "Shop",        href: "/shop",        icon: <ShopIcon /> },
+  { id: "shop",        label: "Shop",        href: "/explore",     icon: <ShopIcon /> },
   { id: "campaigns",   label: "Campaigns",   href: "/campaigns",   icon: <CampaignsIcon /> },
   { id: "influencers", label: "Influencers", href: "/influencers", icon: <InfluencersIcon /> },
   { id: "admin",       label: "Admin",       href: "/admin",       icon: <AdminIcon /> },
@@ -159,13 +158,7 @@ export default function Sidebar() {
           return (
             // Each item staggered 40ms apart — items cascade in rather than all appearing at once.
             // `both` fill-mode keeps the item invisible until its delay starts, preventing a flash.
-            <li
-              key={item.id}
-              style={{
-                animation: "nav-enter 280ms cubic-bezier(0.23, 1, 0.32, 1) both",
-                animationDelay: `${index * 40}ms`,
-              }}
-            >
+            <li key={item.id}>
               <Link
                 href={item.href}
                 className={[
