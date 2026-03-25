@@ -39,7 +39,7 @@ const STATUS_LABEL: Record<ShopStatus, string> = {
 
 function ShopCard({ shop }: { shop: Shop }) {
   return (
-    <div className="flex flex-col rounded-3xl border border-gray-200 bg-white p-3 gap-3 h-full">
+    <div className="card-shine flex flex-col rounded-3xl border border-gray-200 bg-white p-3 gap-3 h-full">
 
       {/* ── Logo area ── */}
       <div className="flex items-center justify-center h-36 bg-gray-100 rounded-2xl">
