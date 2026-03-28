@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useClerk } from "@clerk/nextjs";
 import CreatorCard from "@/components/CreatorCard";
 import BrandCard from "@/components/BrandCard";
 
@@ -9,6 +10,7 @@ type Role = "CREATOR" | "BRAND";
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const { session } = useClerk();
   const [selected, setSelected] = useState<Role | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +29,11 @@ export default function OnboardingPage() {
 
       if (!res.ok) throw new Error("Something went wrong");
 
-      window.location.href = "/dashboard";
+      // Force the session JWT to refresh so the middleware sees
+      // onboardingComplete: true on the very next request.
+      await session?.reload();
+
+      router.push(selected === "CREATOR" ? "/explore" : "/dashboard");
     } catch {
       setError("Something went wrong — please try again.");
       setLoading(false);

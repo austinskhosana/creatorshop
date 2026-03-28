@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useLayoutEffect, useEffect } from "react";
+import { useState, useRef, useLayoutEffect } from "react";
 import ListingCard from "@/components/software/ListingCard";
 
 const CATEGORIES = ["All", "Productivity", "Design", "Video", "Marketing", "Analytics", "Social Media"];
@@ -25,11 +25,12 @@ export default function ExplorePage() {
     if (el) setPill({ left: el.offsetLeft, width: el.offsetWidth, ready: false });
   }, []);
 
-  useEffect(() => {
-    const idx = CATEGORIES.indexOf(activeCategory);
+  function handleCategoryChange(cat: string) {
+    setActiveCategory(cat);
+    const idx = CATEGORIES.indexOf(cat);
     const el = tabRefs.current[idx];
     if (el) setPill({ left: el.offsetLeft, width: el.offsetWidth, ready: true });
-  }, [activeCategory]);
+  }
 
   const filtered = activeCategory === "All"
     ? MOCK_LISTINGS
@@ -52,6 +53,7 @@ export default function ExplorePage() {
             left: 0,
             width: pill.width,
             transform: `translateX(${pill.left}px)`,
+            opacity: pill.width === 0 ? 0 : 1,
             transition: pill.ready
               ? [
                   "transform 320ms cubic-bezier(0.34, 1.1, 0.64, 1)",
@@ -64,7 +66,7 @@ export default function ExplorePage() {
           <button
             key={cat}
             ref={(el) => { tabRefs.current[i] = el; }}
-            onClick={() => setActiveCategory(cat)}
+            onClick={() => handleCategoryChange(cat)}
             className={[
               "relative z-10 px-4 py-1.5 rounded-lg text-sm font-medium",
               "transition-colors duration-[200ms]",

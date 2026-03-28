@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useLayoutEffect, useEffect } from "react";
+import { useState, useRef, useLayoutEffect } from "react";
 import Link from "next/link";
 import Badge from "@/components/ui/Badge";
 
@@ -87,11 +87,12 @@ export default function ShopsPage() {
     if (el) setPill({ left: el.offsetLeft, width: el.offsetWidth, ready: false });
   }, []);
 
-  useEffect(() => {
-    const idx = FILTERS.indexOf(activeFilter);
+  function handleFilterChange(filter: Filter) {
+    setActiveFilter(filter);
+    const idx = FILTERS.indexOf(filter);
     const el = tabRefs.current[idx];
     if (el) setPill({ left: el.offsetLeft, width: el.offsetWidth, ready: true });
-  }, [activeFilter]);
+  }
 
   const filtered = activeFilter === "All"
     ? MOCK_SHOPS
@@ -114,6 +115,7 @@ export default function ShopsPage() {
             left: 0,
             width: pill.width,
             transform: `translateX(${pill.left}px)`,
+            opacity: pill.width === 0 ? 0 : 1,
             transition: pill.ready
               ? [
                   "transform 320ms cubic-bezier(0.34, 1.1, 0.64, 1)",
@@ -126,7 +128,7 @@ export default function ShopsPage() {
           <button
             key={filter}
             ref={(el) => { tabRefs.current[i] = el; }}
-            onClick={() => setActiveFilter(filter)}
+            onClick={() => handleFilterChange(filter)}
             className={[
               "relative z-10 px-4 py-1.5 rounded-lg text-sm font-medium",
               "transition-colors duration-[200ms]",

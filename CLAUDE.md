@@ -482,30 +482,54 @@ src/
 
 ---
 
-## 30-day build plan
+## 7-day build plan
 
-| Day | Task |
-|---|---|
-| 1 | Fix layout.tsx, install Clerk + Supabase + Prisma, deploy schema, push to Vercel |
-| 2 | Clerk auth — sign up, log in, role selection (creator / brand) on onboarding |
-| 3 | Creator onboarding — profile setup form, save to DB |
-| 4 | Brand onboarding — software listing setup + key upload |
-| 5 | Creator profile page + software listing page (read-only) |
-| 6 | Explore page — browse active listings |
-| 7 | Apply form — creator submits deliverable + pitch |
-| 8 | /shops — creator's shop history with status + deadline timer |
-| 9 | /applications — brand's inbox, approve / deny |
-| 10 | Key reveal — decrypt and show access key on approval |
-| 11 | Delivery flow — creator submits link, brand confirms |
-| 12 | Revoke flow + auto-revoke scheduled job (Vercel cron) |
-| 13 | Listing close — auto-deny pending shops transaction |
-| 14 | Dashboard — single route, renders per role + role switcher |
-| 15 | Email notifications via Resend — all 9 triggers |
-| 16 | Buffer — catch up |
-| 17 | Landing page |
-| 18 | UI polish — empty states, loading states, error states |
-| 19 | End-to-end test — full shop flow as creator and brand |
-| 20 | Seed 2–3 real software listings, soft launch |
+### Day 1 — Auth + Onboarding (in progress)
+- [x] Fix layout.tsx — remove Geist, Satoshi already loaded
+- [x] Clerk auth + onboarding role selection (CREATOR / BRAND)
+- [x] Fix stale JWT bug — session.reload() before redirect
+- [ ] Creator profile setup form (displayName, bio, niche, socials, services) → save to DB
+- [ ] Brand profile setup form (brandName, bio, logo, website) → save to DB
+- [ ] Middleware fully enforced end-to-end (onboardingComplete check)
+
+### Day 2 — Listings
+- [ ] Brand creates a listing + uploads access keys (encrypted at rest)
+- [ ] Listing pause / close mechanic + auto-deny pending shops on close
+- [ ] Key top-up on live listing
+- [ ] /explore — browse active listings (ListingCard grid)
+- [ ] /software/[slug] — listing detail page (read-only)
+
+### Day 3 — The apply flow
+- [ ] Apply form — deliverable type + pitch, submitted to DB
+- [ ] Duplicate application guard — disabled button + status shown
+- [ ] /shops — creator shop history, status badges, deadline timer
+- [ ] Public creator profile /profile/[username]
+
+### Day 4 — Brand side
+- [ ] /applications — inbox with all pending apps, creator profile links
+- [ ] Approve → consume key (transaction), set deadline, send key to creator
+- [ ] Deny → mark DENIED, notify creator
+- [ ] Access key encryption at rest (AES-256) + decrypt on reveal (KeyReveal component)
+
+### Day 5 — Delivery + revoke
+- [ ] Creator submits delivery link (DeliveryForm)
+- [ ] Brand confirms → shop COMPLETED, email creator
+- [ ] Brand revokes → key burned, shop REVOKED
+- [ ] Auto-revoke cron job (Vercel cron, runs hourly) — checks past-deadline APPROVED shops
+- [ ] Creator unblocked immediately after auto-revoke
+
+### Day 6 — Emails + Dashboard
+- [ ] All 9 Resend email triggers (React Email templates)
+- [ ] /dashboard — role-aware, CreatorDashboard + BrandDashboard
+- [ ] Role switcher in Navbar for BOTH users
+- [ ] Brand: manage listings (pause / close / top-up keys)
+
+### Day 7 — Polish + Ship
+- [ ] Empty states on /explore, /shops, /applications
+- [ ] Loading states + error boundaries
+- [ ] End-to-end test — full shop flow as creator and brand
+- [ ] Seed 2–3 real software listings
+- [ ] Deploy to Vercel, smoke test in production
 
 ---
 
@@ -520,18 +544,10 @@ src/
 
 ---
 
-## Kickoff prompt for Claude Code
-Paste this at the start of your Claude Code session:
+## Session kickoff prompt for Claude Code
+Paste this at the start of each Claude Code session:
 
 "I'm building Creatorshop — a marketplace where creators barter their
 services for software subscriptions. The product is fully scoped in CLAUDE.md
-at the root of this project. Please read it before we start.
-
-Day 1 tasks:
-1. Fix layout.tsx — remove Geist imports, Satoshi is already loaded in globals.css
-2. Install and configure Clerk for auth with creator/brand role selection
-3. Install Supabase and Prisma, apply the schema from CLAUDE.md
-4. Confirm everything deploys to Vercel cleanly
-
-After that we'll build component-first — starting with ui/Badge, ui/Button,
-and ui/Card using Tailwind 4."
+at the root of this project. Please read CLAUDE.md before we start,
+specifically the 7-day build plan and the checklist for the current day."
