@@ -135,6 +135,7 @@ export default function Sidebar() {
     { id: "shops",         label: "My Shops",   href: "/shops",         icon: <ShopsIcon />,         roles: ["CREATOR", "BOTH"] },
     { id: "profile",       label: "Profile",    href: "/profile",       icon: <ProfileIcon />,       roles: ["CREATOR", "BOTH"] },
     { id: "brand-profile", label: "Profile",    href: "/brand-profile", icon: <BrandProfileIcon />,  roles: ["BRAND"]           },
+    { id: "admin",         label: "Admin",        href: "/admin",         icon: <AdminIcon />,         roles: ["BRAND"]           },
     { id: "campaigns",     label: "Campaigns",  href: "/campaigns",     icon: <CampaignsIcon />,     roles: ["BRAND", "BOTH"]   },
     { id: "influencers",   label: "Creators",   href: "/influencers",   icon: <InfluencersIcon />,   roles: ["BRAND", "BOTH"]   },
   ];

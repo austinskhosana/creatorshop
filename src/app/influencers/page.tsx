@@ -87,7 +87,8 @@ export default function InfluencersPage() {
     : INFLUENCERS.filter((i) => i.niches.includes(activeNiche));
 
   return (
-    <div className="p-10 pl-20">
+    <div className="p-10 pl-20 flex flex-col items-center">
+      <div className="w-full max-w-4xl">
 
       {/* ── Header ── */}
       <div className="flex flex-col gap-1 mb-6">
@@ -134,7 +135,7 @@ export default function InfluencersPage() {
           No influencers in this niche yet.
         </div>
       ) : (
-        <div className="grid grid-cols-3 gap-6 max-w-4xl">
+        <div className="grid grid-cols-3 gap-6">
           {filtered.map((influencer, i) => (
             <div
               key={influencer.id + activeNiche}
@@ -152,6 +153,7 @@ export default function InfluencersPage() {
         </div>
       )}
 
+      </div>
     </div>
   );
 }

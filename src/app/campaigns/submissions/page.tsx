@@ -341,7 +341,8 @@ export default function SubmissionsPage() {
   };
 
   return (
-    <div className="p-10 pl-20">
+    <div className="p-10 pl-20 flex flex-col items-center">
+      <div className="w-full max-w-4xl">
 
       {/* ── Back ── */}
       <Link
@@ -401,7 +402,7 @@ export default function SubmissionsPage() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-3 gap-6 max-w-4xl">
+        <div className="grid grid-cols-3 gap-6">
           {filtered.map((sub, i) => (
             <div
               key={sub.id + activeTab}
@@ -433,6 +434,7 @@ export default function SubmissionsPage() {
         />
       )}
 
+      </div>
     </div>
   );
 }

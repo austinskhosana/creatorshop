@@ -181,9 +181,9 @@ function DeadlineTimer({ deadline }: { deadline: Date }) {
     : "green";
 
   const colours = {
-    green: { bg: "bg-[#EDFFD0]", text: "text-[#2A6000]", border: "border-[#A3FF38]", dot: "bg-[#A3FF38]" },
-    amber: { bg: "bg-amber-50",  text: "text-amber-700", border: "border-amber-200", dot: "bg-amber-400" },
-    red:   { bg: "bg-red-50",    text: "text-red-600",   border: "border-red-200",   dot: "bg-red-400"   },
+    green: { bg: "bg-gray-50",  text: "text-gray-600", border: "border-gray-200", dot: "bg-[#A3FF38]" },
+    amber: { bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200", dot: "bg-amber-400" },
+    red:   { bg: "bg-red-50",   text: "text-red-600",   border: "border-red-200",   dot: "bg-red-400"   },
   }[urgency];
 
   if (expired) {
@@ -198,7 +198,7 @@ function DeadlineTimer({ deadline }: { deadline: Date }) {
   const pad = (n: number) => String(n).padStart(2, "0");
 
   return (
-    <div className={`rounded-2xl border ${colours.border} ${colours.bg} px-5 py-4`}>
+    <div className={`rounded-2xl border ${colours.border} ${colours.bg} px-5 py-4 flex flex-col items-center text-center`}>
       <div className="flex items-center gap-2 mb-3">
         <div className={`w-2 h-2 rounded-full ${colours.dot} flex-shrink-0`} />
         <p className={`text-[12px] font-semibold uppercase tracking-wider ${colours.text}`}>
