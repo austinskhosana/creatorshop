@@ -72,7 +72,7 @@ function ShopCard({ shop }: { shop: Shop }) {
       {/* ── Button ── */}
       <Link
         href={`/shops/${shop.id}`}
-        className="w-full bg-neutral-900 text-white text-sm font-semibold text-center py-3 rounded-xl hover:opacity-90 transition-opacity"
+        className="w-full bg-neutral-900 text-white text-sm font-semibold text-center py-3 rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] hover:opacity-90 transition-opacity"
       >
         {shop.status === "APPROVED" ? "View Shop" : "View Shop"}
       </Link>
@@ -104,7 +104,8 @@ export default function ShopsPage() {
     : MOCK_SHOPS.filter((s) => s.status === activeFilter.toUpperCase());
 
   return (
-    <div className="p-10 pl-20">
+    <div className="p-10 pl-20 flex flex-col items-center">
+      <div className="w-full max-w-4xl">
 
       {/* ── Header ── */}
       <div className="flex flex-col gap-1 mb-6">
@@ -151,13 +152,13 @@ export default function ShopsPage() {
           <p className="text-gray-400 text-[15px] mb-4">You haven&apos;t applied for anything yet.</p>
           <Link
             href="/explore"
-            className="px-5 py-2.5 rounded-xl bg-neutral-900 text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+            className="px-5 py-2.5 rounded-xl bg-neutral-900 text-white text-sm font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] hover:opacity-90 transition-opacity"
           >
             Browse Software
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-3 gap-6 max-w-4xl">
+        <div className="grid grid-cols-3 gap-6">
           {filtered.map((shop, i) => (
             <div
               key={shop.id + activeFilter}
@@ -175,6 +176,7 @@ export default function ShopsPage() {
         </div>
       )}
 
+      </div>
     </div>
   );
 }

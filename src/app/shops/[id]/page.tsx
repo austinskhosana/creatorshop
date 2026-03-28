@@ -134,7 +134,7 @@ function AccessKeyCard({ accessKey }: { accessKey: string }) {
         </span>
         <button
           onClick={handleCopy}
-          className="flex-shrink-0 px-4 py-2 rounded-xl bg-neutral-900 text-white text-[13px] font-semibold hover:opacity-90 active:scale-[0.97] transition-all duration-[140ms]"
+          className="flex-shrink-0 px-4 py-2 rounded-xl bg-neutral-900 text-white text-[13px] font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] hover:opacity-90 active:scale-[0.97] transition-all duration-[140ms]"
         >
           {copied ? "Copied!" : "Copy"}
         </button>
@@ -376,7 +376,7 @@ function DeliveryForm({ shopId }: { shopId: string }) {
       <button
         onClick={handleSubmit}
         disabled={status === "submitting"}
-        className="w-full py-3.5 rounded-2xl bg-[#A3FF38] text-gray-900 text-[15px] font-semibold hover:brightness-95 active:scale-[0.98] transition-all duration-[140ms] disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full py-3.5 rounded-2xl bg-[#A3FF38] border border-[#82F200] shadow-[inset_3px_3px_6px_rgba(255,255,255,0.4)] text-gray-900 text-[15px] font-semibold hover:brightness-95 active:scale-[0.98] transition-all duration-[140ms] disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {status === "submitting" ? "Submitting…" : "Submit Delivery"}
       </button>

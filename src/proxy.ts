@@ -4,19 +4,24 @@ import { NextResponse } from "next/server";
 const isPublicRoute = createRouteMatcher([
   "/",
   "/sign-in(.*)",
-  "/sign-up(.*)",
   "/explore(.*)",
   "/software/(.*)",
-  "/profile/(.*)",
   "/api/webhooks(.*)",
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
+  const { userId } = await auth();
+
+  // Redirect root to sign-in (unauthenticated) or dashboard (authenticated)
+  if (req.nextUrl.pathname === "/") {
+    return NextResponse.redirect(
+      new URL(userId ? "/explore" : "/sign-in", req.url)
+    );
+  }
+
   if (!isPublicRoute(req)) {
     await auth.protect();
   }
-
-  const { userId } = await auth();
   if (userId) {
     const url = req.nextUrl;
     if (!url.pathname.startsWith("/onboarding") && !url.pathname.startsWith("/api")) {

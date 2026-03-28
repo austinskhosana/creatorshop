@@ -141,18 +141,19 @@ export default function ProductGridPage({
     : data.products.filter((p) => p.subcategory === activeSubcategory);
 
   return (
-    <div className="p-8">
+    <div className="p-8 flex flex-col items-center">
+      <div className="w-full max-w-4xl">
 
       {/* ── Header ──────────────────────────────────────────────────── */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-[28px] font-semibold text-gray-900">{formatCategory(category)}</h1>
         <div className="flex items-center gap-3">
-          <button className="w-9 h-9 flex items-center justify-center rounded-xl border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors duration-[120ms]">
+          <button className="w-9 h-9 flex items-center justify-center rounded-xl border border-gray-200 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.03)] text-gray-500 hover:bg-gray-50 transition-colors duration-[120ms]">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
               <path fillRule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z" clipRule="evenodd" />
             </svg>
           </button>
-          <button className="px-4 py-2 rounded-xl bg-[#A3FF38] text-gray-900 text-[14px] font-semibold hover:brightness-95 active:scale-[0.98] transition-all duration-[140ms]">
+          <button className="px-4 py-2 rounded-xl bg-[#A3FF38] border border-[#82F200] shadow-[inset_3px_3px_6px_rgba(255,255,255,0.4)] text-gray-900 text-[14px] font-semibold hover:brightness-95 active:scale-[0.98] transition-all duration-[140ms]">
             Add New Product
           </button>
         </div>
@@ -199,13 +200,14 @@ export default function ProductGridPage({
           No products in this category yet.
         </div>
       ) : (
-        <div className="grid grid-cols-3 gap-5">
+        <div className="grid grid-cols-3 gap-5 w-full">
           {filtered.map((product) => (
             <ProductCard key={product.id} product={product} category={category} />
           ))}
         </div>
       )}
 
+      </div>
     </div>
   );
 }

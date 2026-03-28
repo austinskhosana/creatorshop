@@ -217,7 +217,7 @@ export default function ProductPage({
           ) : (
             <button
               onClick={() => setApplied(true)}
-              className="w-full py-4 rounded-2xl bg-[#A3FF38] text-gray-900 text-[16px] font-semibold hover:brightness-95 active:scale-[0.98] transition-all duration-[140ms]"
+              className="w-full py-4 rounded-2xl bg-[#A3FF38] border border-[#82F200] shadow-[inset_3px_3px_6px_rgba(255,255,255,0.4)] text-gray-900 text-[16px] font-semibold hover:brightness-95 active:scale-[0.98] transition-all duration-[140ms]"
             >
               Apply
             </button>

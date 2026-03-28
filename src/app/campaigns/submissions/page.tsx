@@ -196,13 +196,13 @@ function CreatorDrawer({
           <div className="px-6 py-4 border-t border-gray-100 flex gap-2">
             <button
               onClick={() => { onApprove(); onClose(); }}
-              className="flex-1 py-3 rounded-xl bg-neutral-900 text-white text-sm font-semibold hover:opacity-90 active:scale-[0.98] transition-all duration-[140ms]"
+              className="flex-1 py-3 rounded-xl bg-neutral-900 text-white text-sm font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] hover:opacity-90 active:scale-[0.98] transition-all duration-[140ms]"
             >
               Approve
             </button>
             <button
               onClick={() => { onReject(); onClose(); }}
-              className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-500 text-sm font-semibold hover:bg-gray-50 active:scale-[0.98] transition-all duration-[140ms]"
+              className="flex-1 py-3 rounded-xl border border-gray-200 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.03)] text-gray-500 text-sm font-semibold hover:bg-gray-50 active:scale-[0.98] transition-all duration-[140ms]"
             >
               Reject
             </button>
@@ -269,13 +269,13 @@ function SubmissionCard({
         <div className="flex gap-2">
           <button
             onClick={onApprove}
-            className="flex-1 py-2.5 rounded-xl bg-neutral-900 text-white text-sm font-semibold hover:opacity-90 active:scale-[0.98] transition-all duration-[140ms]"
+            className="flex-1 py-2.5 rounded-xl bg-neutral-900 text-white text-sm font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] hover:opacity-90 active:scale-[0.98] transition-all duration-[140ms]"
           >
             Approve
           </button>
           <button
             onClick={onReject}
-            className="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-500 text-sm font-semibold hover:bg-gray-50 active:scale-[0.98] transition-all duration-[140ms]"
+            className="flex-1 py-2.5 rounded-xl border border-gray-200 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.03)] text-gray-500 text-sm font-semibold hover:bg-gray-50 active:scale-[0.98] transition-all duration-[140ms]"
           >
             Reject
           </button>

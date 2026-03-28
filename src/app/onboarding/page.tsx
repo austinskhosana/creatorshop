@@ -78,7 +78,7 @@ export default function OnboardingPage() {
         <button
           onClick={handleContinue}
           disabled={!selected || loading}
-          className="w-full max-w-xs py-3 rounded-xl bg-neutral-900 text-white font-semibold text-sm tracking-wide transition-opacity disabled:opacity-40 hover:opacity-90"
+          className="w-full max-w-xs py-3 rounded-xl bg-neutral-900 text-white font-semibold text-sm tracking-wide shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] transition-opacity disabled:opacity-40 hover:opacity-90"
         >
           {loading ? "Setting up…" : "Continue"}
         </button>

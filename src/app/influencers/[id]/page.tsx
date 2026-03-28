@@ -12,7 +12,7 @@ type CreatorProfile = {
   handle: string;
   bio: string;
   location: string;
-  niche: string;
+  niches: string[];
   audienceSize: string;
   services: string[];
   instagramUrl: string;
@@ -31,7 +31,7 @@ const CREATORS: Record<string, CreatorProfile> = {
     handle: "@ainojohansson",
     bio: "Fashion enthusiast and adventure lover sharing my unique style and vibrant experiences. From chic streetwear to stunning travel spots, I mix everyday moments with high-fashion looks to inspire you to live boldly and authentically.",
     location: "Los Angeles, California",
-    niche: "Fashion",
+    niches: ["Fashion", "Travel", "Lifestyle"],
     audienceSize: "10K–50K",
     services: ["Instagram Reels", "Stories", "YouTube Reviews", "Blog Posts"],
     instagramUrl: "https://instagram.com/ainojohansson",
@@ -46,7 +46,7 @@ const CREATORS: Record<string, CreatorProfile> = {
     handle: "@noahbrown",
     bio: "Lifestyle creator based in LA. I document the everyday — good food, good fits, and everything in between. Focused on keeping it real and relatable.",
     location: "Los Angeles, California",
-    niche: "Lifestyle",
+    niches: ["Lifestyle", "Fashion"],
     audienceSize: "10K–50K",
     services: ["Instagram Reels", "TikTok Videos", "Stories"],
     instagramUrl: "https://instagram.com/noahbrown",
@@ -61,7 +61,7 @@ const CREATORS: Record<string, CreatorProfile> = {
     handle: "@islasmith",
     bio: "Fashion and lifestyle content creator. I love exploring the intersection of personal style and everyday living. Always hunting for the next great find.",
     location: "London, UK",
-    niche: "Lifestyle",
+    niches: ["Lifestyle", "Fashion", "Fitness"],
     audienceSize: "50K–100K",
     services: ["Instagram Reels", "Stories", "Sponsored Posts"],
     instagramUrl: "https://instagram.com/islasmith",
@@ -141,7 +141,7 @@ export default function CreatorProfilePage({
   const socialLinks = SOCIAL_PLATFORMS.filter((p) => creator[p.key]);
 
   return (
-    <div className="min-h-full p-8 pb-24">
+    <div className="min-h-full p-8 pb-24 flex flex-col">
 
       {/* ── Back ── */}
       <Link
@@ -154,7 +154,8 @@ export default function CreatorProfilePage({
         {backLabel}
       </Link>
 
-      <div className="max-w-2xl mx-auto flex flex-col gap-5">
+      <div className="flex-1 flex flex-col justify-center">
+      <div className="max-w-2xl mx-auto w-full flex flex-col gap-5">
 
         {/* ── Header card ── */}
         <div className="rounded-3xl border border-gray-200 bg-white overflow-hidden">
@@ -180,76 +181,78 @@ export default function CreatorProfilePage({
                 </div>
               </div>
 
-              {/* Meta pills */}
-              <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                {creator.niche && (
-                  <span className="px-3 py-1 rounded-full bg-[#EDFFD0] text-[#2A6000] text-[12px] font-semibold">
-                    {creator.niche}
-                  </span>
-                )}
-                {creator.audienceSize && (
-                  <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-[12px] font-semibold">
-                    {creator.audienceSize} followers
-                  </span>
-                )}
-              </div>
-
-            </div>
-          </div>
-
-          {/* Bio */}
-          {creator.bio && (
-            <div className="px-8 pb-6">
-              <p className="text-[14px] text-gray-500 leading-relaxed">{creator.bio}</p>
-            </div>
-          )}
-        </div>
-
-        {/* ── Services ── */}
-        {creator.services.length > 0 && (
-          <div className="rounded-3xl border border-gray-200 bg-white px-6 py-5">
-            <p className="text-[12px] font-semibold text-gray-400 uppercase tracking-wider mb-3">What they offer</p>
-            <div className="flex flex-wrap gap-2">
-              {creator.services.map((s) => (
-                <span
-                  key={s}
-                  className="px-3 py-1.5 rounded-xl bg-[#EDFFD0] text-[#3A7A00] text-[13px] font-medium"
-                >
-                  {s}
+              {/* Audience size pill */}
+              {creator.audienceSize && (
+                <span className="flex-shrink-0 px-3 py-1.5 rounded-full bg-[#A3FF38] border border-[#82F200] shadow-[inset_3px_3px_6px_rgba(255,255,255,0.4)] text-gray-900 text-[12px] font-semibold">
+                  {creator.audienceSize} followers
                 </span>
-              ))}
-            </div>
-          </div>
-        )}
+              )}
 
-        {/* ── Social links ── */}
-        {socialLinks.length > 0 && (
-          <div className="rounded-3xl border border-gray-200 bg-white px-6 py-5">
-            <p className="text-[12px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Socials</p>
-            <div className="flex flex-wrap gap-2">
-              {socialLinks.map(({ key, label, icon }) => (
-                <a
-                  key={key}
-                  href={creator[key] as string}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-gray-200 text-[13px] font-medium text-gray-600 hover:border-gray-300 hover:text-gray-900 transition-colors duration-[120ms]"
-                >
-                  <span className="text-gray-500">{icon}</span>
-                  {label}
-                </a>
-              ))}
             </div>
           </div>
-        )}
+
+          {/* Bio + services + socials */}
+          <div className="px-8 pb-6 flex flex-col gap-5">
+            {creator.bio && (
+              <p className="text-[14px] text-gray-500 leading-relaxed">{creator.bio}</p>
+            )}
+
+            {creator.niches.length > 0 && (
+              <div className="flex flex-col gap-2.5 pt-5 border-t border-gray-100">
+                <p className="text-[12px] font-semibold text-gray-400 uppercase tracking-wider">Niches</p>
+                <div className="flex flex-wrap gap-2">
+                  {creator.niches.map((n) => (
+                    <span key={n} className="px-3 py-1.5 rounded-xl bg-[#F6F6F6] text-gray-700 text-[13px] font-medium">
+                      {n}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {creator.services.length > 0 && (
+              <div className="flex flex-col gap-2.5 pt-5 border-t border-gray-100">
+                <p className="text-[12px] font-semibold text-gray-400 uppercase tracking-wider">What they offer</p>
+                <div className="flex flex-wrap gap-2">
+                  {creator.services.map((s) => (
+                    <span key={s} className="px-3 py-1.5 rounded-xl bg-[#F6F6F6] text-gray-700 text-[13px] font-medium">
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {socialLinks.length > 0 && (
+              <div className="flex flex-col gap-2.5 pt-5 border-t border-gray-100">
+                <p className="text-[12px] font-semibold text-gray-400 uppercase tracking-wider">Socials</p>
+                <div className="flex flex-wrap gap-2">
+                  {socialLinks.map(({ key, label, icon }) => (
+                    <a
+                      key={key}
+                      href={creator[key] as string}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-gray-200 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.03)] text-[13px] font-medium text-gray-600 hover:border-gray-300 hover:text-gray-900 transition-colors duration-[120ms]"
+                    >
+                      <span className="text-gray-500">{icon}</span>
+                      {label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
 
         {/* ── Actions ── */}
         {!fromProfile && (
-          <button className="w-full py-3.5 rounded-2xl bg-[#A3FF38] text-gray-900 text-[15px] font-semibold hover:brightness-95 active:scale-[0.98] transition-all duration-[140ms]">
+          <button className="w-full py-3.5 rounded-2xl bg-[#A3FF38] border border-[#82F200] shadow-[inset_3px_3px_6px_rgba(255,255,255,0.4)] text-gray-900 text-[15px] font-semibold hover:brightness-95 active:scale-[0.98] transition-all duration-[140ms]">
             Invite to Campaign
           </button>
         )}
 
+      </div>
       </div>
     </div>
   );

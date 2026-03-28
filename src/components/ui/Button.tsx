@@ -18,9 +18,9 @@ export default function Button({
     "inline-flex items-center justify-center font-semibold rounded-xl transition-opacity disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed";
 
   const variants = {
-    primary:   "bg-[#A3FF38] text-black hover:opacity-90",
-    dark:      "bg-neutral-900 text-white hover:opacity-90",
-    secondary: "bg-white text-neutral-900 border border-gray-200 hover:bg-gray-50",
+    primary:   "bg-[#A3FF38] text-black border border-[#82F200] shadow-[inset_3px_3px_6px_rgba(255,255,255,0.4)] hover:brightness-95",
+    dark:      "bg-neutral-900 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] hover:opacity-90",
+    secondary: "bg-white text-neutral-900 border border-gray-200 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.03)] hover:bg-gray-50",
     danger:    "bg-red-500 text-white hover:opacity-90",
   };
 

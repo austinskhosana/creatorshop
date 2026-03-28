@@ -57,7 +57,7 @@ export default function ListingCard({
       {/* ── Button ── */}
       <Link
         href={`/software/${slug}`}
-        className="w-full bg-neutral-900 text-white text-sm font-semibold text-center py-3 rounded-xl hover:opacity-90 transition-opacity"
+        className="w-full bg-neutral-900 text-white text-sm font-semibold text-center py-3 rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] hover:opacity-90 transition-opacity"
       >
         View Brief
       </Link>

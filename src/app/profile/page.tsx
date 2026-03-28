@@ -67,7 +67,7 @@ type Profile = {
   displayName: string;
   bio: string;
   location: string;
-  niche: string;
+  niches: string[];
   audienceSize: string;
   services: string[];
   instagramUrl: string;
@@ -78,7 +78,7 @@ type Profile = {
 };
 
 const INITIAL: Profile = {
-  displayName: "", bio: "", location: "", niche: "", audienceSize: "",
+  displayName: "", bio: "", location: "", niches: [], audienceSize: "",
   services: [], instagramUrl: "", tiktokUrl: "", youtubeUrl: "", twitterUrl: "", linkedinUrl: "",
 };
 
@@ -173,6 +173,13 @@ export default function ProfilePage() {
     setProfile((p) => ({ ...p, [key]: value }));
   }
 
+  function toggleNiche(n: string) {
+    setProfile((p) => ({
+      ...p,
+      niches: p.niches.includes(n) ? p.niches.filter((x) => x !== n) : [...p.niches, n],
+    }));
+  }
+
   function addService() {
     const trimmed = serviceInput.trim();
     if (!trimmed || profile.services.includes(trimmed)) return;
@@ -221,7 +228,7 @@ export default function ProfilePage() {
         </div>
         <Link
           href="/influencers/aino-johansson?from=profile"
-          className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 text-[13px] font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors duration-[120ms]"
+          className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.03)] text-[13px] font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors duration-[120ms]"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-gray-400">
             <path d="M10 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
@@ -234,6 +241,7 @@ export default function ProfilePage() {
       <div className="flex flex-col gap-4">
 
         {/* ── About you ── */}
+        <div style={{ animationName: "card-enter", animationDuration: "0.55s", animationTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)", animationFillMode: "both", animationDelay: "0ms" }}>
         <SectionCard
           title="About you"
           description="The basics brands use to identify who you are."
@@ -249,7 +257,7 @@ export default function ProfilePage() {
               {profile.displayName ? profile.displayName[0].toUpperCase() : "?"}
             </div>
             <div className="flex flex-col gap-1">
-              <button className="px-4 py-2 rounded-xl border border-gray-200 text-[13px] font-medium text-gray-600 hover:bg-gray-50 transition-colors duration-[120ms] w-fit">
+              <button className="px-4 py-2 rounded-xl border border-gray-200 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.03)] text-[13px] font-medium text-gray-600 hover:bg-gray-50 transition-colors duration-[120ms] w-fit">
                 Upload photo
               </button>
               <p className="text-[12px] text-gray-300">JPG or PNG, max 2MB</p>
@@ -286,45 +294,10 @@ export default function ProfilePage() {
             />
           </Field>
         </SectionCard>
-
-        {/* ── Niche & audience ── */}
-        <SectionCard
-          title="Niche & audience"
-          description="Help brands find you when they're looking for the right fit."
-          icon={
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-gray-900">
-              <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clipRule="evenodd" />
-            </svg>
-          }
-        >
-          <Field label="Your niche">
-            <div className="flex flex-wrap gap-2">
-              {NICHES.map((n) => (
-                <NicheChip
-                  key={n}
-                  label={n}
-                  selected={profile.niche === n}
-                  onClick={() => set("niche", profile.niche === n ? "" : n)}
-                />
-              ))}
-            </div>
-          </Field>
-
-          <Field label="Audience size">
-            <div className="flex flex-wrap gap-2">
-              {AUDIENCE_SIZES.map((size) => (
-                <Chip
-                  key={size}
-                  label={size}
-                  selected={profile.audienceSize === size}
-                  onClick={() => set("audienceSize", profile.audienceSize === size ? "" : size)}
-                />
-              ))}
-            </div>
-          </Field>
-        </SectionCard>
+        </div>
 
         {/* ── What you offer ── */}
+        <div style={{ animationName: "card-enter", animationDuration: "0.55s", animationTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)", animationFillMode: "both", animationDelay: "90ms" }}>
         <SectionCard
           title="What you offer"
           description="List the types of content you create so brands know what to expect."
@@ -373,8 +346,49 @@ export default function ProfilePage() {
             )}
           </Field>
         </SectionCard>
+        </div>
+
+        {/* ── Niches & audience ── */}
+        <div style={{ animationName: "card-enter", animationDuration: "0.55s", animationTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)", animationFillMode: "both", animationDelay: "180ms" }}>
+        <SectionCard
+          title="Niches & audience"
+          description="Help brands find you when they're looking for the right fit."
+          icon={
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-gray-900">
+              <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clipRule="evenodd" />
+            </svg>
+          }
+        >
+          <Field label="Your niches" hint="select all that apply">
+            <div className="flex flex-wrap gap-2">
+              {NICHES.map((n) => (
+                <NicheChip
+                  key={n}
+                  label={n}
+                  selected={profile.niches.includes(n)}
+                  onClick={() => toggleNiche(n)}
+                />
+              ))}
+            </div>
+          </Field>
+
+          <Field label="Audience size">
+            <div className="flex flex-wrap gap-2">
+              {AUDIENCE_SIZES.map((size) => (
+                <Chip
+                  key={size}
+                  label={size}
+                  selected={profile.audienceSize === size}
+                  onClick={() => set("audienceSize", profile.audienceSize === size ? "" : size)}
+                />
+              ))}
+            </div>
+          </Field>
+        </SectionCard>
+        </div>
 
         {/* ── Social links ── */}
+        <div style={{ animationName: "card-enter", animationDuration: "0.55s", animationTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)", animationFillMode: "both", animationDelay: "270ms" }}>
         <SectionCard
           title="Social links"
           description="Connect your platforms so brands can see your presence."
@@ -399,13 +413,14 @@ export default function ProfilePage() {
             </div>
           ))}
         </SectionCard>
+        </div>
 
         {/* ── Save ── */}
-        <div className="flex flex-col gap-3 pt-2">
+        <div className="flex flex-col gap-3 pt-2" style={{ animationName: "card-enter", animationDuration: "0.55s", animationTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)", animationFillMode: "both", animationDelay: "360ms" }}>
           <button
             onClick={handleSave}
             disabled={status === "saving"}
-            className="w-full py-3.5 rounded-2xl bg-[#A3FF38] text-gray-900 text-[15px] font-semibold hover:brightness-95 active:scale-[0.98] transition-all duration-[140ms] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3.5 rounded-2xl bg-[#A3FF38] border border-[#82F200] shadow-[inset_3px_3px_6px_rgba(255,255,255,0.4)] text-gray-900 text-[15px] font-semibold hover:brightness-95 active:scale-[0.98] transition-all duration-[140ms] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {status === "saving" ? "Saving…" : status === "saved" ? "Saved!" : "Save Profile"}
           </button>

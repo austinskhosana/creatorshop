@@ -119,7 +119,7 @@ export default function BrandProfilePage() {
               {profile.brandName ? profile.brandName[0].toUpperCase() : "?"}
             </div>
             <div className="flex flex-col gap-1">
-              <button className="px-4 py-2 rounded-xl border border-gray-200 text-[13px] font-medium text-gray-600 hover:bg-gray-50 transition-colors duration-[120ms] w-fit">
+              <button className="px-4 py-2 rounded-xl border border-gray-200 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.03)] text-[13px] font-medium text-gray-600 hover:bg-gray-50 transition-colors duration-[120ms] w-fit">
                 Upload logo
               </button>
               <p className="text-[12px] text-gray-300">PNG or SVG, max 2MB</p>
@@ -173,7 +173,7 @@ export default function BrandProfilePage() {
           <button
             onClick={handleSave}
             disabled={status === "saving"}
-            className="w-full py-3.5 rounded-2xl bg-[#A3FF38] text-gray-900 text-[15px] font-semibold hover:brightness-95 active:scale-[0.98] transition-all duration-[140ms] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3.5 rounded-2xl bg-[#A3FF38] border border-[#82F200] shadow-[inset_3px_3px_6px_rgba(255,255,255,0.4)] text-gray-900 text-[15px] font-semibold hover:brightness-95 active:scale-[0.98] transition-all duration-[140ms] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {status === "saving" ? "Saving…" : status === "saved" ? "Saved!" : "Save Profile"}
           </button>

@@ -9,12 +9,12 @@ interface BadgeProps {
 
 const styles: Record<BadgeVariant, string> = {
   // Shop statuses
-  PENDING:   "bg-yellow-50 text-yellow-700 border border-yellow-200",
-  APPROVED:  "bg-[#A3FF38]/20 text-green-800 border border-[#A3FF38]/40",
-  DENIED:    "bg-red-50 text-red-600 border border-red-200",
-  DELIVERED: "bg-blue-50 text-blue-700 border border-blue-200",
+  PENDING:   "bg-yellow-50 text-yellow-700",
+  APPROVED:  "bg-[#A3FF38]/20 text-green-800",
+  DENIED:    "bg-red-50 text-red-600",
+  DELIVERED: "bg-blue-50 text-blue-700",
   COMPLETED: "bg-neutral-900 text-white",
-  REVOKED:   "bg-gray-100 text-gray-500 border border-gray-200",
+  REVOKED:   "bg-gray-100 text-gray-500",
   // UI variants
   count:   "bg-[#A3FF38]/40 text-[#3E7300]",
   tag:     "bg-white text-gray-600 border border-gray-200",

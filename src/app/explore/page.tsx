@@ -37,7 +37,8 @@ export default function ExplorePage() {
     : MOCK_LISTINGS.filter((l) => l.category === activeCategory);
 
   return (
-    <div className="p-10 pl-20">
+    <div className="p-10 pl-20 flex flex-col items-center">
+      <div className="w-full max-w-4xl">
 
       {/* ── Header ── */}
       <div className="flex flex-col gap-1 mb-6">
@@ -79,7 +80,7 @@ export default function ExplorePage() {
       </div>
 
       {/* ── Listings grid ── */}
-      <div className="grid grid-cols-3 gap-6 max-w-4xl">
+      <div className="grid grid-cols-3 gap-6">
         {filtered.map((listing, i) => (
           <div
             key={listing.slug + activeCategory}
@@ -97,6 +98,7 @@ export default function ExplorePage() {
         ))}
       </div>
 
+      </div>
     </div>
   );
 }

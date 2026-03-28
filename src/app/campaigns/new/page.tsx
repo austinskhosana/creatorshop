@@ -523,7 +523,7 @@ export default function NewCampaignPage() {
           <button
             onClick={handleSave}
             disabled={status === "saving"}
-            className="w-full py-3.5 rounded-2xl bg-[#A3FF38] text-gray-900 text-[15px] font-semibold hover:brightness-95 active:scale-[0.98] transition-all duration-[140ms] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3.5 rounded-2xl bg-[#A3FF38] border border-[#82F200] shadow-[inset_3px_3px_6px_rgba(255,255,255,0.4)] text-gray-900 text-[15px] font-semibold hover:brightness-95 active:scale-[0.98] transition-all duration-[140ms] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {status === "saving" ? "Creating campaign…" : status === "saved" ? "Campaign created!" : "Create Campaign"}
           </button>

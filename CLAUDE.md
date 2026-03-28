@@ -484,56 +484,83 @@ src/
 
 ## 7-day build plan
 
-### Day 1 — Auth + Onboarding (in progress)
+---
+
+### 🎨 PHASE 1 — UI (Days 1–2)
+> All pages built with mock data. No DB wiring. Get every screen looking right first.
+
+### Day 1 — Auth UI + Core pages (in progress)
 - [x] Fix layout.tsx — remove Geist, Satoshi already loaded
 - [x] Clerk auth + onboarding role selection (CREATOR / BRAND)
 - [x] Fix stale JWT bug — session.reload() before redirect
-- [ ] Creator profile setup form (displayName, bio, niche, socials, services) → save to DB
-- [ ] Brand profile setup form (brandName, bio, logo, website) → save to DB
-- [ ] Middleware fully enforced end-to-end (onboardingComplete check)
+- [x] Creator profile setup form (/profile) — UI done
+- [x] Brand profile setup form (/brand-profile) — UI done
+- [x] /explore — ListingCard grid with category filters — UI done (mock)
+- [x] /software/[slug] — listing detail + PayWithPost card — UI done (mock)
+- [x] /shops — shop history with status filters + ShopCard — UI done (mock)
+- [x] /access/[id] — scratch card key reveal — UI done (mock)
+- [x] /campaigns/new — create campaign form (full UI, mock save) — UI done
+- [x] /campaigns/submissions — submitted posts, creator drawer, approve/reject — UI done (mock)
+- [x] /campaigns/list — manage campaigns hub — UI done
+- [x] /campaigns/history — campaign history + stats tiles — UI done (mock)
+- [x] Sidebar — nav, active states, Clerk UserButton — done
 
-### Day 2 — Listings
-- [ ] Brand creates a listing + uploads access keys (encrypted at rest)
-- [ ] Listing pause / close mechanic + auto-deny pending shops on close
+### Day 2 — Remaining UI
+- [x] Delivery flow — /shops/[id] page where creator submits their content link
+- [ ] Public creator profile /profile/[username] — read-only view (avatar, bio, niche, socials)
+- [ ] Duplicate application state — disabled apply button with current status shown on /software/[slug]
+
+---
+
+### ⚙️ PHASE 2 — Backend wiring (Days 3–5)
+> Connect every page to real data. Replace all mock data with DB queries.
+
+### Day 3 — Auth gate + Read data
+- [ ] src/middleware.ts — onboarding gate (unauthenticated → /sign-in, incomplete → /onboarding)
+- [ ] /explore — wire to real SoftwareListing DB query (isActive: true)
+- [ ] /software/[slug] — wire to real listing + show real slots remaining
+- [ ] /shops — wire to real shops for the logged-in creator
+- [ ] /profile/[username] — wire to real CreatorProfile
+
+### Day 4 — Write operations
+- [ ] /api/apply — fix missing deliverable + pitch fields, wire apply button
+- [ ] Duplicate application guard — check existing shop on page load
+- [ ] /applications — wire to real pending shops for logged-in brand
+- [ ] Approve → consume key transaction + set deadline
+- [ ] Deny → mark DENIED
+- [ ] Access key encryption at rest (AES-256) + decrypt on reveal (/access/[id])
+- [ ] Brand listing creation → save to DB + encrypt + store keys
+- [ ] Listing pause / close + auto-deny pending shops transaction
+
+### Day 5 — Delivery, revoke + emails
+- [ ] Creator submits delivery link → shop moves to DELIVERED
+- [ ] Brand confirms → COMPLETED
+- [ ] Brand revokes → REVOKED, key burned
+- [ ] Auto-revoke cron job (Vercel cron, hourly) — past-deadline APPROVED shops
+- [ ] All 9 Resend email triggers
+
+---
+
+### 🚀 PHASE 3 — Polish + Ship (Days 6–7)
+
+### Day 6 — Empty states + polish
 - [ ] Key top-up on live listing
-- [ ] /explore — browse active listings (ListingCard grid)
-- [ ] /software/[slug] — listing detail page (read-only)
+- [ ] Empty states on /explore, /shops, /campaigns/submissions
+- [ ] Loading skeletons on data-fetching pages
 
-### Day 3 — The apply flow
-- [ ] Apply form — deliverable type + pitch, submitted to DB
-- [ ] Duplicate application guard — disabled button + status shown
-- [ ] /shops — creator shop history, status badges, deadline timer
-- [ ] Public creator profile /profile/[username]
-
-### Day 4 — Brand side
-- [ ] /applications — inbox with all pending apps, creator profile links
-- [ ] Approve → consume key (transaction), set deadline, send key to creator
-- [ ] Deny → mark DENIED, notify creator
-- [ ] Access key encryption at rest (AES-256) + decrypt on reveal (KeyReveal component)
-
-### Day 5 — Delivery + revoke
-- [ ] Creator submits delivery link (DeliveryForm)
-- [ ] Brand confirms → shop COMPLETED, email creator
-- [ ] Brand revokes → key burned, shop REVOKED
-- [ ] Auto-revoke cron job (Vercel cron, runs hourly) — checks past-deadline APPROVED shops
-- [ ] Creator unblocked immediately after auto-revoke
-
-### Day 6 — Emails + Dashboard
-- [ ] All 9 Resend email triggers (React Email templates)
-- [ ] /dashboard — role-aware, CreatorDashboard + BrandDashboard
-- [ ] Role switcher in Navbar for BOTH users
-- [ ] Brand: manage listings (pause / close / top-up keys)
-
-### Day 7 — Polish + Ship
-- [ ] Empty states on /explore, /shops, /applications
-- [ ] Loading states + error boundaries
+### Day 7 — Ship
+- [ ] Error boundaries
 - [ ] End-to-end test — full shop flow as creator and brand
 - [ ] Seed 2–3 real software listings
 - [ ] Deploy to Vercel, smoke test in production
 
 ---
 
-## What's cut from phase 1
+## What's cut from MVP
+- Dashboard (CreatorDashboard + BrandDashboard) — cut entirely
+- Deadline timer on ShopCard — not needed on list view
+
+## What's cut from phase 1 (original)
 - Negotiation / counter-offers
 - API post verification
 - Reviews and ratings
