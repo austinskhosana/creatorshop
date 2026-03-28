@@ -4,7 +4,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { UserButton, useUser } from "@clerk/nextjs";
+import { useClerk, useUser } from "@clerk/nextjs";
 
 // ── Icon components ───────────────────────────────────────────────────────────
 // Each one is a small SVG wrapped in a function so we can reuse it cleanly.
@@ -46,7 +46,7 @@ function CampaignsIcon() {
 function InfluencersIcon() {
   return (
     <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-      <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
+      <path d="M4.5 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM14.25 8.625a3.375 3.375 0 1 1 6.75 0 3.375 3.375 0 0 1-6.75 0ZM1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM17.25 19.128l-.001.144a2.25 2.25 0 0 1-.233.96 10.088 10.088 0 0 0 5.06-1.01.75.75 0 0 0 .42-.643 4.875 4.875 0 0 0-6.957-4.611 8.586 8.586 0 0 1 1.71 5.157v.003Z" />
     </svg>
   );
 }
@@ -55,6 +55,14 @@ function ProfileIcon() {
   return (
     <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
       <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
+    </svg>
+  );
+}
+
+function BrandProfileIcon() {
+  return (
+    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+      <path fillRule="evenodd" d="M3 2.25a.75.75 0 0 0 0 1.5v16.5h-.75a.75.75 0 0 0 0 1.5H15v-18a.75.75 0 0 0 0-1.5H3ZM6.75 19.5v-2.25a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-.75.75h-3a.75.75 0 0 1-.75-.75ZM6 6.75A.75.75 0 0 1 6.75 6h.75a.75.75 0 0 1 0 1.5h-.75A.75.75 0 0 1 6 6.75ZM6.75 9a.75.75 0 0 0 0 1.5h.75a.75.75 0 0 0 0-1.5h-.75ZM6 12.75a.75.75 0 0 1 .75-.75h.75a.75.75 0 0 1 0 1.5h-.75a.75.75 0 0 1-.75-.75ZM10.5 6a.75.75 0 0 0 0 1.5h.75a.75.75 0 0 0 0-1.5h-.75Zm-.75 3.75A.75.75 0 0 1 10.5 9h.75a.75.75 0 0 1 0 1.5h-.75a.75.75 0 0 1-.75-.75ZM10.5 12a.75.75 0 0 0 0 1.5h.75a.75.75 0 0 0 0-1.5h-.75ZM16.5 6.75v15h5.25a.75.75 0 0 0 0-1.5H21v-12a.75.75 0 0 0 0-1.5h-4.5Zm1.5 4.5a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 0 1.5H18.75a.75.75 0 0 1-.75-.75Zm.75 2.25a.75.75 0 0 0 0 1.5h.008a.75.75 0 0 0 0-1.5H18.75Z" clipRule="evenodd" />
     </svg>
   );
 }
@@ -76,50 +84,62 @@ function SignOutIcon() {
 }
 
 // ── Nav item type ─────────────────────────────────────────────────────────────
-// This describes the shape of each item in our nav list.
-// TypeScript uses this to catch mistakes — e.g. if you forget to add an icon.
 type NavItem = {
   id: string;
   label: string;
   href: string;
-  icon: React.ReactNode; // ReactNode means "anything React can render" — JSX, text, null, etc.
+  icon: React.ReactNode;
+  roles: ("CREATOR" | "BRAND" | "BOTH")[];
 };
 
-const navItems: NavItem[] = [
-  { id: "shop",        label: "Shop",        href: "/explore",     icon: <ShopIcon /> },
-  { id: "shops",       label: "My Shops",    href: "/shops",       icon: <ShopsIcon /> },
-  { id: "profile",     label: "Profile",     href: "/profile",     icon: <ProfileIcon /> },
-  { id: "campaigns",   label: "Campaigns",   href: "/campaigns",   icon: <CampaignsIcon /> },
-  { id: "influencers", label: "Influencers", href: "/influencers", icon: <InfluencersIcon /> },
-  { id: "admin",       label: "Admin",       href: "/admin",       icon: <AdminIcon /> },
-];
 
 // ── User profile ──────────────────────────────────────────────────────────────
 function UserProfile() {
   const { user } = useUser();
+  const { signOut } = useClerk();
+
+  const initials = [user?.firstName, user?.lastName]
+    .filter(Boolean)
+    .map((n) => n![0].toUpperCase())
+    .join("");
+
+  const displayName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || user?.emailAddresses[0]?.emailAddress || "";
+
   return (
-    <div className="flex items-center gap-3 px-4 py-3">
-      <UserButton
-        afterSignOutUrl="/"
-        appearance={{
-          elements: {
-            avatarBox: "w-8 h-8 ring-2 ring-[#A3FF38]",
-            userButtonTrigger: "focus:shadow-none",
-          },
-        }}
-      />
-      <span className="text-[15px] font-medium text-gray-700 truncate">
-        {user?.firstName} {user?.lastName}
-      </span>
+    <div className="flex items-center justify-between gap-2 px-3 py-3 rounded-xl hover:bg-black/[0.03] transition-colors duration-[160ms]">
+      <div className="flex items-center gap-2.5 min-w-0">
+        <div className="w-8 h-8 rounded-full bg-[#A3FF38] flex items-center justify-center flex-shrink-0 text-[12px] font-bold text-gray-900">
+          {initials || "?"}
+        </div>
+        <span className="text-[14px] font-medium text-gray-700 truncate">{displayName}</span>
+      </div>
+      <button
+        onClick={() => signOut({ redirectUrl: "/sign-in" })}
+        title="Sign out"
+        className="flex-shrink-0 text-gray-400 hover:text-gray-700 transition-colors duration-[160ms]"
+      >
+        <SignOutIcon />
+      </button>
     </div>
   );
 }
 
 // ── Sidebar component ─────────────────────────────────────────────────────────
 export default function Sidebar() {
-  // usePathname returns the current URL path (e.g. "/admin").
-  // We use it to highlight whichever nav item matches the current page.
   const pathname = usePathname();
+  const { user } = useUser();
+  const role = (user?.publicMetadata?.role as "CREATOR" | "BRAND" | "BOTH") ?? "CREATOR";
+
+  const navItems: NavItem[] = [
+    { id: "shop",          label: "Shop",       href: "/explore",       icon: <ShopIcon />,          roles: ["CREATOR", "BOTH"] },
+    { id: "shops",         label: "My Shops",   href: "/shops",         icon: <ShopsIcon />,         roles: ["CREATOR", "BOTH"] },
+    { id: "profile",       label: "Profile",    href: "/profile",       icon: <ProfileIcon />,       roles: ["CREATOR", "BOTH"] },
+    { id: "brand-profile", label: "Profile",    href: "/brand-profile", icon: <BrandProfileIcon />,  roles: ["BRAND"]           },
+    { id: "campaigns",     label: "Campaigns",  href: "/campaigns",     icon: <CampaignsIcon />,     roles: ["BRAND", "BOTH"]   },
+    { id: "influencers",   label: "Creators",   href: "/influencers",   icon: <InfluencersIcon />,   roles: ["BRAND", "BOTH"]   },
+  ];
+
+  const visibleItems = navItems.filter((item) => item.roles.includes(role));
 
   return (
     // The sidebar is a tall flex column with a light gray background.
@@ -169,7 +189,7 @@ export default function Sidebar() {
       {/* ── Nav items ────────────────────────────────────────────────────── */}
       {/* flex-1 makes this section grow to fill available space, pushing Sign Out to the bottom */}
       <ul className="flex flex-col gap-1 flex-1">
-        {navItems.map((item, index) => {
+        {visibleItems.map((item, index) => {
           // Match "/" exactly so the Home link doesn't stay active on every page.
           const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
 

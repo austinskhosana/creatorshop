@@ -15,10 +15,13 @@ type Shop = {
   months: number;
   postsRequired: number;
   status: ShopStatus;
+  deadline?: Date;
 };
 
+const now = new Date();
+
 const MOCK_SHOPS: Shop[] = [
-  { id: "1", slug: "notion-plus",        name: "Notion",    logoUrl: null, planName: "Plus",         months: 3, postsRequired: 1, status: "APPROVED" },
+  { id: "1", slug: "notion-plus",        name: "Notion",    logoUrl: null, planName: "Plus",         months: 3, postsRequired: 1, status: "APPROVED",  deadline: new Date(now.getTime() + 9 * 24 * 60 * 60 * 1000) },
   { id: "2", slug: "figma-pro",          name: "Figma",     logoUrl: null, planName: "Professional", months: 1, postsRequired: 2, status: "PENDING" },
   { id: "3", slug: "capcut-pro",         name: "CapCut",    logoUrl: null, planName: "Pro",          months: 2, postsRequired: 1, status: "DELIVERED" },
   { id: "4", slug: "mailchimp-standard", name: "Mailchimp", logoUrl: null, planName: "Standard",     months: 3, postsRequired: 3, status: "COMPLETED" },
@@ -36,6 +39,7 @@ const STATUS_LABEL: Record<ShopStatus, string> = {
   COMPLETED: "Completed",
   REVOKED:   "Revoked",
 };
+
 
 function ShopCard({ shop }: { shop: Shop }) {
   return (
@@ -62,14 +66,15 @@ function ShopCard({ shop }: { shop: Shop }) {
         <p className="text-sm text-gray-400 leading-snug">
           Get {shop.months} {shop.months === 1 ? "month" : "months"} of {shop.name} {shop.planName}
         </p>
+
       </div>
 
       {/* ── Button ── */}
       <Link
-        href={shop.status === "APPROVED" ? `/access/${shop.id}` : `/software/${shop.slug}`}
+        href={`/shops/${shop.id}`}
         className="w-full bg-neutral-900 text-white text-sm font-semibold text-center py-3 rounded-xl hover:opacity-90 transition-opacity"
       >
-        {shop.status === "APPROVED" ? "Get Access" : "View Brief"}
+        {shop.status === "APPROVED" ? "View Shop" : "View Shop"}
       </Link>
 
     </div>

@@ -33,7 +33,7 @@ export default function OnboardingPage() {
       // onboardingComplete: true on the very next request.
       await session?.reload();
 
-      router.push(selected === "CREATOR" ? "/explore" : "/dashboard");
+      router.push(selected === "CREATOR" ? "/profile" : "/brand-profile/setup");
     } catch {
       setError("Something went wrong — please try again.");
       setLoading(false);

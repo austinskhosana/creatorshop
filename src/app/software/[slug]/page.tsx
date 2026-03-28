@@ -136,6 +136,19 @@ const LISTINGS: Record<string, Listing> = {
   },
 };
 
+// Mock: slugs the current creator has already applied to
+const EXISTING_APPLICATIONS: Record<string, { shopId: string; status: "PENDING" | "APPROVED" | "DELIVERED" | "COMPLETED" | "REVOKED" }> = {
+  "notion-plus": { shopId: "1", status: "APPROVED" },
+};
+
+const STATUS_COPY: Record<string, string> = {
+  PENDING:   "Application pending",
+  APPROVED:  "Already approved",
+  DELIVERED: "Delivery submitted",
+  COMPLETED: "Shop completed",
+  REVOKED:   "Shop revoked",
+};
+
 function deliverablesSummary(deliverables: Deliverable[]) {
   return deliverables.map((d) => `${d.quantity} ${d.type}`).join(" · ");
 }
@@ -199,6 +212,7 @@ export default function SoftwareListingPage({
 }) {
   const { slug } = use(params);
   const listing = LISTINGS[slug] ?? LISTINGS["notion-plus"];
+  const existingApp = EXISTING_APPLICATIONS[slug] ?? null;
   const [state, setState] = useState<"idle" | "loading" | "applied" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -258,7 +272,19 @@ export default function SoftwareListingPage({
         </p>
 
         {/* Apply button */}
-        {state === "applied" ? (
+        {existingApp ? (
+          <div className="flex flex-col gap-2">
+            <div className="w-full py-4 rounded-2xl bg-gray-100 text-gray-400 text-[16px] font-medium text-center cursor-not-allowed select-none">
+              {STATUS_COPY[existingApp.status]}
+            </div>
+            <Link
+              href={`/shops/${existingApp.shopId}`}
+              className="text-[13px] text-gray-400 hover:text-gray-700 transition-colors duration-[120ms] text-center"
+            >
+              View your shop →
+            </Link>
+          </div>
+        ) : state === "applied" ? (
           <div className="w-full py-4 rounded-2xl bg-gray-100 text-gray-500 text-[16px] font-medium text-center">
             Application sent — we&apos;ll be in touch.
           </div>
@@ -269,7 +295,7 @@ export default function SoftwareListingPage({
               disabled={state === "loading"}
               className="w-full py-4 rounded-2xl bg-[#A3FF38] text-gray-900 text-[16px] font-semibold hover:brightness-95 active:scale-[0.98] transition-[filter,transform] duration-[140ms] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {state === "loading" ? "Applying…" : "Apply"}
+              {state === "loading" ? "Applying…" : "Apply to Purchase"}
             </button>
             {state === "error" && (
               <p className="text-[13px] text-red-500 text-center -mt-2">{errorMsg}</p>
