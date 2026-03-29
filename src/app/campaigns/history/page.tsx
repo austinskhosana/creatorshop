@@ -173,12 +173,12 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
 
         {/* Stats row */}
         <div className="flex gap-3">
-          <div className="flex-1 rounded-2xl bg-gray-50 px-4 py-3 flex flex-col gap-0.5">
+          <div className="flex-1 rounded-2xl bg-white border border-gray-200 px-4 py-3 flex flex-col gap-0.5">
             <p className="text-[18px] font-bold text-neutral-900 leading-none">{campaign.filled}<span className="text-[13px] font-medium text-gray-300"> / {campaign.totalSlots}</span></p>
             <p className="text-[12px] text-gray-400">Slots filled</p>
             <p className="text-[11px] text-gray-300">{fillRate}% fill rate</p>
           </div>
-          <div className="flex-1 rounded-2xl bg-gray-50 px-4 py-3 flex flex-col gap-0.5">
+          <div className="flex-1 rounded-2xl bg-white border border-gray-200 px-4 py-3 flex flex-col gap-0.5">
             <p className="text-[18px] font-bold text-neutral-900 leading-none">{campaign.delivered}</p>
             <p className="text-[12px] text-gray-400">Posts delivered</p>
             <p className="text-[11px] text-gray-300">{campaign.filled > 0 ? `${deliveryRate}% delivery rate` : "—"}</p>
@@ -193,7 +193,7 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
 
 function StatTile({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
   return (
-    <div className="flex flex-col gap-1 flex-1 rounded-2xl bg-gray-50 px-5 py-4">
+    <div className="flex flex-col gap-1 flex-1 rounded-2xl bg-white border border-gray-200 px-5 py-4">
       <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">{label}</p>
       <p className="text-[28px] font-bold text-neutral-900 leading-none">{value}</p>
       {sub && <p className="text-[12px] text-gray-400 mt-0.5">{sub}</p>}

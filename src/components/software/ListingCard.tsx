@@ -25,7 +25,7 @@ export default function ListingCard({
     <div className="card-shine flex flex-col rounded-3xl border border-gray-200 bg-white p-3 gap-3 h-full">
 
       {/* ── Logo area — inset rounded rectangle ── */}
-      <div className="flex items-center justify-center h-36 bg-gray-100 rounded-2xl">
+      <div className="flex items-center justify-center h-36 rounded-2xl border border-[#EFEFEF]" style={{ background: "radial-gradient(ellipse at 0% 0%, rgba(163,255,56,0.32) 0%, #ffffff 65%)" }}>
         {logoUrl ? (
           <img
             src={logoUrl}

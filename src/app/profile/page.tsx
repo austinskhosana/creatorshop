@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
@@ -78,8 +77,17 @@ type Profile = {
 };
 
 const INITIAL: Profile = {
-  displayName: "", bio: "", location: "", niches: [], audienceSize: "",
-  services: [], instagramUrl: "", tiktokUrl: "", youtubeUrl: "", twitterUrl: "", linkedinUrl: "",
+  displayName: "Aino Johansson",
+  bio: "Fashion enthusiast and adventure lover sharing my unique style and vibrant experiences. From chic streetwear to stunning travel spots, I mix everyday moments with high-fashion looks to inspire you to live boldly and authentically.",
+  location: "Los Angeles, California",
+  niches: ["Fashion", "Travel", "Lifestyle"],
+  audienceSize: "10K–50K",
+  services: ["Instagram Reels", "Stories", "YouTube Reviews", "Blog Posts"],
+  instagramUrl: "https://instagram.com/ainojohansson",
+  tiktokUrl: "https://tiktok.com/@ainojohansson",
+  youtubeUrl: "",
+  twitterUrl: "",
+  linkedinUrl: "",
 };
 
 // ── Primitives ─────────────────────────────────────────────────────────────────
@@ -98,17 +106,7 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
   );
 }
 
-function SectionCard({
-  icon,
-  title,
-  description,
-  children,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  children: React.ReactNode;
-}) {
+function SectionCard({ icon, title, description, children }: { icon: React.ReactNode; title: string; description: string; children: React.ReactNode }) {
   return (
     <div className="rounded-3xl border border-gray-200 bg-white overflow-hidden">
       <div className="flex items-center gap-4 px-6 pt-6 pb-6 bg-gradient-to-b from-[#A3FF38]/40 to-white">
@@ -120,9 +118,7 @@ function SectionCard({
           <p className="text-[13px] text-gray-400 leading-snug mt-0.5">{description}</p>
         </div>
       </div>
-      <div className="px-6 pb-6 flex flex-col gap-5">
-        {children}
-      </div>
+      <div className="px-6 pb-6 flex flex-col gap-5">{children}</div>
     </div>
   );
 }
@@ -134,9 +130,7 @@ function Chip({ label, selected, onClick }: { label: string; selected: boolean; 
       onClick={onClick}
       className={[
         "px-4 py-2 rounded-xl border text-[13px] font-medium transition-all duration-[120ms] active:scale-[0.96]",
-        selected
-          ? "bg-neutral-900 border-neutral-900 text-white"
-          : "border-gray-200 text-gray-500 hover:border-gray-300 hover:text-gray-700",
+        selected ? "bg-neutral-900 border-neutral-900 text-white" : "border-gray-200 text-gray-500 hover:border-gray-300 hover:text-gray-700",
       ].join(" ")}
     >
       {label}
@@ -151,9 +145,7 @@ function NicheChip({ label, selected, onClick }: { label: string; selected: bool
       onClick={onClick}
       className={[
         "px-4 py-2 rounded-xl border text-[13px] font-medium transition-all duration-[120ms] active:scale-[0.96]",
-        selected
-          ? "bg-[#EDFFD0] border-[#EDFFD0] text-[#3A7A00]"
-          : "border-gray-200 text-gray-500 hover:border-gray-300 hover:text-gray-700",
+        selected ? "bg-[#EDFFD0] border-[#EDFFD0] text-[#3A7A00]" : "border-gray-200 text-gray-500 hover:border-gray-300 hover:text-gray-700",
       ].join(" ")}
     >
       {label}
@@ -161,10 +153,107 @@ function NicheChip({ label, selected, onClick }: { label: string; selected: bool
   );
 }
 
+// ── Profile card (read view) ───────────────────────────────────────────────────
+
+function ProfileCard({ profile, onEdit }: { profile: Profile; onEdit: () => void }) {
+  const socialLinks = SOCIAL_PLATFORMS.filter((p) => profile[p.key as SocialKey]);
+
+  return (
+    <div className="rounded-3xl border border-gray-200 bg-white overflow-hidden">
+      <div className="bg-gradient-to-b from-[#A3FF38]/40 to-white px-8 pt-8 pb-6">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-2xl bg-[#A3FF38]/30 border border-[#A3FF38]/40 flex items-center justify-center text-[24px] font-bold text-[#2A6000] flex-shrink-0">
+              {profile.displayName ? profile.displayName[0].toUpperCase() : "?"}
+            </div>
+            <div>
+              <h1 className="text-[20px] font-bold text-neutral-900 leading-tight">
+                {profile.displayName || <span className="text-gray-300">Your name</span>}
+              </h1>
+              {profile.location && (
+                <div className="flex items-center gap-1 mt-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-gray-400">
+                    <path fillRule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 0 0 .281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 1 0 3 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 0 0 2.273 1.765 11.842 11.842 0 0 0 .976.544l.062.029.018.008.006.003ZM10 11.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-[12px] text-gray-400">{profile.location}</span>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {profile.audienceSize && (
+              <span className="px-3 py-1.5 rounded-full bg-[#A3FF38] border border-[#82F200] shadow-[inset_3px_3px_6px_rgba(255,255,255,0.4)] text-gray-900 text-[12px] font-semibold">
+                {profile.audienceSize} followers
+              </span>
+            )}
+            <button
+              onClick={onEdit}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white border border-gray-200 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.03)] text-[13px] font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors duration-[120ms]"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-gray-400">
+                <path d="m5.433 13.917 1.262-3.155A4 4 0 0 1 7.58 9.42l6.92-6.918a2.121 2.121 0 0 1 3 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 0 1-.65-.65Z" />
+                <path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0 0 10 3H4.75A2.75 2.75 0 0 0 2 5.75v9.5A2.75 2.75 0 0 0 4.75 18h9.5A2.75 2.75 0 0 0 17 15.25V10a.75.75 0 0 0-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5Z" />
+              </svg>
+              Edit
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-8 pb-8 flex flex-col gap-5">
+        {profile.bio && <p className="text-[14px] text-gray-500 leading-relaxed">{profile.bio}</p>}
+
+        {profile.niches.length > 0 && (
+          <div className="flex flex-col gap-2.5 pt-5 border-t border-gray-100">
+            <p className="text-[12px] font-semibold text-gray-400 uppercase tracking-wider">Niches</p>
+            <div className="flex flex-wrap gap-2">
+              {profile.niches.map((n) => (
+                <span key={n} className="px-3 py-1.5 rounded-xl bg-[#F6F6F6] text-gray-700 text-[13px] font-medium">{n}</span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {profile.services.length > 0 && (
+          <div className="flex flex-col gap-2.5 pt-5 border-t border-gray-100">
+            <p className="text-[12px] font-semibold text-gray-400 uppercase tracking-wider">What I offer</p>
+            <div className="flex flex-wrap gap-2">
+              {profile.services.map((s) => (
+                <span key={s} className="px-3 py-1.5 rounded-xl bg-[#F6F6F6] text-gray-700 text-[13px] font-medium">{s}</span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {socialLinks.length > 0 && (
+          <div className="flex flex-col gap-2.5 pt-5 border-t border-gray-100">
+            <p className="text-[12px] font-semibold text-gray-400 uppercase tracking-wider">Socials</p>
+            <div className="flex flex-wrap gap-2">
+              {socialLinks.map(({ key, label, icon }) => (
+                <a
+                  key={key}
+                  href={profile[key as SocialKey]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-gray-200 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.03)] text-[13px] font-medium text-gray-600 hover:border-gray-300 hover:text-gray-900 transition-colors duration-[120ms]"
+                >
+                  <span className="text-gray-500">{icon}</span>
+                  {label}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState<Profile>(INITIAL);
+  const [isEditing, setIsEditing] = useState(false);
   const [serviceInput, setServiceInput] = useState("");
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
@@ -210,7 +299,7 @@ export default function ProfilePage() {
         throw new Error(data.error ?? "Something went wrong");
       }
       setStatus("saved");
-      setTimeout(() => setStatus("idle"), 2000);
+      setTimeout(() => { setStatus("idle"); setIsEditing(false); }, 1000);
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : "Something went wrong — please try again.");
       setStatus("error");
@@ -218,7 +307,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="p-10 max-w-2xl mx-auto pb-24">
+    <div className="min-h-full flex flex-col justify-center p-10 max-w-2xl mx-auto pb-24">
 
       {/* ── Header ── */}
       <div className="flex items-start justify-between gap-4 mb-8">
@@ -226,210 +315,126 @@ export default function ProfilePage() {
           <h1 className="text-3xl font-bold text-neutral-900">My Profile</h1>
           <p className="text-[15px] text-gray-400">This is what brands see when they review your application.</p>
         </div>
-        <Link
-          href="/influencers/aino-johansson?from=profile"
-          className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.03)] text-[13px] font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors duration-[120ms]"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-gray-400">
-            <path d="M10 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
-            <path fillRule="evenodd" d="M.664 10.59a1.651 1.651 0 0 1 0-1.186A10.004 10.004 0 0 1 10 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0 1 10 17c-4.257 0-7.893-2.66-9.336-6.41ZM14 10a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z" clipRule="evenodd" />
-          </svg>
-          View public profile
-        </Link>
+        {isEditing && (
+          <button
+            onClick={() => { setIsEditing(false); setStatus("idle"); setErrorMsg(""); }}
+            className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.03)] text-[13px] font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors duration-[120ms]"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-gray-400">
+              <path fillRule="evenodd" d="M4.72 9.47a.75.75 0 0 0 0 1.06l4.25 4.25a.75.75 0 1 0 1.06-1.06L7.06 10.75h8.19a.75.75 0 0 0 0-1.5H7.06l2.97-2.97a.75.75 0 0 0-1.06-1.06L4.72 9.47Z" clipRule="evenodd" />
+            </svg>
+            Back to profile
+          </button>
+        )}
       </div>
 
-      <div className="flex flex-col gap-4">
+      {!isEditing ? (
+        <ProfileCard profile={profile} onEdit={() => setIsEditing(true)} />
+      ) : (
+        <div className="flex flex-col gap-4">
 
-        {/* ── About you ── */}
-        <div style={{ animationName: "card-enter", animationDuration: "0.55s", animationTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)", animationFillMode: "both", animationDelay: "0ms" }}>
-        <SectionCard
-          title="About you"
-          description="The basics brands use to identify who you are."
-          icon={
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-gray-900">
-              <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
-            </svg>
-          }
-        >
-          {/* Avatar */}
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center text-2xl font-bold text-gray-300 flex-shrink-0">
-              {profile.displayName ? profile.displayName[0].toUpperCase() : "?"}
-            </div>
-            <div className="flex flex-col gap-1">
-              <button className="px-4 py-2 rounded-xl border border-gray-200 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.03)] text-[13px] font-medium text-gray-600 hover:bg-gray-50 transition-colors duration-[120ms] w-fit">
-                Upload photo
-              </button>
-              <p className="text-[12px] text-gray-300">JPG or PNG, max 2MB</p>
-            </div>
+          <div style={{ animationName: "card-enter", animationDuration: "0.55s", animationTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)", animationFillMode: "both", animationDelay: "0ms" }}>
+            <SectionCard title="About you" description="The basics brands use to identify who you are." icon={
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-gray-900">
+                <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
+              </svg>
+            }>
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-2xl bg-[#A3FF38]/30 border border-[#A3FF38]/40 flex items-center justify-center text-[24px] font-bold text-[#2A6000] flex-shrink-0">
+                  {profile.displayName ? profile.displayName[0].toUpperCase() : "?"}
+                </div>
+                <div className="flex flex-col gap-1">
+                  <button className="px-4 py-2 rounded-xl border border-gray-200 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.03)] text-[13px] font-medium text-gray-600 hover:bg-gray-50 transition-colors duration-[120ms] w-fit">
+                    Upload photo
+                  </button>
+                  <p className="text-[12px] text-gray-300">JPG or PNG, max 2MB</p>
+                </div>
+              </div>
+              <Field label="Display name">
+                <input type="text" value={profile.displayName} onChange={(e) => set("displayName", e.target.value)} placeholder="Your name or handle" className={inputClass} />
+              </Field>
+              <Field label="Bio">
+                <textarea value={profile.bio} onChange={(e) => set("bio", e.target.value)} placeholder="Tell brands a bit about yourself and the content you make" rows={3} className={inputClass + " resize-none"} />
+              </Field>
+              <Field label="Location" hint="optional">
+                <input type="text" value={profile.location} onChange={(e) => set("location", e.target.value)} placeholder="City, Country" className={inputClass} />
+              </Field>
+            </SectionCard>
           </div>
 
-          <Field label="Display name">
-            <input
-              type="text"
-              value={profile.displayName}
-              onChange={(e) => set("displayName", e.target.value)}
-              placeholder="Your name or handle"
-              className={inputClass}
-            />
-          </Field>
+          <div style={{ animationName: "card-enter", animationDuration: "0.55s", animationTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)", animationFillMode: "both", animationDelay: "90ms" }}>
+            <SectionCard title="What you offer" description="List the types of content you create so brands know what to expect." icon={
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-gray-900">
+                <path fillRule="evenodd" d="M9 4.5a.75.75 0 0 1 .721.544l.813 2.846a3.75 3.75 0 0 0 2.576 2.576l2.846.813a.75.75 0 0 1 0 1.442l-2.846.813a3.75 3.75 0 0 0-2.576 2.576l-.813 2.846a.75.75 0 0 1-1.442 0l-.813-2.846a3.75 3.75 0 0 0-2.576-2.576l-2.846-.813a.75.75 0 0 1 0-1.442l2.846-.813A3.75 3.75 0 0 0 7.466 7.89l.813-2.846A.75.75 0 0 1 9 4.5ZM18 1.5a.75.75 0 0 1 .728.568l.258 1.036a2.63 2.63 0 0 0 1.91 1.91l1.036.258a.75.75 0 0 1 0 1.456l-1.036.258a2.63 2.63 0 0 0-1.91 1.91l-.258 1.036a.75.75 0 0 1-1.456 0l-.258-1.036a2.63 2.63 0 0 0-1.91-1.91l-1.036-.258a.75.75 0 0 1 0-1.456l1.036-.258a2.63 2.63 0 0 0 1.91-1.91l.258-1.036A.75.75 0 0 1 18 1.5Z" clipRule="evenodd" />
+              </svg>
+            }>
+              <Field label="Services" hint="press Enter to add">
+                <div className="flex gap-2">
+                  <input type="text" value={serviceInput} onChange={(e) => setServiceInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addService())} placeholder="e.g. Instagram Reels, YouTube Reviews…" className={inputClass} />
+                  <button type="button" onClick={addService} className="px-4 py-3 rounded-xl bg-gray-900 text-white text-[13px] font-medium hover:opacity-90 transition-opacity flex-shrink-0">Add</button>
+                </div>
+                {profile.services.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {profile.services.map((s) => (
+                      <span key={s} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#EDFFD0] text-[#3A7A00] text-[13px] font-medium">
+                        {s}
+                        <button type="button" onClick={() => removeService(s)} className="text-[#3A7A00]/50 hover:text-[#3A7A00] leading-none transition-colors">×</button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </Field>
+            </SectionCard>
+          </div>
 
-          <Field label="Bio">
-            <textarea
-              value={profile.bio}
-              onChange={(e) => set("bio", e.target.value)}
-              placeholder="Tell brands a bit about yourself and the content you make"
-              rows={3}
-              className={inputClass + " resize-none"}
-            />
-          </Field>
+          <div style={{ animationName: "card-enter", animationDuration: "0.55s", animationTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)", animationFillMode: "both", animationDelay: "180ms" }}>
+            <SectionCard title="Niches & audience" description="Help brands find you when they're looking for the right fit." icon={
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-gray-900">
+                <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clipRule="evenodd" />
+              </svg>
+            }>
+              <Field label="Your niches" hint="select all that apply">
+                <div className="flex flex-wrap gap-2">
+                  {NICHES.map((n) => <NicheChip key={n} label={n} selected={profile.niches.includes(n)} onClick={() => toggleNiche(n)} />)}
+                </div>
+              </Field>
+              <Field label="Audience size">
+                <div className="flex flex-wrap gap-2">
+                  {AUDIENCE_SIZES.map((size) => <Chip key={size} label={size} selected={profile.audienceSize === size} onClick={() => set("audienceSize", profile.audienceSize === size ? "" : size)} />)}
+                </div>
+              </Field>
+            </SectionCard>
+          </div>
 
-          <Field label="Location" hint="optional">
-            <input
-              type="text"
-              value={profile.location}
-              onChange={(e) => set("location", e.target.value)}
-              placeholder="City, Country"
-              className={inputClass}
-            />
-          </Field>
-        </SectionCard>
-        </div>
-
-        {/* ── What you offer ── */}
-        <div style={{ animationName: "card-enter", animationDuration: "0.55s", animationTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)", animationFillMode: "both", animationDelay: "90ms" }}>
-        <SectionCard
-          title="What you offer"
-          description="List the types of content you create so brands know what to expect."
-          icon={
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-gray-900">
-              <path fillRule="evenodd" d="M9 4.5a.75.75 0 0 1 .721.544l.813 2.846a3.75 3.75 0 0 0 2.576 2.576l2.846.813a.75.75 0 0 1 0 1.442l-2.846.813a3.75 3.75 0 0 0-2.576 2.576l-.813 2.846a.75.75 0 0 1-1.442 0l-.813-2.846a3.75 3.75 0 0 0-2.576-2.576l-2.846-.813a.75.75 0 0 1 0-1.442l2.846-.813A3.75 3.75 0 0 0 7.466 7.89l.813-2.846A.75.75 0 0 1 9 4.5ZM18 1.5a.75.75 0 0 1 .728.568l.258 1.036a2.63 2.63 0 0 0 1.91 1.91l1.036.258a.75.75 0 0 1 0 1.456l-1.036.258a2.63 2.63 0 0 0-1.91 1.91l-.258 1.036a.75.75 0 0 1-1.456 0l-.258-1.036a2.63 2.63 0 0 0-1.91-1.91l-1.036-.258a.75.75 0 0 1 0-1.456l1.036-.258a2.63 2.63 0 0 0 1.91-1.91l.258-1.036A.75.75 0 0 1 18 1.5Z" clipRule="evenodd" />
-            </svg>
-          }
-        >
-          <Field label="Services" hint="press Enter to add">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={serviceInput}
-                onChange={(e) => setServiceInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addService())}
-                placeholder="e.g. Instagram Reels, YouTube Reviews…"
-                className={inputClass}
-              />
-              <button
-                type="button"
-                onClick={addService}
-                className="px-4 py-3 rounded-xl bg-gray-900 text-white text-[13px] font-medium hover:opacity-90 transition-opacity flex-shrink-0"
-              >
-                Add
-              </button>
-            </div>
-            {profile.services.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-1">
-                {profile.services.map((s) => (
-                  <span
-                    key={s}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#EDFFD0] text-[#3A7A00] text-[13px] font-medium"
-                  >
-                    {s}
-                    <button
-                      type="button"
-                      onClick={() => removeService(s)}
-                      className="text-[#3A7A00]/50 hover:text-[#3A7A00] leading-none transition-colors"
-                    >
-                      ×
-                    </button>
-                  </span>
-                ))}
-              </div>
-            )}
-          </Field>
-        </SectionCard>
-        </div>
-
-        {/* ── Niches & audience ── */}
-        <div style={{ animationName: "card-enter", animationDuration: "0.55s", animationTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)", animationFillMode: "both", animationDelay: "180ms" }}>
-        <SectionCard
-          title="Niches & audience"
-          description="Help brands find you when they're looking for the right fit."
-          icon={
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-gray-900">
-              <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clipRule="evenodd" />
-            </svg>
-          }
-        >
-          <Field label="Your niches" hint="select all that apply">
-            <div className="flex flex-wrap gap-2">
-              {NICHES.map((n) => (
-                <NicheChip
-                  key={n}
-                  label={n}
-                  selected={profile.niches.includes(n)}
-                  onClick={() => toggleNiche(n)}
-                />
+          <div style={{ animationName: "card-enter", animationDuration: "0.55s", animationTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)", animationFillMode: "both", animationDelay: "270ms" }}>
+            <SectionCard title="Social links" description="Connect your platforms so brands can see your presence." icon={
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-gray-900">
+                <path fillRule="evenodd" d="M15.75 4.5a3 3 0 1 1 .825 2.066l-8.421 4.679a3.002 3.002 0 0 1 0 1.51l8.421 4.679a3 3 0 1 1-.729 1.31l-8.421-4.678a3 3 0 1 1 0-4.132l8.421-4.679a3 3 0 0 1-.096-.755Z" clipRule="evenodd" />
+              </svg>
+            }>
+              {SOCIAL_PLATFORMS.map(({ key, label, placeholder, icon }) => (
+                <div key={key} className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0 text-gray-500">{icon}</div>
+                  <input type="url" value={profile[key as SocialKey]} onChange={(e) => set(key as keyof Profile, e.target.value)} placeholder={placeholder} className={inputClass} />
+                </div>
               ))}
-            </div>
-          </Field>
+            </SectionCard>
+          </div>
 
-          <Field label="Audience size">
-            <div className="flex flex-wrap gap-2">
-              {AUDIENCE_SIZES.map((size) => (
-                <Chip
-                  key={size}
-                  label={size}
-                  selected={profile.audienceSize === size}
-                  onClick={() => set("audienceSize", profile.audienceSize === size ? "" : size)}
-                />
-              ))}
-            </div>
-          </Field>
-        </SectionCard>
+          <div className="flex flex-col gap-3 pt-2" style={{ animationName: "card-enter", animationDuration: "0.55s", animationTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)", animationFillMode: "both", animationDelay: "360ms" }}>
+            <button
+              onClick={handleSave}
+              disabled={status === "saving"}
+              className="w-full py-3.5 rounded-2xl bg-[#A3FF38] border border-[#82F200] shadow-[inset_3px_3px_6px_rgba(255,255,255,0.4)] text-gray-900 text-[15px] font-semibold hover:brightness-95 active:scale-[0.98] transition-all duration-[140ms] disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {status === "saving" ? "Saving…" : status === "saved" ? "Saved!" : "Save Profile"}
+            </button>
+            {status === "error" && <p className="text-[13px] text-red-500 text-center">{errorMsg}</p>}
+          </div>
+
         </div>
+      )}
 
-        {/* ── Social links ── */}
-        <div style={{ animationName: "card-enter", animationDuration: "0.55s", animationTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)", animationFillMode: "both", animationDelay: "270ms" }}>
-        <SectionCard
-          title="Social links"
-          description="Connect your platforms so brands can see your presence."
-          icon={
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-gray-900">
-              <path fillRule="evenodd" d="M15.75 4.5a3 3 0 1 1 .825 2.066l-8.421 4.679a3.002 3.002 0 0 1 0 1.51l8.421 4.679a3 3 0 1 1-.729 1.31l-8.421-4.678a3 3 0 1 1 0-4.132l8.421-4.679a3 3 0 0 1-.096-.755Z" clipRule="evenodd" />
-            </svg>
-          }
-        >
-          {SOCIAL_PLATFORMS.map(({ key, label, placeholder, icon }) => (
-            <div key={key} className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0 text-gray-500">
-                {icon}
-              </div>
-              <input
-                type="url"
-                value={profile[key as SocialKey]}
-                onChange={(e) => set(key as keyof Profile, e.target.value)}
-                placeholder={placeholder}
-                className={inputClass}
-              />
-            </div>
-          ))}
-        </SectionCard>
-        </div>
-
-        {/* ── Save ── */}
-        <div className="flex flex-col gap-3 pt-2" style={{ animationName: "card-enter", animationDuration: "0.55s", animationTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)", animationFillMode: "both", animationDelay: "360ms" }}>
-          <button
-            onClick={handleSave}
-            disabled={status === "saving"}
-            className="w-full py-3.5 rounded-2xl bg-[#A3FF38] border border-[#82F200] shadow-[inset_3px_3px_6px_rgba(255,255,255,0.4)] text-gray-900 text-[15px] font-semibold hover:brightness-95 active:scale-[0.98] transition-all duration-[140ms] disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {status === "saving" ? "Saving…" : status === "saved" ? "Saved!" : "Save Profile"}
-          </button>
-          {status === "error" && (
-            <p className="text-[13px] text-red-500 text-center">{errorMsg}</p>
-          )}
-        </div>
-
-      </div>
     </div>
   );
 }

@@ -181,9 +181,9 @@ function DeadlineTimer({ deadline }: { deadline: Date }) {
     : "green";
 
   const colours = {
-    green: { bg: "bg-gray-50",  text: "text-gray-600", border: "border-gray-200", dot: "bg-[#A3FF38]" },
-    amber: { bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200", dot: "bg-amber-400" },
-    red:   { bg: "bg-red-50",   text: "text-red-600",   border: "border-red-200",   dot: "bg-red-400"   },
+    green: { bg: "bg-white", text: "text-gray-600", border: "border-gray-200", dot: "bg-[#A3FF38]" },
+    amber: { bg: "bg-white", text: "text-amber-700", border: "border-amber-200", dot: "bg-amber-400" },
+    red:   { bg: "bg-white", text: "text-red-600",   border: "border-red-200",   dot: "bg-red-400"   },
   }[urgency];
 
   if (expired) {

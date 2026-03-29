@@ -21,17 +21,19 @@ export default function InfluencerCard({
     <div className="card-shine flex flex-col rounded-3xl border border-gray-200 bg-white p-3 gap-3 h-full">
 
       {/* ── Cover image ── */}
-      <div
-        className="w-full h-44 rounded-2xl flex-shrink-0 overflow-hidden"
-        style={{ backgroundColor: coverColor }}
-      >
-        {avatarUrl && (
-          <img
-            src={avatarUrl}
-            alt={name}
-            className="w-full h-full object-cover"
-          />
-        )}
+      <div className="flex justify-center pt-2">
+        <div
+          className="relative h-52 w-52 shrink-0 overflow-hidden rounded-[20px] ring-2 ring-black/10"
+          style={{ backgroundColor: coverColor }}
+        >
+          {avatarUrl && (
+            <img
+              src={avatarUrl}
+              alt={name}
+              className="w-full h-full object-cover"
+            />
+          )}
+        </div>
       </div>
 
       {/* ── Niche tags ── */}
