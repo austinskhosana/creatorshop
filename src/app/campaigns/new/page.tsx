@@ -217,14 +217,26 @@ export default function NewCampaignPage() {
   }
 
   async function handleSave() {
-    if (!campaign.name.trim()) { setErrorMsg("Campaign name is required."); setStatus("error"); return; }
-    if (!campaign.brief.trim()) { setErrorMsg("Creator brief is required."); setStatus("error"); return; }
+    if (!campaign.productName.trim()) { setErrorMsg("Product name is required."); setStatus("error"); return; }
+    if (!campaign.planName.trim())    { setErrorMsg("Plan name is required."); setStatus("error"); return; }
+    if (!campaign.brief.trim())       { setErrorMsg("Creator brief is required."); setStatus("error"); return; }
+    if (!campaign.accessKeys.length)  { setErrorMsg("Add at least one access key."); setStatus("error"); return; }
     setStatus("saving");
     setErrorMsg("");
-    // TODO: POST /api/campaigns
-    await new Promise((r) => setTimeout(r, 800));
-    setStatus("saved");
-    setTimeout(() => router.push("/campaigns/list"), 800);
+    try {
+      const res = await fetch("/api/listings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(campaign),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Something went wrong");
+      setStatus("saved");
+      setTimeout(() => router.push("/campaigns/list"), 800);
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : "Something went wrong");
+      setStatus("error");
+    }
   }
 
   return (

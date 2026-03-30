@@ -6,8 +6,10 @@ export async function POST(req: Request) {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
 
-  const { slug } = await req.json();
+  const { slug, pitch, deliverable } = await req.json();
   if (!slug) return NextResponse.json({ error: "Missing listing slug" }, { status: 400 });
+  if (!pitch?.trim()) return NextResponse.json({ error: "Pitch is required" }, { status: 400 });
+  if (!deliverable) return NextResponse.json({ error: "Deliverable type is required" }, { status: 400 });
 
   // Get the creator's DB user
   const user = await prisma.user.findUnique({ where: { clerkId: userId } });
@@ -34,6 +36,8 @@ export async function POST(req: Request) {
       brandId: listing.brandProfile.userId,
       softwareListingId: listing.id,
       status: "PENDING",
+      pitch: pitch.trim(),
+      deliverable,
     },
   });
 

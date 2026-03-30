@@ -1,7 +1,3 @@
-// Creatorshop — Prisma Schema
-// Phase 1: Software subscription barter marketplace
-// Stack: Next.js + Supabase + Clerk + Prisma
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,9 +6,123 @@ datasource db {
   provider = "postgresql"
 }
 
-// ─────────────────────────────────────────────
-// ENUMS
-// ─────────────────────────────────────────────
+model User {
+  id             String          @id @default(cuid())
+  clerkId        String          @unique
+  email          String          @unique
+  role           Role            @default(CREATOR)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  brandProfile   BrandProfile?
+  creatorProfile CreatorProfile?
+  shopsAsBrand   Shop[]          @relation("BrandShops")
+  shopsAsCreator Shop[]          @relation("CreatorShops")
+
+  @@map("users")
+}
+
+model CreatorProfile {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  displayName  String
+  bio          String?
+  avatarUrl    String?
+  location     String?
+  niches       String[]
+  services     String[]
+  instagramUrl String?
+  tiktokUrl    String?
+  youtubeUrl   String?
+  twitterUrl   String?
+  linkedinUrl  String?
+  websiteUrl   String?
+  audienceSize String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("creator_profiles")
+}
+
+model BrandProfile {
+  id         String            @id @default(cuid())
+  userId     String            @unique
+  brandName  String
+  bio        String?
+  logoUrl    String?
+  websiteUrl String?
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listings   SoftwareListing[]
+
+  @@map("brand_profiles")
+}
+
+model SoftwareListing {
+  id                    String            @id @default(cuid())
+  brandProfileId        String
+  slug                  String            @unique
+  name                  String
+  tagline               String?
+  description           String?
+  logoUrl               String?
+  websiteUrl            String?
+  category              String?
+  planName              String
+  planDurationMonths    Int               @default(1)
+  planValue             Float?
+  billingCycle          String?
+  brief                 String
+  preferredDeliverables DeliverableType[]
+  deliveryDays          Int               @default(14)
+  isActive              Boolean           @default(true)
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  accessKeys            AccessKey[]
+  shops                 Shop[]
+  brandProfile          BrandProfile      @relation(fields: [brandProfileId], references: [id], onDelete: Cascade)
+
+  @@map("software_listings")
+}
+
+model AccessKey {
+  id                String          @id @default(cuid())
+  softwareListingId String
+  encryptedValue    String
+  isConsumed        Boolean         @default(false)
+  consumedAt        DateTime?
+  createdAt         DateTime        @default(now())
+  softwareListing   SoftwareListing @relation(fields: [softwareListingId], references: [id], onDelete: Cascade)
+  shop              Shop?
+
+  @@map("access_keys")
+}
+
+model Shop {
+  id                String          @id @default(cuid())
+  creatorId         String
+  brandId           String
+  softwareListingId String
+  accessKeyId       String?         @unique
+  status            ShopStatus      @default(PENDING)
+  deliverable       DeliverableType
+  pitch             String
+  deadline          DateTime?
+  deliveryLink      String?
+  deliveryNote      String?
+  deliveredAt       DateTime?
+  completedAt       DateTime?
+  revokedAt         DateTime?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  accessKey         AccessKey?      @relation(fields: [accessKeyId], references: [id])
+  brand             User            @relation("BrandShops", fields: [brandId], references: [id])
+  creator           User            @relation("CreatorShops", fields: [creatorId], references: [id])
+  softwareListing   SoftwareListing @relation(fields: [softwareListingId], references: [id])
+
+  @@map("shops")
+}
 
 enum Role {
   CREATOR
@@ -21,12 +131,12 @@ enum Role {
 }
 
 enum ShopStatus {
-  PENDING     // Applied, waiting on brand
-  APPROVED    // Brand said yes, access key revealed
-  DENIED      // Brand passed
-  DELIVERED   // Creator submitted content link
-  COMPLETED   // Brand confirmed, shop is done
-  REVOKED     // Creator didn't deliver, access burned
+  PENDING
+  APPROVED
+  DENIED
+  DELIVERED
+  COMPLETED
+  REVOKED
 }
 
 enum DeliverableType {
@@ -40,181 +150,4 @@ enum DeliverableType {
   LINKEDIN_POST
   BLOG_POST
   OTHER
-}
-
-// ─────────────────────────────────────────────
-// USER
-// Clerk handles auth — we store a reference
-// to the Clerk user ID and extend it here
-// ─────────────────────────────────────────────
-
-model User {
-  id        String   @id @default(cuid())
-  clerkId   String   @unique
-  email     String   @unique
-  role      Role     @default(CREATOR)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  creatorProfile CreatorProfile?
-  brandProfile   BrandProfile?
-  shopsAsCreator Shop[]          @relation("CreatorShops")
-  shopsAsBrand   Shop[]          @relation("BrandShops")
-
-  @@map("users")
-}
-
-// ─────────────────────────────────────────────
-// CREATOR PROFILE
-// Set up during creator onboarding
-// ─────────────────────────────────────────────
-
-model CreatorProfile {
-  id     String @id @default(cuid())
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  displayName  String
-  bio          String?
-  avatarUrl    String?
-  location     String?
-  niche        String?
-  services     String[]
-
-  instagramUrl String?
-  tiktokUrl    String?
-  youtubeUrl   String?
-  twitterUrl   String?
-  linkedinUrl  String?
-  websiteUrl   String?
-
-  audienceSize String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("creator_profiles")
-}
-
-// ─────────────────────────────────────────────
-// BRAND PROFILE
-// Set up during brand onboarding
-// ─────────────────────────────────────────────
-
-model BrandProfile {
-  id     String @id @default(cuid())
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  brandName  String
-  bio        String?
-  logoUrl    String?
-  websiteUrl String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  listings SoftwareListing[]
-
-  @@map("brand_profiles")
-}
-
-// ─────────────────────────────────────────────
-// SOFTWARE LISTING
-// A software tool a brand is offering for barter
-// ─────────────────────────────────────────────
-
-model SoftwareListing {
-  id             String       @id @default(cuid())
-  brandProfileId String
-  brandProfile   BrandProfile @relation(fields: [brandProfileId], references: [id], onDelete: Cascade)
-
-  slug        String  @unique
-  name        String
-  tagline     String?
-  description String?
-  logoUrl     String?
-  websiteUrl  String?
-  category    String?
-
-  planName     String
-  planValue    Float?
-  billingCycle String?
-
-  brief                 String
-  preferredDeliverables DeliverableType[]
-  deliveryDays          Int               @default(14)
-
-  isActive Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  accessKeys AccessKey[]
-  shops      Shop[]
-
-  @@map("software_listings")
-}
-
-// ─────────────────────────────────────────────
-// ACCESS KEY
-// One key = one slot. Brand uploads a batch.
-// Consumed one-at-a-time on approval.
-// IMPORTANT: encryptedValue must never be plain text.
-// ─────────────────────────────────────────────
-
-model AccessKey {
-  id                String          @id @default(cuid())
-  softwareListingId String
-  softwareListing   SoftwareListing @relation(fields: [softwareListingId], references: [id], onDelete: Cascade)
-
-  encryptedValue String
-  isConsumed     Boolean   @default(false)
-  consumedAt     DateTime?
-
-  shop Shop?
-
-  createdAt DateTime @default(now())
-
-  @@map("access_keys")
-}
-
-// ─────────────────────────────────────────────
-// SHOP
-// The core unit — one barter exchange between
-// a creator and a software brand
-// ─────────────────────────────────────────────
-
-model Shop {
-  id String @id @default(cuid())
-
-  creatorId String
-  creator   User   @relation("CreatorShops", fields: [creatorId], references: [id])
-  brandId   String
-  brand     User   @relation("BrandShops", fields: [brandId], references: [id])
-
-  softwareListingId String
-  softwareListing   SoftwareListing @relation(fields: [softwareListingId], references: [id])
-
-  accessKeyId String?    @unique
-  accessKey   AccessKey? @relation(fields: [accessKeyId], references: [id])
-
-  status ShopStatus @default(PENDING)
-
-  deliverable DeliverableType?
-  pitch       String?
-
-  // Set on approval as approvedAt + listing.deliveryDays
-  deadline    DateTime?
-
-  deliveryLink String?
-  deliveryNote String?
-  deliveredAt  DateTime?
-  completedAt  DateTime?
-  revokedAt    DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("shops")
 }
