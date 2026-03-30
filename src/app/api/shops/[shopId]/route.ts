@@ -70,3 +70,37 @@ export async function PATCH(
 
   return NextResponse.json({ ok: true });
 }
+
+export async function POST(
+  req: Request,
+  { params }: { params: Promise<{ shopId: string }> }
+) {
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
+
+  const { shopId } = await params;
+  const { deliveryLink, deliveryNote } = await req.json();
+
+  if (!deliveryLink?.trim()) return NextResponse.json({ error: "Delivery link is required." }, { status: 400 });
+  try { new URL(deliveryLink.trim()); } catch { return NextResponse.json({ error: "Invalid URL." }, { status: 400 }); }
+
+  const user = await prisma.user.findUnique({ where: { clerkId: userId } });
+  if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+
+  const shop = await prisma.shop.findUnique({ where: { id: shopId } });
+  if (!shop) return NextResponse.json({ error: "Shop not found" }, { status: 404 });
+  if (shop.creatorId !== user.id) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (shop.status !== "APPROVED") return NextResponse.json({ error: "Shop is not approved" }, { status: 400 });
+
+  await prisma.shop.update({
+    where: { id: shopId },
+    data: {
+      status: "DELIVERED",
+      deliveryLink: deliveryLink.trim(),
+      deliveryNote: deliveryNote?.trim() || null,
+      deliveredAt: new Date(),
+    },
+  });
+
+  return NextResponse.json({ ok: true });
+}
