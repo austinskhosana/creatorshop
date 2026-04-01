@@ -12,7 +12,7 @@ export async function PATCH(
   const { shopId } = await params;
   const { action } = await req.json();
 
-  if (action !== "approve" && action !== "deny") {
+  if (!["approve", "deny", "complete", "revoke"].includes(action)) {
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   }
 
@@ -25,6 +25,21 @@ export async function PATCH(
   });
   if (!shop) return NextResponse.json({ error: "Shop not found" }, { status: 404 });
   if (shop.brandId !== user.id) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  // complete / revoke — brand reviewing a DELIVERED shop
+  if (action === "complete" || action === "revoke") {
+    if (shop.status !== "DELIVERED") {
+      return NextResponse.json({ error: "Shop is not delivered" }, { status: 400 });
+    }
+    await prisma.shop.update({
+      where: { id: shopId },
+      data:
+        action === "complete"
+          ? { status: "COMPLETED", completedAt: new Date() }
+          : { status: "REVOKED",   revokedAt:   new Date() },
+    });
+    return NextResponse.json({ ok: true });
+  }
+
   if (shop.status !== "PENDING") return NextResponse.json({ error: "Shop is not pending" }, { status: 400 });
 
   if (action === "deny") {

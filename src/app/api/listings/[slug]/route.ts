@@ -33,8 +33,25 @@ export async function PATCH(
   }
 
   const body = await req.json();
-  const { accessKeys } = body as { accessKeys: string[] };
+  const { action, accessKeys } = body as { action?: string; accessKeys?: string[] };
 
+  // ── Close listing ─────────────────────────────────────────────────────────
+  if (action === "close") {
+    await prisma.$transaction([
+      // Auto-deny all pending shops
+      prisma.shop.updateMany({
+        where: { softwareListingId: listing.id, status: "PENDING" },
+        data: { status: "DENIED" },
+      }),
+      prisma.softwareListing.update({
+        where: { id: listing.id },
+        data: { isActive: false },
+      }),
+    ]);
+    return NextResponse.json({ ok: true });
+  }
+
+  // ── Top up keys ───────────────────────────────────────────────────────────
   if (!accessKeys?.length) {
     return NextResponse.json({ error: "Provide at least one access key." }, { status: 400 });
   }
@@ -46,8 +63,6 @@ export async function PATCH(
         encryptedValue: encrypt(key),
       })),
     }),
-    // Reopen listing if it was inactive (ran out of keys) — not if brand manually closed it.
-    // We reopen unconditionally on top-up; brand can re-close from the listings page if needed.
     prisma.softwareListing.update({
       where: { id: listing.id },
       data: { isActive: true },

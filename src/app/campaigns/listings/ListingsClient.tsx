@@ -67,6 +67,7 @@ function ListingRow({ listing }: { listing: Listing }) {
   const [showTopUp, setShowTopUp] = useState(false);
   const [slotsRemaining, setSlotsRemaining] = useState(listing.slotsRemaining);
   const [isActive, setIsActive] = useState(listing.isActive);
+  const [closing, setClosing] = useState(false);
 
   const slotsFull = slotsRemaining === 0;
 
@@ -74,6 +75,24 @@ function ListingRow({ listing }: { listing: Listing }) {
     setSlotsRemaining((n) => n + added);
     setIsActive(true);
     setShowTopUp(false);
+  }
+
+  async function handleClose() {
+    if (!confirm(`Close "${listing.name}"? All pending applications will be denied and the listing will be removed from Explore.`)) return;
+    setClosing(true);
+    try {
+      const res = await fetch(`/api/listings/${listing.slug}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "close" }),
+      });
+      if (!res.ok) throw new Error();
+      setIsActive(false);
+    } catch {
+      alert("Something went wrong — please try again.");
+    } finally {
+      setClosing(false);
+    }
   }
 
   return (
@@ -108,12 +127,24 @@ function ListingRow({ listing }: { listing: Listing }) {
             {isActive ? "Active" : "Closed"}
           </span>
 
-          <button
-            onClick={() => setShowTopUp((v) => !v)}
-            className="text-[13px] font-medium px-3.5 py-1.5 rounded-xl border border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-all duration-[120ms]"
-          >
-            {showTopUp ? "Cancel" : "Top up keys"}
-          </button>
+          {isActive && (
+            <>
+              <button
+                onClick={() => setShowTopUp((v) => !v)}
+                className="text-[13px] font-medium px-3.5 py-1.5 rounded-xl border border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-all duration-[120ms]"
+              >
+                {showTopUp ? "Cancel" : "Top up keys"}
+              </button>
+
+              <button
+                onClick={handleClose}
+                disabled={closing}
+                className="text-[13px] font-medium px-3.5 py-1.5 rounded-xl border border-red-200 text-red-500 hover:bg-red-50 transition-all duration-[120ms] disabled:opacity-50"
+              >
+                {closing ? "Closing…" : "Close"}
+              </button>
+            </>
+          )}
         </div>
 
       </div>
