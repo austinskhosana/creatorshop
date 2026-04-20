@@ -92,3 +92,58 @@ body {
 .card-shine:hover::after {
   animation: card-shine 0.55s ease forwards;
 }
+
+/* ── Swipe card exit animations ─────────────────────────────────────────────── */
+/* Used as fallback for reduced-motion and as CSS anchor for JS-driven exits     */
+
+@keyframes swipe-out-right {
+  to {
+    transform: translateX(120%) rotate(20deg);
+    opacity: 0;
+  }
+}
+
+@keyframes swipe-out-left {
+  to {
+    transform: translateX(-120%) rotate(-20deg);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes swipe-out-right {
+    to { opacity: 0; }
+  }
+  @keyframes swipe-out-left {
+    to { opacity: 0; }
+  }
+}
+
+/* ── Landing page ──────────────────────────────────────────────────────────── */
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(var(--card-rotate, 0deg)); }
+  50%       { transform: translateY(-8px) rotate(var(--card-rotate, 0deg)); }
+}
+.animate-float {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}

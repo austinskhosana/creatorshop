@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import PayWithPostsCard from "@/components/ui/PayWithPostsCard";
 
 type Deliverable = { quantity: number; type: string; enumValue: string };
 
@@ -160,6 +161,11 @@ export default function SoftwareListingClient({
         <p className="text-[15px] text-gray-500 leading-relaxed -mt-2">
           {listing.description}
         </p>
+
+        {/* Pay with Posts — bank card visual metaphor */}
+        <div className="flex justify-center">
+          <PayWithPostsCard />
+        </div>
 
         {/* Pay with Post card */}
         <PayWithPostCard listing={listing} />

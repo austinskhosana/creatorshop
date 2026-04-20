@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "creatorshop",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": ["-c", "export PATH=/usr/local/bin:$PATH && NODE_OPTIONS=--max-old-space-size=8192 node node_modules/.bin/next dev"],
       "port": 3000
     }
   ]
