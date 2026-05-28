@@ -1,3 +1,6 @@
+import Image from "next/image";
+import { cn } from "@/lib/utils";
+
 interface AvatarProps {
   src?: string | null;
   name?: string;
@@ -6,10 +9,10 @@ interface AvatarProps {
 }
 
 const sizes = {
-  sm: "w-8 h-8 text-xs",
-  md: "w-10 h-10 text-sm",
-  lg: "w-12 h-12 text-base",
-  xl: "w-16 h-16 text-lg",
+  sm: { className: "w-8 h-8 text-xs",   px: 32  },
+  md: { className: "w-10 h-10 text-sm",  px: 40  },
+  lg: { className: "w-12 h-12 text-base", px: 48 },
+  xl: { className: "w-16 h-16 text-lg",  px: 64  },
 };
 
 function getInitials(name?: string) {
@@ -22,28 +25,32 @@ function getInitials(name?: string) {
     .toUpperCase();
 }
 
-export default function Avatar({ src, name, size = "md", className = "" }: AvatarProps) {
+const ring = "ring-2 ring-white border border-gray-200";
+
+export default function Avatar({ src, name, size = "md", className }: AvatarProps) {
+  const { className: sizeCls, px } = sizes[size];
+
   if (src) {
     return (
-      <img
+      <Image
         src={src}
-        alt={name ?? "Avatar"}
-        className={[
-          "rounded-full object-cover ring-2 ring-white border border-gray-200",
-          sizes[size],
-          className,
-        ].join(" ")}
+        alt={name ? `${name}'s avatar` : "Avatar"}
+        width={px}
+        height={px}
+        className={cn("rounded-full object-cover", ring, sizeCls, className)}
       />
     );
   }
 
   return (
     <div
-      className={[
-        "rounded-full bg-neutral-900 text-white flex items-center justify-center font-semibold ring-2 ring-white border border-gray-200",
-        sizes[size],
+      aria-label={name ? `${name}'s avatar` : "Avatar"}
+      className={cn(
+        "rounded-full bg-neutral-900 text-white flex items-center justify-center font-semibold select-none",
+        ring,
+        sizeCls,
         className,
-      ].join(" ")}
+      )}
     >
       {getInitials(name)}
     </div>

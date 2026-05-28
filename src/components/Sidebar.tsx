@@ -210,6 +210,7 @@ export default function Sidebar() {
             <li key={item.id}>
               <Link
                 href={item.href}
+                aria-current={isActive ? "page" : undefined}
                 className={[
                   "flex items-center gap-3 w-full text-left px-4 py-3 rounded-lg text-[16px]",
                   // Specific properties only — no transition-all.

@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { encrypt } from "@/lib/crypto";
+import { sendListingClosed } from "@/lib/email";
 
 // PATCH /api/listings/[slug]
 // Adds more access keys to an existing listing the brand owns.
@@ -37,8 +38,22 @@ export async function PATCH(
 
   // ── Close listing ─────────────────────────────────────────────────────────
   if (action === "close") {
+    // Fetch pending shops with creator emails before denying them
+    const pendingShops = await prisma.shop.findMany({
+      where: { softwareListingId: listing.id, status: "PENDING" },
+      include: {
+        creator: {
+          select: { email: true, creatorProfile: { select: { displayName: true } } },
+        },
+      },
+    });
+
+    const fullListing = await prisma.softwareListing.findUnique({
+      where: { id: listing.id },
+      select: { name: true },
+    });
+
     await prisma.$transaction([
-      // Auto-deny all pending shops
       prisma.shop.updateMany({
         where: { softwareListingId: listing.id, status: "PENDING" },
         data: { status: "DENIED" },
@@ -48,6 +63,16 @@ export async function PATCH(
         data: { isActive: false },
       }),
     ]);
+
+    // Email #3: listing closed → each affected creator
+    for (const shop of pendingShops) {
+      sendListingClosed({
+        to: shop.creator.email,
+        creatorName: shop.creator.creatorProfile?.displayName ?? shop.creator.email,
+        listingName: fullListing?.name ?? "a listing",
+      }).catch(() => {});
+    }
+
     return NextResponse.json({ ok: true });
   }
 
