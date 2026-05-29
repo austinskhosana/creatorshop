@@ -1,14 +1,14 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { getOrCreateUser } from "@/lib/getOrCreateUser";
 import ShopsClient from "./ShopsClient";
 
 export default async function ShopsPage() {
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
 
-  const user = await prisma.user.findUnique({ where: { clerkId: userId } });
-  if (!user) redirect("/onboarding");
+  const user = await getOrCreateUser(userId);
 
   const shops = await prisma.shop.findMany({
     where: { creatorId: user.id },

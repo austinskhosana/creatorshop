@@ -1,17 +1,20 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { getOrCreateUser } from "@/lib/getOrCreateUser";
 import ListingsClient from "./ListingsClient";
 
 export default async function ListingsPage() {
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
 
+  await getOrCreateUser(userId);
+
   const user = await prisma.user.findUnique({
     where: { clerkId: userId },
     include: { brandProfile: true },
   });
-  if (!user?.brandProfile) redirect("/onboarding");
+  if (!user?.brandProfile) redirect("/brand-profile/setup");
 
   const listings = await prisma.softwareListing.findMany({
     where: { brandProfileId: user.brandProfile.id },

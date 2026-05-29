@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { getOrCreateUser } from "@/lib/getOrCreateUser";
 import SubmissionsClient, { type Submission } from "./SubmissionsClient";
 
 function platformFromDeliverable(deliverable: string): Submission["platform"] {
@@ -22,8 +23,7 @@ export default async function SubmissionsPage() {
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
 
-  const user = await prisma.user.findUnique({ where: { clerkId: userId } });
-  if (!user) redirect("/onboarding");
+  const user = await getOrCreateUser(userId);
 
   const shops = await prisma.shop.findMany({
     where: { brandId: user.id },

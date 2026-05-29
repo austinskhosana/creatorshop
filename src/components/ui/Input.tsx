@@ -41,14 +41,14 @@ export default function Input({
         )}
         <input
           id={id}
-          aria-describedby={cn(hint && hintId, error && errorId) || undefined}
+          aria-describedby={[hint && hintId, error && errorId].filter(Boolean).join(" ") || undefined}
           aria-invalid={error ? true : undefined}
           className={cn(
             "w-full rounded-xl border bg-white text-sm text-neutral-900 placeholder:text-gray-400",
             "px-3.5 py-2.5 transition-[border-color,box-shadow] duration-150",
             "focus:outline-none focus:ring-2 focus:ring-offset-0",
-            iconLeft && "pl-9",
-            iconRight && "pr-9",
+            iconLeft ? "pl-9" : undefined,
+            iconRight ? "pr-9" : undefined,
             error
               ? "border-red-300 focus:border-red-400 focus:ring-red-200"
               : "border-gray-200 focus:border-neutral-400 focus:ring-neutral-200",

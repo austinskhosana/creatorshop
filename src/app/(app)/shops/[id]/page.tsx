@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect, notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { decrypt } from "@/lib/crypto";
+import { getOrCreateUser } from "@/lib/getOrCreateUser";
 import ShopDetailClient from "./ShopDetailClient";
 
 const DELIVERABLE_LABELS: Record<string, string> = {
@@ -26,8 +27,7 @@ export default async function ShopDetailPage({
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
 
-  const user = await prisma.user.findUnique({ where: { clerkId: userId } });
-  if (!user) redirect("/onboarding");
+  const user = await getOrCreateUser(userId);
 
   const shop = await prisma.shop.findUnique({
     where: { id },

@@ -52,7 +52,7 @@ export default function Textarea({
 
       <textarea
         id={id}
-        aria-describedby={cn(hint && hintId, error && errorId, maxChars && counterId) || undefined}
+        aria-describedby={[hint && hintId, error && errorId, maxChars != null && counterId].filter(Boolean).join(" ") || undefined}
         aria-invalid={error ? true : undefined}
         className={cn(
           "w-full rounded-xl border bg-white text-sm text-neutral-900 placeholder:text-gray-400",
