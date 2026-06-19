@@ -2,18 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { encrypt } from "@/lib/crypto";
-
-const DELIVERABLE_MAP: Record<string, string> = {
-  "Instagram Reel":    "INSTAGRAM_REEL",
-  "Instagram Post":    "INSTAGRAM_POST",
-  "Instagram Story":   "INSTAGRAM_STORY",
-  "TikTok Video":      "TIKTOK_VIDEO",
-  "YouTube Video":     "YOUTUBE_VIDEO",
-  "YouTube Short":     "YOUTUBE_SHORT",
-  "Tweet / Thread":    "TWEET",
-  "LinkedIn Post":     "LINKEDIN_POST",
-  "Blog Post":         "BLOG_POST",
-};
+import { DELIVERABLE_MAP } from "@/lib/deliverables";
 
 function toSlug(str: string) {
   return str.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -50,7 +39,7 @@ export async function POST(req: Request) {
 
   // Map deliverable labels to enum values
   const preferredDeliverables = (deliverables as string[])
-    .map((d) => DELIVERABLE_MAP[d])
+    .map((d) => (DELIVERABLE_MAP as Record<string, string>)[d])
     .filter(Boolean) as string[];
 
   const listing = await prisma.softwareListing.create({

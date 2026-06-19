@@ -96,9 +96,24 @@ revealed, deliver, see completed — feels like one coherent product, and
   - Polish swipe motion (already has exit animations in `globals.css` — confirm they feel right, check reduced-motion fallback works)
   - Empty state: no pending applications
 - [ ] `/brand-profile` (237 lines) — bring in line with creator `/profile` patterns where it makes sense
+- [x] `/campaigns/new` — AI assists (shipped ahead of the componentization pass below)
+  - Autofill from URL: brand pastes a product/pricing page, server fetches it
+    and Claude (`claude-sonnet-4-6`, structured output via Zod) extracts
+    product name, plan name, plan value, description → `/api/campaigns/ai/autofill`
+  - Draft with AI: brand describes the offer in plain language, Claude drafts
+    the brief + suggests deliverable types → `/api/campaigns/ai/draft-brief`
+  - Suggest terms with AI: Claude recommends a delivery window + deliverable
+    mix from plan value/niche → `/api/campaigns/ai/suggest-terms`
+  - Model choice: Sonnet 4.6 over Opus — these are bounded extraction/drafting
+    tasks, not deep reasoning, and cost scales per listing created
+  - Still needed: loading/error states are wired but unstyled-polish pass:
+    confirm AI button placement reads well once the form below is split into
+    sections, and decide whether brand can see/edit AI suggestions before
+    they're applied (currently they overwrite fields directly)
 - [ ] `/campaigns/new` (550 lines — biggest single file in the app)
   - Break into `campaign/` form sections: basics, key upload, deliverable
     preferences, brief — each its own component with its own validation
+  - AI buttons above move with their fields into the matching section component
   - This is the most important componentization target this month
 - [ ] `/campaigns/list` + `/campaigns/listings` (`ListingsClient.tsx`)
   - Extract `campaign/ListingRow.tsx`; pause/close actions polish (confirm the pause-vs-close distinction is visually clear)

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { DELIVERABLE_LABELS } from "@/lib/deliverables";
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
@@ -55,7 +56,7 @@ const PLATFORMS: { label: string; selected: string; icon: React.ReactNode }[] = 
 ];
 
 const NICHES = ["Lifestyle", "Tech", "Fashion", "Beauty", "Food", "Travel", "Fitness", "Gaming", "Finance", "Education"];
-const DELIVERABLES = ["Instagram Reel", "Instagram Post", "Instagram Story", "TikTok Video", "YouTube Video", "YouTube Short", "Tweet / Thread", "LinkedIn Post", "Blog Post"];
+const DELIVERABLES: string[] = DELIVERABLE_LABELS;
 const AUDIENCE_SIZES = ["Under 1K", "1K–10K", "10K–50K", "50K–100K", "100K+"];
 
 type Campaign = {
@@ -185,6 +186,35 @@ function Chip({ label, selected, onClick }: { label: string; selected: boolean; 
   );
 }
 
+// AI-assist button — same shape used for autofill, brief drafting, and term suggestions
+type AIState = "idle" | "loading" | "error";
+
+function AIButton({
+  label,
+  loadingLabel,
+  state,
+  onClick,
+}: {
+  label: string;
+  loadingLabel: string;
+  state: AIState;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={state === "loading"}
+      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#82F200] bg-[#EDFFD0] text-[#2A6000] text-[12px] font-semibold hover:brightness-95 active:scale-[0.96] transition-all duration-[120ms] disabled:opacity-60 disabled:cursor-not-allowed"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
+        <path d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z" />
+      </svg>
+      {state === "loading" ? loadingLabel : label}
+    </button>
+  );
+}
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function NewCampaignPage() {
@@ -193,6 +223,102 @@ export default function NewCampaignPage() {
   const [keyInput, setKeyInput] = useState("");
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+
+  const [aiState, setAiState] = useState<{ autofill: AIState; brief: AIState; terms: AIState }>({
+    autofill: "idle",
+    brief: "idle",
+    terms: "idle",
+  });
+  const [aiError, setAiError] = useState<{ autofill?: string; brief?: string; terms?: string }>({});
+
+  async function handleAutofill() {
+    if (!campaign.websiteUrl.trim()) {
+      setAiError((e) => ({ ...e, autofill: "Add a website URL first." }));
+      setAiState((s) => ({ ...s, autofill: "error" }));
+      return;
+    }
+    setAiState((s) => ({ ...s, autofill: "loading" }));
+    setAiError((e) => ({ ...e, autofill: undefined }));
+    try {
+      const res = await fetch("/api/campaigns/ai/autofill", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: campaign.websiteUrl }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Couldn't read that page.");
+      setCampaign((c) => ({
+        ...c,
+        productName: data.productName || c.productName,
+        planName: data.planName || c.planName,
+        planValue: data.planValue != null ? String(data.planValue) : c.planValue,
+        description: data.description || c.description,
+      }));
+      setAiState((s) => ({ ...s, autofill: "idle" }));
+    } catch (err) {
+      setAiError((e) => ({ ...e, autofill: err instanceof Error ? err.message : "Couldn't read that page." }));
+      setAiState((s) => ({ ...s, autofill: "error" }));
+    }
+  }
+
+  async function handleDraftBrief() {
+    if (!campaign.description.trim() && !campaign.name.trim()) {
+      setAiError((e) => ({ ...e, brief: "Add a campaign name or description first." }));
+      setAiState((s) => ({ ...s, brief: "error" }));
+      return;
+    }
+    setAiState((s) => ({ ...s, brief: "loading" }));
+    setAiError((e) => ({ ...e, brief: undefined }));
+    try {
+      const res = await fetch("/api/campaigns/ai/draft-brief", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          description: campaign.description || campaign.name,
+          productName: campaign.productName,
+          planName: campaign.planName,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Couldn't draft a brief.");
+      setCampaign((c) => ({
+        ...c,
+        brief: data.brief || c.brief,
+        deliverables: data.deliverables?.length ? data.deliverables : c.deliverables,
+      }));
+      setAiState((s) => ({ ...s, brief: "idle" }));
+    } catch (err) {
+      setAiError((e) => ({ ...e, brief: err instanceof Error ? err.message : "Couldn't draft a brief." }));
+      setAiState((s) => ({ ...s, brief: "error" }));
+    }
+  }
+
+  async function handleSuggestTerms() {
+    setAiState((s) => ({ ...s, terms: "loading" }));
+    setAiError((e) => ({ ...e, terms: undefined }));
+    try {
+      const res = await fetch("/api/campaigns/ai/suggest-terms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          planValue: campaign.planValue,
+          niches: campaign.niches,
+          productName: campaign.productName,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Couldn't suggest terms.");
+      setCampaign((c) => ({
+        ...c,
+        deliveryDays: data.deliveryDays != null ? String(data.deliveryDays) : c.deliveryDays,
+        deliverables: data.deliverables?.length ? data.deliverables : c.deliverables,
+      }));
+      setAiState((s) => ({ ...s, terms: "idle" }));
+    } catch (err) {
+      setAiError((e) => ({ ...e, terms: err instanceof Error ? err.message : "Couldn't suggest terms." }));
+      setAiState((s) => ({ ...s, terms: "error" }));
+    }
+  }
 
   function addKey() {
     const trimmed = keyInput.trim();
@@ -340,6 +466,17 @@ export default function NewCampaignPage() {
               placeholder="https://yourproduct.com"
               className={inputClass}
             />
+            <div className="flex items-center gap-3">
+              <AIButton
+                label="Autofill from URL"
+                loadingLabel="Reading page…"
+                state={aiState.autofill}
+                onClick={handleAutofill}
+              />
+              {aiState.autofill === "error" && aiError.autofill && (
+                <span className="text-[12px] text-red-500">{aiError.autofill}</span>
+              )}
+            </div>
           </Field>
 
           <Field label="Access keys" hint={campaign.accessKeys.length > 0 ? `${campaign.accessKeys.length} added` : "one per creator slot"}>
@@ -457,6 +594,17 @@ export default function NewCampaignPage() {
             </svg>
           }
         >
+          <div className="flex items-center gap-3">
+            <AIButton
+              label="Draft with AI"
+              loadingLabel="Drafting…"
+              state={aiState.brief}
+              onClick={handleDraftBrief}
+            />
+            {aiState.brief === "error" && aiError.brief && (
+              <span className="text-[12px] text-red-500">{aiError.brief}</span>
+            )}
+          </div>
           <textarea
             value={campaign.brief}
             onChange={(e) => set("brief", e.target.value)}
@@ -476,6 +624,17 @@ export default function NewCampaignPage() {
             </svg>
           }
         >
+          <div className="flex items-center gap-3">
+            <AIButton
+              label="Suggest terms with AI"
+              loadingLabel="Thinking…"
+              state={aiState.terms}
+              onClick={handleSuggestTerms}
+            />
+            {aiState.terms === "error" && aiError.terms && (
+              <span className="text-[12px] text-red-500">{aiError.terms}</span>
+            )}
+          </div>
           <div className="grid grid-cols-2 gap-4">
             <Field label="Creator slots" hint="max applications to accept">
               <input
