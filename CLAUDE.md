@@ -21,10 +21,17 @@ lives on the `archive/pre-atomic-rebuild` branch on GitHub
 (`austinskhosana/creatorshop`), for one purpose only: checking prior UX
 decisions while designing a new component or page here.
 
-**This is temporary.** Once the rebuilt component library ships as the
-final product, delete the `archive/pre-atomic-rebuild` branch (and any
-other stale reference branches) — it's a build aid, not something that
-should persist in the shipped repo.
+**Styling and UX only.** Pull layout, copy, spacing, and interaction
+patterns from it. Never pull in anything functional from that branch —
+no dependencies (Clerk, Prisma, Supabase, Resend, svix, pg), no database
+wiring, no auth, no API routes. Those get rebuilt fresh, on purpose, when
+there's real product work to wire up.
+
+**This is temporary.** Once the full marketplace app is rebuilt and ships
+as the final product — not just the component library — delete the
+`archive/pre-atomic-rebuild` branch (and any other stale reference
+branches). It's a build aid, not something that should persist in the
+shipped repo.
 
 ---
 
