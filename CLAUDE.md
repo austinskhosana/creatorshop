@@ -14,6 +14,20 @@ standalone tool later.
 
 ---
 
+## Reference: the prior full build
+Before this reset, Creatorshop had a fully built-out version of the
+marketplace app — real pages and components, not just the plan. That work
+lives on the `archive/pre-atomic-rebuild` branch on GitHub
+(`austinskhosana/creatorshop`), for one purpose only: checking prior UX
+decisions while designing a new component or page here.
+
+**This is temporary.** Once the rebuilt component library ships as the
+final product, delete the `archive/pre-atomic-rebuild` branch (and any
+other stale reference branches) — it's a build aid, not something that
+should persist in the shipped repo.
+
+---
+
 ## Atomic design levels
 Build in this order. Don't skip ahead — a molecule shouldn't exist before
 the atoms it's made of do.
