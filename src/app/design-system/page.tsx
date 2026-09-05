@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { registry, roadmap, ATOMIC_LEVELS } from "@/components/registry";
+import { slugify } from "@/lib/utils";
 
 export const metadata = {
   title: "Design System — Creatorshop",
@@ -31,10 +32,15 @@ export default function DesignSystemPage() {
                   {built.map((entry) => (
                     <Link
                       key={entry.name}
-                      href={`/design-system/${entry.name.toLowerCase()}`}
-                      className="block py-3 text-sm font-medium text-neutral-900 transition-colors duration-150 hover:text-neutral-600"
+                      href={`/design-system/${slugify(entry.name)}`}
+                      className="flex items-center gap-2 py-3 text-sm font-medium text-neutral-900 transition-colors duration-150 hover:text-neutral-600"
                     >
                       {entry.name}
+                      {entry.stage === "before" && (
+                        <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-700">
+                          before
+                        </span>
+                      )}
                     </Link>
                   ))}
                   {planned.map((entry) => (

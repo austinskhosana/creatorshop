@@ -71,7 +71,7 @@ src/components/atoms/Button/
 // Button.tsx pattern to follow
 import { cn } from "@/lib/utils";
 
-type ButtonVariant = "primary" | "secondary" | "ghost";
+type ButtonVariant = "primary" | "dark" | "secondary" | "danger";
 type ButtonSize = "sm" | "md" | "lg";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -81,17 +81,53 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 // ...variant/size style maps, then the component using cn()
 ```
 
-Registry entry:
+Registry entry — each variant becomes its own page under
+`/design-system/{component}/{variant}`:
 
 ```tsx
 // registry.tsx — one object per component
 {
   name: "Button",
   level: "atoms",
-  description: "Primary, secondary, and ghost variants in three sizes.",
-  preview: (/* live JSX showing all variants/states */),
+  description: "Primary, dark, secondary, and danger variants in three sizes.",
+  variants: [
+    { name: "Primary", preview: (/* live JSX for this variant/state */) },
+    { name: "Dark", preview: (/* ... */) },
+    // one entry per variant or notable state (loading, disabled, etc.)
+  ],
 }
 ```
+
+---
+
+## Decomposition rule (lesson from the prior build)
+The prior build (`archive/pre-atomic-rebuild`) got this wrong: whole pages
+were built as one monolithic component instead of being decomposed. Concrete
+examples worth not repeating:
+- `ExploreClient.tsx` (113 lines) and `ShopsClient.tsx` (174 lines) each
+  hand-rolled an identical ~40-line animated filter-pill tab bar inline —
+  duplicated verbatim instead of extracted once.
+- `SoftwareListingClient.tsx` (263 lines) inlined 7-8 distinct visual chunks
+  (hero/logo block, a full `PayWithPostCard`, a deliverable-picker button
+  group, a multi-state application form/CTA) as nested ternaries in one JSX
+  return.
+- `ShopsClient.tsx` also defined a full `ShopCard` as an unexported local
+  function inside the client file instead of extracting it.
+- `CreatorCard.tsx` and `BrandCard.tsx` were near-identical files (same
+  tilt animation, same layout) that should have been one component
+  parameterized by icon/title/copy.
+
+**The rule going forward**: before a page or organism is "done", every
+visually distinct chunk — a card, a status pill, a filter bar, an empty
+state, a form section, a CTA block — is its own file under
+`src/components/{level}/`, never inline JSX in a page-level file. If a
+chunk of JSX gets copy-pasted into a second page, that's the signal to stop
+and extract it into a molecule/organism instead.
+
+The one part of the old build that *was* decomposed well: `src/components/ui/`
+(Badge, Card, Avatar, EmptyState, Button, Input, Textarea, Skeleton,
+ErrorState) — genuinely atomic, single-concern, prop-driven. That's the
+shape to match, not the page-level files.
 
 ---
 
@@ -123,7 +159,7 @@ and can come back when there's product work to wire up.
 ## Current inventory
 | Component | Level | Status |
 |---|---|---|
-| Button | atoms | Done — primary/secondary/ghost × sm/md/lg |
+| Button | atoms | Done — primary/dark/secondary/danger × sm/md/lg, plus loading/full-width/icon states |
 
 ---
 

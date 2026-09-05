@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import {
+  GeistPixelSquare,
+  GeistPixelGrid,
+  GeistPixelCircle,
+  GeistPixelTriangle,
+  GeistPixelLine,
+} from "geist/font/pixel";
+import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -7,22 +14,21 @@ export const metadata: Metadata = {
   description: "Building Creatorshop's design system, one component at a time.",
 };
 
+const fontVariables = [
+  GeistPixelSquare.variable,
+  GeistPixelGrid.variable,
+  GeistPixelCircle.variable,
+  GeistPixelTriangle.variable,
+  GeistPixelLine.variable,
+  GeistMono.variable,
+].join(" ");
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en" className={`h-full antialiased ${fontVariables}`}>
       <body className="min-h-full flex flex-col">
-        <header className="border-b border-neutral-200">
-          <nav className="max-w-5xl mx-auto flex items-center gap-6 px-6 h-14 text-sm font-medium">
-            <Link href="/" className="font-bold text-neutral-900">
-              Creatorshop
-            </Link>
-            <Link href="/design-system" className="text-neutral-500 hover:text-neutral-900">
-              Design System
-            </Link>
-          </nav>
-        </header>
         <main className="flex-1">{children}</main>
       </body>
     </html>
