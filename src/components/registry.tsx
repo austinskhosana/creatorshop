@@ -35,6 +35,8 @@ import { SocialCapitalCard } from "@/components/organisms/SocialCapitalCard";
 import { HeroSection } from "@/components/organisms/HeroSection";
 import { LogoMark } from "@/components/atoms/LogoMark";
 import { PixelTrail } from "@/components/atoms/PixelTrail";
+import { Fire } from "@/components/atoms/Fire";
+import { AsciiFlame } from "@/components/atoms/AsciiFlame";
 import { LocationTime } from "@/components/atoms/LocationTime";
 import { ScrollIndicator } from "@/components/atoms/ScrollIndicator";
 
@@ -426,6 +428,36 @@ export const registry: RegistryEntry[] = [
                 Move your cursor here
               </span>
             </div>
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Fire",
+    level: "atoms",
+    description: "Doom-fire-style ASCII flame — black glyph shades propagating on brand green, from the Brand Engineering Kit. Used behind the \"Ditch the subscription\" section.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="relative h-64 w-full max-w-xl overflow-hidden rounded-xl">
+            <Fire background="#a2ff38" rows={64} widthPercent={70} className="h-full w-full" />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Ascii flame",
+    level: "atoms",
+    description: "A single shaped flame silhouette (main tongue + two side licks) rendered as monospace glyphs — used above the copy in the \"Ditch the subscription\" section, in place of a static logo.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="relative h-36 w-28 overflow-hidden rounded-xl">
+            <AsciiFlame background="#a2ff38" className="h-full w-full" />
           </div>
         ),
       },

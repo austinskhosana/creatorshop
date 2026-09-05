@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { SpinningText } from "@/components/atoms/SpinningText";
 
@@ -24,6 +25,14 @@ export default function ScrollIndicator({ className, onClick }: ScrollIndicatorP
         className,
       )}
     >
+      <span className="absolute inset-3 rounded-full bg-[#A3FF38]" />
+      <Image
+        src="/Creatorshop Brand Symbol.webp"
+        alt=""
+        width={40}
+        height={40}
+        className="pointer-events-none absolute inset-0 m-auto h-10 w-10"
+      />
       <SpinningText
         radius={6.5}
         duration={9}
