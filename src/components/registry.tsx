@@ -39,6 +39,8 @@ import { Fire } from "@/components/atoms/Fire";
 import { AsciiFlame } from "@/components/atoms/AsciiFlame";
 import { LocationTime } from "@/components/atoms/LocationTime";
 import { ScrollIndicator } from "@/components/atoms/ScrollIndicator";
+import { PosterCard } from "@/components/molecules/PosterCard";
+import { HowItWorksSection } from "@/components/organisms/HowItWorksSection";
 
 export type AtomicLevel = "atoms" | "molecules" | "organisms" | "templates" | "pages";
 
@@ -974,6 +976,35 @@ export const registry: RegistryEntry[] = [
     ],
   },
   {
+    name: "Poster card",
+    level: "molecules",
+    description: "Square-cornered brand-green tile with a step number, pixel-font headline, and mono description — used in the \"How it works\" section.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-80">
+            <PosterCard
+              step="01"
+              art={`    #####
+  ###   ###
+ ##       ##
+ ##       ##
+ ##       ##
+  ###   ###
+    #####
+       ##
+        ##
+         ###`}
+              title={"BROWSE THE\nDROP"}
+              description={"Explore software\nlistings from brands\nlooking for creators."}
+            />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
     name: "Profile header",
     level: "organisms",
     description: "Avatar, name, location, audience badge, and edit action.",
@@ -1070,6 +1101,21 @@ export const registry: RegistryEntry[] = [
         preview: (
           <div className="w-full max-w-5xl bg-white">
             <HeroSection />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "How it works section",
+    level: "organisms",
+    description: "White section with three square-cornered brand-green poster cards walking through the browse → pitch → deliver flow.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-full max-w-5xl bg-white">
+            <HowItWorksSection />
           </div>
         ),
       },

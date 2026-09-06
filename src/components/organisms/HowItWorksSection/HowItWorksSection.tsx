@@ -1,0 +1,70 @@
+import { PosterCard } from "@/components/molecules/PosterCard";
+
+const BROWSE_ART = `    #####
+  ###   ###
+ ##       ##
+ ##       ##
+ ##       ##
+  ###   ###
+    #####
+       ##
+        ##
+         ###`;
+
+const PITCH_ART = `
+            #
+           ##
+          ##
+ #       ##
+ ##     ##
+  ##   ##
+   ## ##
+    ###
+     #`;
+
+const DELIVER_ART = `      #
+     ###
+    #####
+   #######
+  #########
+ ###########
+#############
+     ###
+     ###
+    ## ##`;
+
+const STEPS = [
+  {
+    step: "01",
+    art: BROWSE_ART,
+    title: "BROWSE THE\nDROP",
+    description: "Explore software\nlistings from brands\nlooking for creators.",
+  },
+  {
+    step: "02",
+    art: PITCH_ART,
+    title: "PITCH & GET\nPICKED",
+    description: "Send your pitch —\nif the brand approves,\nyou're in.",
+  },
+  {
+    step: "03",
+    art: DELIVER_ART,
+    title: "POST & GET\nPAID",
+    description: "Create it, deliver it,\nunlock your access.\nNo cash required.",
+  },
+];
+
+export default function HowItWorksSection() {
+  return (
+    <section className="sticky top-0 z-20 flex h-screen flex-col justify-center bg-white px-6 py-16 sm:px-10 lg:px-16">
+      <div className="mx-auto w-full max-w-5xl">
+        <h2 className="font-pixel text-2xl text-neutral-900 sm:text-3xl">How it works</h2>
+        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3">
+          {STEPS.map((s) => (
+            <PosterCard key={s.step} {...s} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
