@@ -41,6 +41,9 @@ import { LocationTime } from "@/components/atoms/LocationTime";
 import { ScrollIndicator } from "@/components/atoms/ScrollIndicator";
 import { PosterCard } from "@/components/molecules/PosterCard";
 import { HowItWorksSection } from "@/components/organisms/HowItWorksSection";
+import { FAQItem } from "@/components/molecules/FAQItem";
+import { FAQSection } from "@/components/organisms/FAQSection";
+import { Footer } from "@/components/organisms/Footer";
 
 export type AtomicLevel = "atoms" | "molecules" | "organisms" | "templates" | "pages";
 
@@ -1005,6 +1008,36 @@ export const registry: RegistryEntry[] = [
     ],
   },
   {
+    name: "FAQ item",
+    level: "molecules",
+    description: "Click-to-expand question/answer row — flat, border-divided list item, chevron rotates open, geist mono type.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-96 bg-white p-3">
+            <FAQItem
+              question="How does Creatorshop actually work?"
+              answer="Browse a software drop, pitch your reach, and if the brand's into it, you create the content and deliver it. Access unlocked — no cash involved."
+            />
+          </div>
+        ),
+      },
+      {
+        name: "Open",
+        preview: (
+          <div className="w-96 bg-white p-3">
+            <FAQItem
+              question="How does Creatorshop actually work?"
+              answer="Browse a software drop, pitch your reach, and if the brand's into it, you create the content and deliver it. Access unlocked — no cash involved."
+              defaultOpen
+            />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
     name: "Profile header",
     level: "organisms",
     description: "Avatar, name, location, audience badge, and edit action.",
@@ -1116,6 +1149,36 @@ export const registry: RegistryEntry[] = [
         preview: (
           <div className="w-full max-w-5xl bg-white">
             <HowItWorksSection />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "FAQ section",
+    level: "organisms",
+    description: "White section holding a flat, border-divided list of FAQ items — simple shadcn-style accordion, click to expand.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-full max-w-5xl">
+            <FAQSection />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Footer",
+    level: "organisms",
+    description: "Super-minimal footer — copyright, Privacy Policy link, and text-only X / LinkedIn links.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-full max-w-5xl">
+            <Footer />
           </div>
         ),
       },
