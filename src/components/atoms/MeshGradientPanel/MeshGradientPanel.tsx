@@ -8,12 +8,15 @@ import { cn } from "@/lib/utils";
 interface MeshGradientPanelProps {
   children?: ReactNode;
   className?: string;
+  /** Show the animated shader texture inside the metallic border. Set false for a plain grey fill. */
+  shaded?: boolean;
 }
 
-export default function MeshGradientPanel({ children, className }: MeshGradientPanelProps) {
+export default function MeshGradientPanel({ children, className, shaded = true }: MeshGradientPanelProps) {
   return (
     <div className={cn("relative isolate overflow-hidden rounded-[32px]", className)}>
       <LiquidMetal
+        aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-20 h-full w-full"
         shape="none"
         fit="cover"
@@ -32,12 +35,16 @@ export default function MeshGradientPanel({ children, className }: MeshGradientP
         worldHeight={800}
       />
 
-      <div className="absolute inset-[5px] -z-10 overflow-hidden rounded-[28px]">
-        <TerminalgraphShader
-          theme="light"
-          background={{ dark: "#052e12", light: "#ffffff" }}
-          className="h-full w-full"
-        />
+      <div aria-hidden="true" className="absolute inset-[5px] -z-10 overflow-hidden rounded-[27px]">
+        {shaded ? (
+          <TerminalgraphShader
+            theme="light"
+            background={{ dark: "#052e12", light: "#ffffff" }}
+            className="h-full w-full"
+          />
+        ) : (
+          <div className="h-full w-full bg-white" />
+        )}
       </div>
 
       {children}

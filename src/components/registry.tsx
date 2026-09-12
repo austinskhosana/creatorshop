@@ -36,6 +36,8 @@ import { HeroSection } from "@/components/organisms/HeroSection";
 import { BrandHeroSection } from "@/components/organisms/BrandHeroSection";
 import { BrandMomentSection } from "@/components/organisms/BrandMomentSection";
 import { FeatureGridSection } from "@/components/organisms/FeatureGridSection";
+import { PricingCard } from "@/components/molecules/PricingCard";
+import { PricingSection } from "@/components/organisms/PricingSection";
 import { BrandFAQSection } from "@/components/organisms/BrandFAQSection";
 import { BrandFAQItem } from "@/components/molecules/BrandFAQItem";
 import { BrandCardVisual } from "@/components/molecules/BrandCardVisual";
@@ -1238,6 +1240,71 @@ export const registry: RegistryEntry[] = [
         preview: (
           <div className="w-full max-w-5xl bg-white">
             <FeatureGridSection />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Pricing card",
+    level: "molecules",
+    description: "Badge, description, price, feature checklist, and CTA — the plain variant is a white bordered card, the featured variant wraps in the header's metallic shader panel.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-80">
+            <PricingCard
+              badgeIcon={
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
+                  <circle cx="12" cy="12" r="3" fill="currentColor" />
+                </svg>
+              }
+              badgeLabel="Custom"
+              description="We run your drop end to end for you."
+              price="Custom"
+              features={["Dedicated campaign manager", "Full pitch review on your behalf"]}
+              buttonLabel="Contact us"
+              buttonVariant="secondary"
+            />
+          </div>
+        ),
+      },
+      {
+        name: "Featured",
+        preview: (
+          <div className="w-80">
+            <PricingCard
+              badgeIcon={
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z" />
+                </svg>
+              }
+              badgeLabel="Subscription"
+              description="List your own drops and manage delivery yourself."
+              price="$50"
+              priceSuffix="/month"
+              features={["Unlimited drops", "Pay in access, not cash"]}
+              buttonLabel="Get started"
+              buttonVariant="dark"
+              featured
+            />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Pricing section",
+    level: "organisms",
+    description: "Brand-page pricing — a custom/enterprise plan next to the $50/month self-serve subscription, sits after the feature grid.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-full max-w-5xl bg-white">
+            <PricingSection />
           </div>
         ),
       },
