@@ -7,7 +7,20 @@ import {
   GeistPixelLine,
 } from "geist/font/pixel";
 import { GeistMono } from "geist/font/mono";
+import { Permanent_Marker, Space_Mono } from "next/font/google";
 import "./globals.css";
+
+const permanentMarker = Permanent_Marker({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-permanent-marker",
+});
+
+const spaceMono = Space_Mono({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  variable: "--font-space-mono",
+});
 
 export const metadata: Metadata = {
   title: "Creatorshop",
@@ -21,6 +34,8 @@ const fontVariables = [
   GeistPixelTriangle.variable,
   GeistPixelLine.variable,
   GeistMono.variable,
+  permanentMarker.variable,
+  spaceMono.variable,
 ].join(" ");
 
 export default function RootLayout({
@@ -28,6 +43,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`h-full antialiased ${fontVariables}`}>
+      <head>
+        <link rel="preconnect" href="https://api.fontshare.com" />
+      </head>
       <body className="min-h-full flex flex-col">
         <main className="flex-1">{children}</main>
       </body>

@@ -1,5 +1,4 @@
 @import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Space+Mono:wght@400;700&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -11,8 +10,8 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: 'Satoshi', sans-serif;
-  --font-marker: 'Permanent Marker', cursive;
-  --font-mono: 'Space Mono', monospace;
+  --font-marker: var(--font-permanent-marker), cursive;
+  --font-mono: var(--font-space-mono), monospace;
   --font-pixel: var(--font-geist-pixel-square);
   --font-geist-mono: var(--font-geist-mono);
 }

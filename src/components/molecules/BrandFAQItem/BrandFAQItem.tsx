@@ -4,13 +4,13 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-interface FAQItemProps {
+interface BrandFAQItemProps {
   question: string;
   answer: string;
   defaultOpen?: boolean;
 }
 
-export default function FAQItem({ question, answer, defaultOpen = false }: FAQItemProps) {
+export default function BrandFAQItem({ question, answer, defaultOpen = false }: BrandFAQItemProps) {
   const [open, setOpen] = useState(defaultOpen);
 
   return (

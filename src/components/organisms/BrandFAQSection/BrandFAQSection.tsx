@@ -1,0 +1,37 @@
+import { BrandFAQItem } from "@/components/molecules/BrandFAQItem";
+
+const FAQS = [
+  {
+    question: "How is this different from an affiliate program?",
+    answer:
+      "No commissions, no cash payouts. Creators get access to your software in exchange for content. You get the campaign, they get the tool.",
+  },
+  {
+    question: "How do I pick which creators get access?",
+    answer:
+      "You review every pitch and approve who fits your drop. Nothing goes out until you say yes.",
+  },
+  {
+    question: "What do I need to provide?",
+    answer:
+      "Just your software access and a clear brief: plan, seats, and how many posts you want in return.",
+  },
+  {
+    question: "Is there a cost to list a drop?",
+    answer:
+      "Listing is free while we're in early access. Pricing for brands is being finalized as we launch.",
+  },
+];
+
+export default function BrandFAQSection() {
+  return (
+    <section className="bg-white px-6 pt-16 pb-48 text-center sm:px-10 lg:px-16">
+      <h2 className="text-2xl leading-tight font-medium text-neutral-900 sm:text-3xl">FAQ</h2>
+      <div className="mx-auto mt-10 flex w-full max-w-lg flex-col gap-4 text-left">
+        {FAQS.map((faq) => (
+          <BrandFAQItem key={faq.question} question={faq.question} answer={faq.answer} />
+        ))}
+      </div>
+    </section>
+  );
+}

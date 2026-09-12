@@ -33,8 +33,18 @@ import { SocialLinks } from "@/components/organisms/SocialLinks";
 import type { SocialLink } from "@/components/organisms/SocialLinks";
 import { SocialCapitalCard } from "@/components/organisms/SocialCapitalCard";
 import { HeroSection } from "@/components/organisms/HeroSection";
+import { BrandHeroSection } from "@/components/organisms/BrandHeroSection";
+import { BrandMomentSection } from "@/components/organisms/BrandMomentSection";
+import { FeatureGridSection } from "@/components/organisms/FeatureGridSection";
+import { BrandFAQSection } from "@/components/organisms/BrandFAQSection";
+import { BrandFAQItem } from "@/components/molecules/BrandFAQItem";
+import { BrandCardVisual } from "@/components/molecules/BrandCardVisual";
+import { BrandCard3D } from "@/components/molecules/BrandCard3D";
+import { Navbar } from "@/components/organisms/Navbar";
 import { LogoMark } from "@/components/atoms/LogoMark";
+import { Logo3D } from "@/components/atoms/Logo3D";
 import { PixelTrail } from "@/components/atoms/PixelTrail";
+import { MeshGradientPanel } from "@/components/atoms/MeshGradientPanel";
 import { Fire } from "@/components/atoms/Fire";
 import { AsciiFlame } from "@/components/atoms/AsciiFlame";
 import { LocationTime } from "@/components/atoms/LocationTime";
@@ -415,6 +425,17 @@ export const registry: RegistryEntry[] = [
             <span className="text-sm font-medium tracking-[0.08em] text-[#0F0F0F]">CREATORSHOP</span>
           </div>
         ),
+      },
+    ],
+  },
+  {
+    name: "3D chrome logo",
+    level: "atoms",
+    description: "The Creatorshop symbol rendered as an interactive 3D chrome model (react-three-fiber) — tilts toward the cursor with a slow idle spin.",
+    variants: [
+      {
+        name: "Default",
+        preview: <Logo3D className="h-32 w-32" />,
       },
     ],
   },
@@ -1010,7 +1031,7 @@ export const registry: RegistryEntry[] = [
   {
     name: "FAQ item",
     level: "molecules",
-    description: "Click-to-expand question/answer row — flat, border-divided list item, chevron rotates open, geist mono type.",
+    description: "Click-to-expand question/answer row in a #FAFAFA rounded box, matching the brand-page FAQ item.",
     variants: [
       {
         name: "Default",
@@ -1140,6 +1161,138 @@ export const registry: RegistryEntry[] = [
     ],
   },
   {
+    name: "Brand card visual",
+    level: "molecules",
+    description: "The brand card image with the same mouse-tilt hover as the creator SocialCapitalCard.",
+    variants: [
+      {
+        name: "Default",
+        preview: <BrandCardVisual />,
+      },
+    ],
+  },
+  {
+    name: "Brand card 3D",
+    level: "molecules",
+    description:
+      "The brand card rendered as a real 3D object (react-three-fiber) — the card image is a texture on a thin extruded box, with physical materials and environment lighting, tilting toward the cursor with a gentle idle float. Used in the brand hero in place of the flat CSS-tilt card.",
+    variants: [
+      {
+        name: "Default",
+        preview: <BrandCard3D />,
+      },
+    ],
+  },
+  {
+    name: "Mesh gradient panel",
+    level: "atoms",
+    description: "Animated WebGL mesh-gradient panel in the brand palette (lime + white) — used as a soft, moving background behind hero visuals.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <MeshGradientPanel className="flex h-64 w-full max-w-5xl items-center justify-center">
+            <span className="text-sm text-neutral-500">Content sits on top</span>
+          </MeshGradientPanel>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Navbar",
+    level: "organisms",
+    description: "Centered marketing nav — logo lockup, How it works / For creators / For brands links, and a Join Waitlist CTA.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-full max-w-5xl bg-white">
+            <Navbar />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Brand moment section",
+    level: "organisms",
+    description: "Minimal brand-awareness moment for the top of the brands page — large 3D chrome logo, a heading, and one line of copy.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-full max-w-5xl bg-white">
+            <BrandMomentSection />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Feature grid section",
+    level: "organisms",
+    description: "Placeholder grid of #FAFAFA rounded blocks, sized to match the other brand-page panels — sits after the brand moment scroll section.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-full max-w-5xl bg-white">
+            <FeatureGridSection />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Brand FAQ item",
+    level: "molecules",
+    description: "Accordion FAQ row in a #FAFAFA rounded box, matching the brand-page grid blocks.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-full max-w-md">
+            <BrandFAQItem
+              question="How is this different from an affiliate program?"
+              answer="No commissions, no cash payouts. Creators get access to your software in exchange for content."
+            />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Brand FAQ section",
+    level: "organisms",
+    description: "FAQ section for the brands page — each question sits in a #FAFAFA rounded box, same treatment as the creator-page FAQ section.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-full max-w-5xl bg-white">
+            <BrandFAQSection />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Brand hero section",
+    level: "organisms",
+    description:
+      "The brand-facing landing page hero — centered headline and CTA row, with a gradient panel holding the brand card image.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-full max-w-5xl bg-white">
+            <BrandHeroSection />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
     name: "How it works section",
     level: "organisms",
     description: "White section with three square-cornered brand-green poster cards walking through the browse → pitch → deliver flow.",
@@ -1157,7 +1310,7 @@ export const registry: RegistryEntry[] = [
   {
     name: "FAQ section",
     level: "organisms",
-    description: "White section holding a flat, border-divided list of FAQ items — simple shadcn-style accordion, click to expand.",
+    description: "White section holding a stack of #FAFAFA rounded FAQ items in a centered column, matching the brand-page FAQ section.",
     variants: [
       {
         name: "Default",

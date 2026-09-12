@@ -162,13 +162,36 @@ const Fire = forwardRef<FireHandle, FireProps>(function Fire(
       raf = requestAnimationFrame(frame);
     }
 
+    function startLoop() {
+      if (!raf) raf = requestAnimationFrame(frame);
+    }
+
+    function stopLoop() {
+      if (raf) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      }
+    }
+
     resize();
     window.addEventListener("resize", resize);
-    raf = requestAnimationFrame(frame);
+
+    // The simulation is invisible work once its canvas scrolls out of view —
+    // stop stepping/drawing entirely rather than just skipping the paint, so
+    // an off-screen flame costs nothing instead of idling at 60fps.
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) startLoop();
+        else stopLoop();
+      },
+      { threshold: 0 },
+    );
+    observer.observe(canvas);
 
     return () => {
       window.removeEventListener("resize", resize);
-      cancelAnimationFrame(raf);
+      observer.disconnect();
+      stopLoop();
     };
   }, []);
 

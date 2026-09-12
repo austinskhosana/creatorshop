@@ -1,54 +1,21 @@
 import { PosterCard } from "@/components/molecules/PosterCard";
 
-const BROWSE_ART = `    #####
-  ###   ###
- ##       ##
- ##       ##
- ##       ##
-  ###   ###
-    #####
-       ##
-        ##
-         ###`;
-
-const PITCH_ART = `
-            #
-           ##
-          ##
- #       ##
- ##     ##
-  ##   ##
-   ## ##
-    ###
-     #`;
-
-const DELIVER_ART = `      #
-     ###
-    #####
-   #######
-  #########
- ###########
-#############
-     ###
-     ###
-    ## ##`;
-
 const STEPS = [
   {
     step: "01",
-    art: BROWSE_ART,
+    model: "/models/floppy-disk.glb",
     title: "BROWSE THE DROP",
     description: "Explore software\nlistings from brands\nlooking for creators.",
   },
   {
     step: "02",
-    art: PITCH_ART,
+    model: "/models/pitch-bag.glb",
     title: "PITCH & GET PICKED",
     description: "Send your pitch —\nif the brand approves,\nyou're in.",
   },
   {
     step: "03",
-    art: DELIVER_ART,
+    model: "/models/deliver-symbol.glb",
     title: "POST & GET PAID",
     description: "Create it, deliver it,\nunlock your access.\nNo cash required.",
   },

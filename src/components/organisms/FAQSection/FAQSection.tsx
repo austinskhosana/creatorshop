@@ -30,14 +30,12 @@ const FAQS = [
 
 export default function FAQSection() {
   return (
-    <section className="bg-white px-6 pt-24 pb-64 sm:px-10 lg:px-16">
-      <div className="mx-auto max-w-3xl">
-        <h2 className="font-pixel text-2xl text-neutral-900 sm:text-3xl">FAQ</h2>
-        <div className="mt-8">
-          {FAQS.map((faq) => (
-            <FAQItem key={faq.question} question={faq.question} answer={faq.answer} />
-          ))}
-        </div>
+    <section className="bg-white px-6 pt-16 pb-48 text-center sm:px-10 lg:px-16">
+      <h2 className="text-2xl leading-tight font-medium text-neutral-900 sm:text-3xl">FAQ</h2>
+      <div className="mx-auto mt-10 flex w-full max-w-lg flex-col gap-4 text-left">
+        {FAQS.map((faq) => (
+          <FAQItem key={faq.question} question={faq.question} answer={faq.answer} />
+        ))}
       </div>
     </section>
   );

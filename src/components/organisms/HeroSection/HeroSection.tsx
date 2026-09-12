@@ -28,7 +28,7 @@ export default function HeroSection() {
           size="md"
           pill
           className="pointer-events-auto min-w-[150px]"
-          style={{ boxShadow: "none", fontWeight: 400 }}
+          style={{ boxShadow: "none" }}
         >
           Sign Up
         </Button>

@@ -1,9 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
-import Image from "next/image";
 import { Button } from "@/components/atoms/Button";
 import { Fire } from "@/components/atoms/Fire";
+import { Logo3D } from "@/components/atoms/Logo3D";
 
 export default function NextSection() {
   return (
@@ -14,19 +13,9 @@ export default function NextSection() {
         widthPercent={100}
         className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-full w-full"
       />
-      <motion.div
-        animate={{ y: [0, -14, 0] }}
-        transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
-        className="pointer-events-none mb-10"
-      >
-        <Image
-          src="/Metal Logo.webp"
-          alt="Creatorshop"
-          width={128}
-          height={128}
-          className="h-28 w-28 sm:h-32 sm:w-32"
-        />
-      </motion.div>
+      <div className="pointer-events-auto mb-10">
+        <Logo3D className="h-36 w-36 sm:h-44 sm:w-44" spinWithScroll />
+      </div>
       <h2 className="pointer-events-none font-pixel max-w-4xl text-4xl leading-tight text-black sm:text-5xl">
         Ditch the subscription. You&apos;re too hot to pay for software.
       </h2>
@@ -39,7 +28,7 @@ export default function NextSection() {
         size="lg"
         pill
         className="pointer-events-auto mt-8 min-w-[160px]"
-        style={{ boxShadow: "none", fontWeight: 400, color: "#A3FF38" }}
+        style={{ boxShadow: "none", color: "#A3FF38" }}
       >
         Sign Up
       </Button>
