@@ -23,7 +23,7 @@ export default function FAQItem({ question, answer, defaultOpen = false }: FAQIt
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="flex w-full items-center justify-between gap-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
+        className="pointer-events-auto flex w-full items-center justify-between gap-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
       >
         <span className="font-medium text-neutral-900">{question}</span>
         <motion.svg

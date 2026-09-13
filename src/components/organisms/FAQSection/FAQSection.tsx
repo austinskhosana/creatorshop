@@ -1,4 +1,5 @@
 import { FAQItem } from "@/components/molecules/FAQItem";
+import { PixelTrail } from "@/components/atoms/PixelTrail";
 
 const FAQS = [
   {
@@ -30,9 +31,16 @@ const FAQS = [
 
 export default function FAQSection() {
   return (
-    <section className="bg-white px-6 pt-16 pb-48 text-center sm:px-10 lg:px-16">
-      <h2 className="font-pixel text-2xl leading-tight text-neutral-900 sm:text-3xl">FAQ</h2>
-      <div className="mx-auto mt-10 flex w-full max-w-lg flex-col gap-4 text-left">
+    <section className="relative bg-white px-6 pt-16 pb-48 text-center sm:px-10 lg:px-16">
+      <PixelTrail
+        pixelSize={16}
+        fadeDuration={500}
+        delay={0}
+        className="-z-10"
+        pixelClassName="bg-black"
+      />
+      <h2 className="pointer-events-none font-pixel text-2xl leading-tight text-neutral-900 sm:text-3xl">FAQ</h2>
+      <div className="pointer-events-none mx-auto mt-10 flex w-full max-w-lg flex-col gap-4 text-left">
         {FAQS.map((faq) => (
           <FAQItem key={faq.question} question={faq.question} answer={faq.answer} />
         ))}
