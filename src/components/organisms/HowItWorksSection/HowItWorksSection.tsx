@@ -5,19 +5,19 @@ const STEPS = [
     step: "01",
     model: "/models/floppy-disk.glb",
     title: "BROWSE THE DROP",
-    description: "Explore software\nlistings from brands\nlooking for creators.",
+    description: "Explore software\nsubscription listings from\nbrands seeking creators.",
   },
   {
     step: "02",
     model: "/models/pitch-bag.glb",
-    title: "PITCH & GET PICKED",
-    description: "Send your pitch —\nif the brand approves,\nyou're in.",
+    title: "APPLY TO SHOP",
+    description: "Apply to pay with a post\nif the brand approves, go ahead and pay",
   },
   {
     step: "03",
     model: "/models/deliver-symbol.glb",
-    title: "POST & GET PAID",
-    description: "Create it, deliver it,\nunlock your access.\nNo cash required.",
+    title: "PAY WITH A POST",
+    description: "Create and deliver the\ncontent, unlock your access.\nNo cash required.",
   },
 ];
 

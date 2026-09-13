@@ -17,10 +17,12 @@ export default function NextSection() {
         <Logo3D className="h-24 w-24 sm:h-36 sm:w-36 lg:h-44 lg:w-44" spinWithScroll />
       </div>
       <h2 className="pointer-events-none font-pixel max-w-4xl text-2xl leading-tight text-black sm:text-4xl lg:text-5xl">
-        Ditch the subscription. You&apos;re too hot to pay for software.
+        Ditch the subscription. You&apos;re too hot
+        <br />
+        online to pay for software.
       </h2>
-      <p className="pointer-events-none mt-4 max-w-xl font-mono text-sm text-black/70 sm:mt-6 sm:text-base">
-        Apply to software access listings and if brands approve, you can pay
+      <p className="pointer-events-none mt-4 max-w-xl font-mono text-sm text-black/70 sm:mt-6 sm:max-w-2xl sm:text-base">
+        Apply to software subscription listings and if brands approve, you can pay
         using content you create for the brand. No cash required.
       </p>
       <Button
