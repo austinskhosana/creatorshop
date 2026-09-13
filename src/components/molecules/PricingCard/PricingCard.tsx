@@ -63,9 +63,29 @@ export default function PricingCard({
       </ul>
 
       <div className="mt-auto pt-10">
-        <Button variant={buttonVariant} size="md" pill fullWidth style={{ boxShadow: "none" }}>
-          {buttonLabel}
-        </Button>
+        {featured ? (
+          <MeshGradientPanel
+            radius={9999}
+            borderWidth={2}
+            shaded={false}
+            className="p-[2px] shadow-[0_0_0_1px_rgba(0,0,0,0.15),0_4px_10px_-2px_rgba(0,0,0,0.25)] transition-transform duration-150 has-[button:active]:scale-[0.98]"
+          >
+            <Button
+              variant={buttonVariant}
+              size="md"
+              pill
+              fullWidth
+              pressScale={false}
+              style={{ boxShadow: "none" }}
+            >
+              {buttonLabel}
+            </Button>
+          </MeshGradientPanel>
+        ) : (
+          <Button variant={buttonVariant} size="md" pill fullWidth style={{ boxShadow: "none" }}>
+            {buttonLabel}
+          </Button>
+        )}
       </div>
     </div>
   );

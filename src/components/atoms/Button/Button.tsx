@@ -12,6 +12,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
   iconLeft?: ReactNode;
   iconRight?: ReactNode;
+  /** Disable the built-in press scale, e.g. when a wrapper (like a metallic border panel) handles the press feedback itself. */
+  pressScale?: boolean;
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
@@ -44,6 +46,7 @@ export default function Button({
   fullWidth = false,
   pill = false,
   loading = false,
+  pressScale = true,
   iconLeft,
   iconRight,
   className,
@@ -58,7 +61,8 @@ export default function Button({
       aria-busy={loading}
       disabled={isDisabled}
       className={cn(
-        "inline-flex items-center justify-center gap-2 font-medium transition-all duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100",
+        "inline-flex items-center justify-center gap-2 font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40",
+        pressScale && "active:scale-[0.98] disabled:active:scale-100",
         pill ? "rounded-full" : "rounded-xl",
         variantStyles[variant],
         sizeStyles[size],

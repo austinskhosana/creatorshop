@@ -28,7 +28,7 @@ export default function PosterCard({ step, art, image, model, title, description
         </pre>
       )}
       <div className="text-center">
-        <h3 className="font-pixel text-xl leading-tight whitespace-nowrap text-black sm:text-[clamp(0.65rem,1.6vw,1.125rem)]">
+        <h3 className="font-pixel text-lg leading-tight text-black sm:text-[clamp(0.65rem,1.6vw,1.125rem)] sm:whitespace-nowrap">
           {title}
         </h3>
         <p className="mt-3 font-mono text-sm leading-relaxed whitespace-pre-line text-black/70">

@@ -23,10 +23,10 @@ const STEPS = [
 
 export default function HowItWorksSection() {
   return (
-    <section className="sticky top-0 z-20 flex h-screen flex-col justify-center bg-white px-6 py-16 sm:px-10 lg:px-16">
+    <section className="relative z-20 flex flex-col justify-start bg-white px-6 pt-28 pb-16 sm:sticky sm:top-0 sm:h-screen sm:px-10 sm:pt-36 lg:px-16">
       <div className="mx-auto w-full max-w-5xl">
-        <h2 className="text-center font-pixel text-3xl text-neutral-900 sm:text-5xl">How it works</h2>
-        <div className="mt-20 grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <h2 className="text-center font-pixel text-2xl text-neutral-900 sm:text-3xl lg:text-5xl">How it works</h2>
+        <div className="mt-10 grid grid-cols-1 gap-6 sm:mt-20 sm:grid-cols-3">
           {STEPS.map((s) => (
             <PosterCard key={s.step} {...s} />
           ))}

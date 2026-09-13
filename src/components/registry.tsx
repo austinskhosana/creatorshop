@@ -1203,13 +1203,21 @@ export const registry: RegistryEntry[] = [
   {
     name: "Navbar",
     level: "organisms",
-    description: "Centered marketing nav — logo lockup, How it works / For creators / For brands links, and a Join Waitlist CTA.",
+    description: "Marketing nav with a full default header and a compact variant (links + hamburger only, no logo/CTA) for embedding inside a hero.",
     variants: [
       {
         name: "Default",
         preview: (
           <div className="w-full max-w-5xl bg-white">
             <Navbar />
+          </div>
+        ),
+      },
+      {
+        name: "Compact",
+        preview: (
+          <div className="w-full max-w-5xl bg-white p-6">
+            <Navbar variant="compact" />
           </div>
         ),
       },

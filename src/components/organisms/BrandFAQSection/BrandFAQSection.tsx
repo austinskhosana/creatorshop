@@ -25,7 +25,7 @@ const FAQS = [
 
 export default function BrandFAQSection() {
   return (
-    <section className="bg-white px-6 pt-16 pb-48 text-center sm:px-10 lg:px-16">
+    <section className="bg-white px-6 pt-24 pb-20 text-center sm:px-10 sm:pt-36 sm:pb-48 lg:px-16 lg:pt-56">
       <h2 className="text-2xl leading-tight font-medium text-neutral-900 sm:text-3xl">FAQ</h2>
       <div className="mx-auto mt-10 flex w-full max-w-lg flex-col gap-4 text-left">
         {FAQS.map((faq) => (

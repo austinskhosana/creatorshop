@@ -98,8 +98,12 @@ const Fire = forwardRef<FireHandle, FireProps>(function Fire(
     function resize() {
       const dpr = window.devicePixelRatio || 1;
       const width = parent!.clientWidth;
+      const maxRows = Math.max(12, Math.floor(parent!.clientHeight / CHAR_HEIGHT));
       cols = Math.max(12, Math.floor(width / CHAR_WIDTH));
-      rows = Math.max(12, rowCountRef.current);
+      // Cap rows to what the container can actually show — otherwise the fixed-height
+      // canvas overflows past the top of a short (e.g. mobile) container and gets hard
+      // clipped by overflow-hidden instead of tapering off naturally.
+      rows = Math.max(12, Math.min(rowCountRef.current, maxRows));
       const cssWidth = cols * CHAR_WIDTH;
       const cssHeight = rows * CHAR_HEIGHT;
       canvas!.width = cssWidth * dpr;

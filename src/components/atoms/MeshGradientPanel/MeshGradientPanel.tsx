@@ -10,11 +10,21 @@ interface MeshGradientPanelProps {
   className?: string;
   /** Show the animated shader texture inside the metallic border. Set false for a plain grey fill. */
   shaded?: boolean;
+  /** Corner radius in px for the outer ring. Defaults to 32, the large-panel treatment. Use 9999 for a pill. */
+  radius?: number;
+  /** Thickness of the visible metal ring in px. Defaults to 5. */
+  borderWidth?: number;
 }
 
-export default function MeshGradientPanel({ children, className, shaded = true }: MeshGradientPanelProps) {
+export default function MeshGradientPanel({
+  children,
+  className,
+  shaded = true,
+  radius = 32,
+  borderWidth = 5,
+}: MeshGradientPanelProps) {
   return (
-    <div className={cn("relative isolate overflow-hidden rounded-[32px]", className)}>
+    <div className={cn("relative isolate overflow-hidden", className)} style={{ borderRadius: radius }}>
       <LiquidMetal
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-20 h-full w-full"
@@ -35,7 +45,11 @@ export default function MeshGradientPanel({ children, className, shaded = true }
         worldHeight={800}
       />
 
-      <div aria-hidden="true" className="absolute inset-[5px] -z-10 overflow-hidden rounded-[27px]">
+      <div
+        aria-hidden="true"
+        className="absolute -z-10 overflow-hidden"
+        style={{ inset: borderWidth, borderRadius: Math.max(radius - borderWidth, 0) }}
+      >
         {shaded ? (
           <TerminalgraphShader
             theme="light"

@@ -9,7 +9,7 @@ interface FeatureTileProps {
 
 function FeatureTile({ title, description, visual }: FeatureTileProps) {
   return (
-    <div className="flex flex-col text-left">
+    <div className="flex flex-col items-center text-center">
       <div className="flex aspect-square w-full items-center justify-center rounded-[24px] bg-[#FAFAFA]">
         {visual}
       </div>
@@ -25,7 +25,7 @@ function FeatureTile({ title, description, visual }: FeatureTileProps) {
 
 export default function FeatureGridSection() {
   return (
-    <section className="bg-white px-6 pt-64 pb-64 text-center sm:px-10 lg:px-16">
+    <section className="bg-white px-6 pt-24 text-center sm:px-10 sm:pt-36 lg:px-16 lg:pt-56">
       <div className="mx-auto max-w-2xl">
         <h2 className="text-2xl leading-tight font-medium tracking-tight text-neutral-900 sm:text-3xl">
           Everything you need to run a drop
@@ -36,7 +36,7 @@ export default function FeatureGridSection() {
         </p>
       </div>
 
-      <div className="mx-auto mt-24 grid w-full max-w-5xl grid-cols-1 gap-10 sm:grid-cols-3">
+      <div className="mx-auto mt-12 grid w-full max-w-5xl grid-cols-1 gap-10 sm:mt-24 sm:grid-cols-3">
         <FeatureTile
           title="List in minutes"
           description="Set your plan, seats, and how many posts you want back. Live the same day."

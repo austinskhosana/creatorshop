@@ -2,7 +2,7 @@
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, Lightformer, useGLTF } from "@react-three/drei";
-import { Suspense, useRef } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { cn } from "@/lib/utils";
 
@@ -86,25 +86,51 @@ export default function Logo3D({
   spinSpeed = 0.15,
   accentColor = "#A3FF38",
 }: Logo3DProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+
+  // Every instance spins up its own WebGL context + PMREM environment map,
+  // which is expensive to create several of at once (the stacked sticky
+  // sections on this page keep every prior <Canvas> mounted). Deferring
+  // mount until the model is actually about to be seen keeps concurrent
+  // contexts low so later ones don't silently fail to render.
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className={cn("h-28 w-28", className)}>
-      <Canvas camera={{ position: [0, 0, 4], fov: 35 }} gl={{ alpha: true, preserveDrawingBuffer: true }}>
-        <ambientLight intensity={1.6} />
-        <directionalLight position={[3, 4, 5]} intensity={2.2} />
-        <directionalLight position={[-4, 2, 3]} intensity={1.4} color="#ffffff" />
-        <directionalLight position={[0, -3, 5]} intensity={1.2} color="#ffffff" />
-        <pointLight position={[0, -3, 4]} intensity={1.2} color={accentColor} />
-        <Suspense fallback={null}>
-          <ChromeSymbol modelUrl={modelUrl} spinWithScroll={spinWithScroll} spinSpeed={spinSpeed} />
-          <Environment resolution={256}>
-            <Lightformer form="rect" intensity={4} color="#ffffff" position={[0, 2, 3]} scale={[5, 5, 1]} />
-            <Lightformer form="rect" intensity={3} color={accentColor} position={[-3, -1, 2]} scale={[4, 4, 1]} />
-            <Lightformer form="rect" intensity={2.5} color="#ffffff" position={[3, -2, -2]} scale={[4, 4, 1]} />
-            <Lightformer form="ring" intensity={2.5} color="#ffffff" position={[0, 0, -4]} scale={7} />
-            <Lightformer form="rect" intensity={2} color="#ffffff" position={[0, -4, 2]} scale={[6, 3, 1]} />
-          </Environment>
-        </Suspense>
-      </Canvas>
+    <div ref={containerRef} className={cn("h-28 w-28", className)}>
+      {inView && (
+        <Canvas camera={{ position: [0, 0, 4], fov: 35 }} gl={{ alpha: true, preserveDrawingBuffer: true }}>
+          <ambientLight intensity={1.6} />
+          <directionalLight position={[3, 4, 5]} intensity={2.2} />
+          <directionalLight position={[-4, 2, 3]} intensity={1.4} color="#ffffff" />
+          <directionalLight position={[0, -3, 5]} intensity={1.2} color="#ffffff" />
+          <pointLight position={[0, -3, 4]} intensity={1.2} color={accentColor} />
+          <Suspense fallback={null}>
+            <ChromeSymbol modelUrl={modelUrl} spinWithScroll={spinWithScroll} spinSpeed={spinSpeed} />
+            <Environment resolution={256}>
+              <Lightformer form="rect" intensity={4} color="#ffffff" position={[0, 2, 3]} scale={[5, 5, 1]} />
+              <Lightformer form="rect" intensity={3} color={accentColor} position={[-3, -1, 2]} scale={[4, 4, 1]} />
+              <Lightformer form="rect" intensity={2.5} color="#ffffff" position={[3, -2, -2]} scale={[4, 4, 1]} />
+              <Lightformer form="ring" intensity={2.5} color="#ffffff" position={[0, 0, -4]} scale={7} />
+              <Lightformer form="rect" intensity={2} color="#ffffff" position={[0, -4, 2]} scale={[6, 3, 1]} />
+            </Environment>
+          </Suspense>
+        </Canvas>
+      )}
     </div>
   );
 }
