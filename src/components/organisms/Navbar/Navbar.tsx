@@ -216,7 +216,7 @@ export default function Navbar({ variant = "default", className }: NavbarProps) 
 
         <motion.div className="hidden sm:block" {...entranceProps(NAV_LINKS.length + 1, reduce)}>
           <Button variant="primary" size="md" pill style={{ border: "none", boxShadow: "none" }}>
-            Join Waitlist
+            Sign Up
           </Button>
         </motion.div>
 

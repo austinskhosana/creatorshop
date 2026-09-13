@@ -1058,7 +1058,7 @@ export const registry: RegistryEntry[] = [
           <div className="w-96 bg-white p-3">
             <FAQItem
               question="How does Creatorshop actually work?"
-              answer="Browse a software drop, pitch your reach, and if the brand's into it, you create the content and deliver it. Access unlocked — no cash involved."
+              answer="Browse software subscription listings, apply to shop, and if the brand approves, create and deliver the content to pay with a post. No cash involved."
             />
           </div>
         ),
@@ -1069,7 +1069,7 @@ export const registry: RegistryEntry[] = [
           <div className="w-96 bg-white p-3">
             <FAQItem
               question="How does Creatorshop actually work?"
-              answer="Browse a software drop, pitch your reach, and if the brand's into it, you create the content and deliver it. Access unlocked — no cash involved."
+              answer="Browse software subscription listings, apply to shop, and if the brand approves, create and deliver the content to pay with a post. No cash involved."
               defaultOpen
             />
           </div>

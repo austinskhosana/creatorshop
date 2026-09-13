@@ -4,27 +4,27 @@ const FAQS = [
   {
     question: "How does Creatorshop actually work?",
     answer:
-      "Browse a software drop, pitch your reach, and if the brand's into it, you create the content and deliver it. Access unlocked — no cash involved.",
+      "Browse software subscription listings, apply to shop, and if the brand approves, create and deliver the content to pay with a post. No cash involved.",
   },
   {
     question: "Do I need a huge following to apply?",
     answer:
-      "No minimum follower count. Brands pick based on fit for their software, not just your numbers.",
+      "No minimum follower count. Brands pick based on fit for their software subscription, not just your numbers.",
   },
   {
-    question: "What happens if my pitch isn't picked?",
+    question: "What happens if my application isn't picked?",
     answer:
-      "Nothing bad — you just browse the next drop. No cost, no card on file, no risk.",
+      "Nothing bad happens. You just browse the next drop. No cost, no card on file, no risk.",
   },
   {
     question: "How do I actually get paid?",
     answer:
-      "You're paid in access, not cash. Deliver the content you agreed on, and the software's yours.",
+      "You pay with a post, not cash. Deliver the content you agreed on, and the subscription that would've cost you money is yours.",
   },
   {
     question: "Is this only for software brands right now?",
     answer:
-      "For now, yes — we're launching focused on software drops. More categories are on the way.",
+      "For now, yes. We're launching focused on software subscription drops, with more categories on the way.",
   },
 ];
 

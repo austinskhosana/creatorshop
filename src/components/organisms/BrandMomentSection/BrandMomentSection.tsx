@@ -22,7 +22,7 @@ export default function BrandMomentSection() {
             className="mt-10"
             style={{ border: "none", boxShadow: "none" }}
           >
-            Join Waitlist
+            Sign Up
           </Button>
         </div>
       </div>

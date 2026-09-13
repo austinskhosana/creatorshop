@@ -1,36 +1,51 @@
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
+import { BoltIcon, ClipboardIcon, EnvelopeIcon } from "@heroicons/react/24/solid";
 import { PricingCard } from "@/components/molecules/PricingCard";
 
-function TargetIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
-      <circle cx="12" cy="12" r="3" fill="currentColor" />
-    </svg>
-  );
-}
+const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 
-function SparkleIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z" />
-    </svg>
-  );
+/** Staggered fade/slide-up on scroll into view — matches the hero's entranceProps. */
+function entranceProps(index: number, reduce: boolean | null) {
+  if (reduce) {
+    return {
+      initial: { opacity: 0 },
+      whileInView: { opacity: 1 },
+      viewport: { once: true, margin: "-80px" },
+      transition: { duration: 0.15, delay: index * 0.05 },
+    };
+  }
+  return {
+    initial: { opacity: 0, transform: "translateY(8px)" },
+    whileInView: { opacity: 1, transform: "translateY(0px)" },
+    viewport: { once: true, margin: "-80px" },
+    transition: { duration: 0.35, ease: EASE_OUT, delay: index * 0.07 },
+  };
 }
 
 export default function PricingSection() {
+  const reduce = useReducedMotion();
+
   return (
     <section className="bg-white px-6 pt-24 text-center sm:px-10 sm:pt-36 lg:px-16 lg:pt-56">
-      <h2 className="text-2xl leading-tight font-medium tracking-tight text-neutral-900 sm:text-3xl">
+      <motion.h2
+        className="text-2xl leading-tight font-medium tracking-tight text-neutral-900 sm:text-3xl"
+        {...entranceProps(0, reduce)}
+      >
         Simple pricing for every brand
-      </h2>
-      <p className="mx-auto mt-4 max-w-md leading-relaxed text-neutral-500">
+      </motion.h2>
+      <motion.p
+        className="mx-auto mt-4 max-w-md leading-relaxed text-neutral-500"
+        {...entranceProps(1, reduce)}
+      >
         Run your own drops for a flat monthly fee, or hand the whole campaign
         to us.
-      </p>
+      </motion.p>
 
       <div className="mx-auto mt-16 grid max-w-3xl grid-cols-1 items-stretch gap-6 sm:grid-cols-2">
         <PricingCard
-          badgeIcon={<SparkleIcon />}
+          badgeIcon={<BoltIcon width={14} height={14} />}
           badgeLabel="Subscription"
           description="List your own drops, review every pitch, and manage delivery yourself."
           price="$50"
@@ -49,9 +64,9 @@ export default function PricingSection() {
         />
 
         <PricingCard
-          badgeIcon={<TargetIcon />}
+          badgeIcon={<ClipboardIcon width={14} height={14} />}
           badgeLabel="Custom"
-          description="We run your drop end to end. Sourcing creators, reviewing pitches, and managing delivery for you."
+          description="We run your drop end to end. Sourcing creators managing delivery."
           price="Custom"
           features={[
             "Dedicated campaign manager",
@@ -62,6 +77,7 @@ export default function PricingSection() {
             "Priority support",
           ]}
           buttonLabel="Contact us"
+          buttonIcon={<EnvelopeIcon width={16} height={16} />}
           buttonVariant="secondary"
         />
       </div>

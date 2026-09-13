@@ -11,6 +11,7 @@ interface PricingCardProps {
   priceSuffix?: string;
   features: string[];
   buttonLabel: string;
+  buttonIcon?: ReactNode;
   buttonVariant?: "primary" | "dark" | "secondary";
   /** Wraps the card in the metallic shader background/border instead of a plain white card. */
   featured?: boolean;
@@ -32,6 +33,7 @@ export default function PricingCard({
   priceSuffix,
   features,
   buttonLabel,
+  buttonIcon,
   buttonVariant = "secondary",
   featured = false,
 }: PricingCardProps) {
@@ -76,13 +78,21 @@ export default function PricingCard({
               pill
               fullWidth
               pressScale={false}
+              iconLeft={buttonIcon}
               style={{ boxShadow: "none" }}
             >
               {buttonLabel}
             </Button>
           </MeshGradientPanel>
         ) : (
-          <Button variant={buttonVariant} size="md" pill fullWidth style={{ boxShadow: "none" }}>
+          <Button
+            variant={buttonVariant}
+            size="md"
+            pill
+            fullWidth
+            iconLeft={buttonIcon}
+            style={{ boxShadow: "none" }}
+          >
             {buttonLabel}
           </Button>
         )}
