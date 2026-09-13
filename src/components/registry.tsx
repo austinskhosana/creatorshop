@@ -51,6 +51,7 @@ import { Fire } from "@/components/atoms/Fire";
 import { AsciiFlame } from "@/components/atoms/AsciiFlame";
 import { LocationTime } from "@/components/atoms/LocationTime";
 import { ScrollIndicator } from "@/components/atoms/ScrollIndicator";
+import { TextScramble } from "@/components/atoms/TextScramble";
 import { PosterCard } from "@/components/molecules/PosterCard";
 import { HowItWorksSection } from "@/components/organisms/HowItWorksSection";
 import { FAQItem } from "@/components/molecules/FAQItem";
@@ -517,6 +518,22 @@ export const registry: RegistryEntry[] = [
           <div className="rounded-xl border border-neutral-200 bg-white p-6">
             <ScrollIndicator />
           </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Text scramble",
+    level: "atoms",
+    description: "Decodes into place from random glyphs on mount — used for the hero's pitch copy. Respects prefers-reduced-motion by rendering the final text immediately.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <TextScramble
+            text="Trade posts for software access."
+            className="font-mono text-sm text-neutral-600"
+          />
         ),
       },
     ],
