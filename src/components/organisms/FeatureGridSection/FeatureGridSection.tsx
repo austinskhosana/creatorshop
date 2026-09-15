@@ -71,13 +71,13 @@ export default function FeatureGridSection() {
         <FeatureTile
           title="List in minutes"
           description="Set your plan, seats, and how many posts you want back. Live the same day."
-          visual={<Logo3D modelUrl="/symbl-3d (8).glb" className="h-44 w-44" spinSpeed={0.6} accentColor="#ffffff" />}
+          visual={<Logo3D modelUrl="/models/floppy-disk.glb" className="h-44 w-44" spinSpeed={0.6} accentColor="#ffffff" />}
         />
 
         <FeatureTile
           title="You choose who gets in"
           description="Every pitch reviewed by you. Nothing goes out until you approve it."
-          visual={<Logo3D modelUrl="/symbl-3d (11).glb" className="h-44 w-44" spinSpeed={0.6} accentColor="#ffffff" />}
+          visual={<Logo3D modelUrl="/models/pitch-bag.glb" className="h-44 w-44" spinSpeed={0.6} accentColor="#ffffff" />}
         />
 
         <FeatureTile

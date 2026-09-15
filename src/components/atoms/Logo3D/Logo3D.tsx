@@ -1,71 +1,15 @@
 "use client";
 
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Environment, Lightformer, useGLTF } from "@react-three/drei";
-import { Suspense, useEffect, useRef, useState } from "react";
-import * as THREE from "three";
+import dynamic from "next/dynamic";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const MODEL_URL = "/models/symbol-3d.glb";
 
-function ChromeSymbol({
-  modelUrl,
-  spinWithScroll,
-  spinSpeed,
-}: {
-  modelUrl: string;
-  spinWithScroll: boolean;
-  spinSpeed: number;
-}) {
-  const { scene } = useGLTF(modelUrl);
-  const groupRef = useRef<THREE.Group>(null);
-
-  const model = useRef(scene.clone(true));
-  const normalized = useRef(false);
-
-  model.current.traverse((child) => {
-    if (child instanceof THREE.Mesh) {
-      child.material = new THREE.MeshPhysicalMaterial({
-        color: "#e8e8ea",
-        metalness: 1,
-        roughness: 0.18,
-        clearcoat: 1,
-        clearcoatRoughness: 0.08,
-      });
-    }
-  });
-
-  // Normalize every model to the same on-screen size regardless of how it
-  // was authored/exported, so different .glb files read as consistently
-  // sized when swapped into this same component.
-  if (!normalized.current) {
-    const box = new THREE.Box3().setFromObject(model.current);
-    const size = box.getSize(new THREE.Vector3());
-    const center = box.getCenter(new THREE.Vector3());
-    const maxDimension = Math.max(size.x, size.y, size.z) || 1;
-    const targetSize = 1.8;
-    model.current.scale.multiplyScalar(targetSize / maxDimension);
-    model.current.position.sub(center.multiplyScalar(targetSize / maxDimension));
-    normalized.current = true;
-  }
-
-  useFrame((state, delta) => {
-    if (!groupRef.current) return;
-
-    if (spinWithScroll) {
-      const scrollTarget = window.scrollY * 0.003;
-      groupRef.current.rotation.y += (scrollTarget - groupRef.current.rotation.y) * 0.1;
-    } else {
-      groupRef.current.rotation.y += delta * spinSpeed;
-    }
-  });
-
-  return (
-    <group ref={groupRef}>
-      <primitive object={model.current} />
-    </group>
-  );
-}
+// three.js + @react-three/fiber + drei weigh in over 1MB — split them into their
+// own chunk so it's only ever fetched once a symbol is about to be seen, instead
+// of shipping with every page that renders one.
+const Logo3DCanvas = dynamic(() => import("./Logo3DCanvas"), { ssr: false });
 
 interface Logo3DProps {
   className?: string;
@@ -88,12 +32,18 @@ export default function Logo3D({
 }: Logo3DProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
+  const [ready, setReady] = useState(false);
 
   // Every instance spins up its own WebGL context + PMREM environment map,
   // which is expensive to create several of at once (the stacked sticky
   // sections on this page keep every prior <Canvas> mounted). Deferring
-  // mount until the model is actually about to be seen keeps concurrent
-  // contexts low so later ones don't silently fail to render.
+  // mount until the model is about to be seen keeps concurrent contexts low
+  // so later ones don't silently fail to render — but on this page sections
+  // are full-viewport sticky panels, so "about to be seen" needs to mean
+  // "roughly a screen away", not 200px, or the fetch+decode is still running
+  // by the time the section is actually on screen. A full viewport of lead
+  // time (rootMargin: "100%") starts it while the user is still scrolling
+  // through the previous section instead.
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -104,35 +54,26 @@ export default function Logo3D({
           observer.disconnect();
         }
       },
-      { rootMargin: "200px" },
+      { rootMargin: "100% 0px" },
     );
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
   return (
-    <div ref={containerRef} className={cn("h-28 w-28", className)}>
+    <div ref={containerRef} className={cn("relative h-28 w-28", className)}>
+      {inView && !ready && (
+        <div className="absolute inset-[15%] animate-pulse rounded-full bg-black/10" aria-hidden="true" />
+      )}
       {inView && (
-        <Canvas camera={{ position: [0, 0, 4], fov: 35 }} gl={{ alpha: true, preserveDrawingBuffer: true }}>
-          <ambientLight intensity={1.6} />
-          <directionalLight position={[3, 4, 5]} intensity={2.2} />
-          <directionalLight position={[-4, 2, 3]} intensity={1.4} color="#ffffff" />
-          <directionalLight position={[0, -3, 5]} intensity={1.2} color="#ffffff" />
-          <pointLight position={[0, -3, 4]} intensity={1.2} color={accentColor} />
-          <Suspense fallback={null}>
-            <ChromeSymbol modelUrl={modelUrl} spinWithScroll={spinWithScroll} spinSpeed={spinSpeed} />
-            <Environment resolution={256}>
-              <Lightformer form="rect" intensity={4} color="#ffffff" position={[0, 2, 3]} scale={[5, 5, 1]} />
-              <Lightformer form="rect" intensity={3} color={accentColor} position={[-3, -1, 2]} scale={[4, 4, 1]} />
-              <Lightformer form="rect" intensity={2.5} color="#ffffff" position={[3, -2, -2]} scale={[4, 4, 1]} />
-              <Lightformer form="ring" intensity={2.5} color="#ffffff" position={[0, 0, -4]} scale={7} />
-              <Lightformer form="rect" intensity={2} color="#ffffff" position={[0, -4, 2]} scale={[6, 3, 1]} />
-            </Environment>
-          </Suspense>
-        </Canvas>
+        <Logo3DCanvas
+          modelUrl={modelUrl}
+          spinWithScroll={spinWithScroll}
+          spinSpeed={spinSpeed}
+          accentColor={accentColor}
+          onReady={() => setReady(true)}
+        />
       )}
     </div>
   );
 }
-
-useGLTF.preload(MODEL_URL);

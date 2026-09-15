@@ -56,7 +56,7 @@ export default function FilterTabBar({ tabs, activeId, onChange }: FilterTabBarP
           }}
           onClick={() => handleChange(tab.id, i)}
           className={[
-            "relative z-10 flex items-center gap-2 rounded-lg px-4 py-1.5 text-sm font-medium transition-colors duration-[200ms]",
+            "relative z-10 flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-[200ms]",
             activeId === tab.id ? "text-neutral-900" : "text-gray-500 hover:text-gray-800",
           ].join(" ")}
         >

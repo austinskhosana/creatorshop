@@ -1,74 +1,167 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { Badge } from "@/components/atoms/Badge";
+import Badge from "@/components/atoms/Badge/Badge";
+import Button from "@/components/atoms/Button/Button";
 
 interface ListingCardProps {
   slug: string;
-  name: string;
-  logoUrl?: string | null;
-  planName: string;
-  months: number;
-  postsRequired: number;
+  brandName: string;
+  title: string;
+  description: string;
+  deliverables: string[];
+  retailValue: number;
   slotsRemaining: number;
-  category?: string | null;
+  totalSlots: number;
+  verified?: boolean;
+  saved?: boolean;
+}
+
+function ImagePlaceholderIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8 text-neutral-300">
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <circle cx="8.5" cy="8.5" r="1.5" />
+      <path d="M21 15l-5-5L5 21" />
+    </svg>
+  );
+}
+
+function VerifiedIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5 flex-shrink-0 text-neutral-400">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M8.5 12.5l2.25 2.25L15.5 9.5" />
+    </svg>
+  );
+}
+
+function BookmarkIcon({ filled }: { filled: boolean }) {
+  return (
+    <span className="relative block h-4 w-4">
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={[
+          "absolute inset-0 h-4 w-4 transition-opacity duration-150 ease-[cubic-bezier(0.2,0,0,1)]",
+          filled ? "opacity-0" : "opacity-100",
+        ].join(" ")}
+      >
+        <path d="M6 3.75A1.75 1.75 0 0 1 7.75 2h8.5A1.75 1.75 0 0 1 18 3.75V21l-6-3.75L6 21V3.75Z" />
+      </svg>
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={[
+          "absolute inset-0 h-4 w-4 transition-opacity duration-150 ease-[cubic-bezier(0.2,0,0,1)]",
+          filled ? "opacity-100" : "opacity-0",
+        ].join(" ")}
+      >
+        <path d="M6 3.75A1.75 1.75 0 0 1 7.75 2h8.5A1.75 1.75 0 0 1 18 3.75V21l-6-3.75L6 21V3.75Z" />
+      </svg>
+    </span>
+  );
+}
+
+function CartIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5">
+      <circle cx="9" cy="20" r="1.1" />
+      <circle cx="17" cy="20" r="1.1" />
+      <path d="M2.5 3.5h2.1l1.8 10.9a1.75 1.75 0 0 0 1.73 1.47h8.6a1.75 1.75 0 0 0 1.73-1.47L19.9 7.5H5.9" />
+    </svg>
+  );
 }
 
 export default function ListingCard({
   slug,
-  name,
-  logoUrl,
-  planName,
-  months,
-  postsRequired,
+  brandName,
+  title,
+  description,
+  deliverables,
+  retailValue,
   slotsRemaining,
+  totalSlots,
+  verified = true,
+  saved = false,
 }: ListingCardProps) {
-  const noSlots = slotsRemaining === 0;
+  const [isSaved, setIsSaved] = useState(saved);
+  const soldOut = slotsRemaining === 0;
 
   return (
-    <article className="flex h-full flex-col gap-3 rounded-3xl border border-gray-200 bg-white p-3">
-      <div
-        className="relative flex h-36 items-center justify-center overflow-hidden rounded-2xl border border-[#EFEFEF]"
-        style={{ background: "radial-gradient(ellipse at 0% 0%, rgba(163,255,56,0.32) 0%, #ffffff 65%)" }}
-      >
-        {logoUrl ? (
-          <Image src={logoUrl} alt={`${name} logo`} width={80} height={80} className="object-contain" />
-        ) : (
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-200" aria-hidden="true">
-            <span className="text-2xl font-bold text-gray-400">{name[0]}</span>
+    <article className="flex flex-col gap-3 rounded-2xl border border-neutral-200 p-3">
+      <div className="relative">
+        <Link href={soldOut ? "#" : `/software/${slug}`} aria-disabled={soldOut} tabIndex={soldOut ? -1 : undefined} className="rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2">
+          <div className="flex aspect-[16/10] items-center justify-center rounded-lg border border-neutral-200 bg-neutral-100">
+            <ImagePlaceholderIcon />
           </div>
-        )}
-        {noSlots && (
-          <div className="absolute inset-0 flex items-center justify-center rounded-2xl bg-white/60">
-            <span className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-semibold text-gray-500">
-              Full
-            </span>
-          </div>
-        )}
+        </Link>
+
+        <span
+          className={[
+            "pointer-events-none absolute top-2 left-2 rounded-full px-2 py-0.5 text-[11px] font-medium",
+            soldOut ? "bg-neutral-900 text-white" : "bg-white/90 text-neutral-600 ring-1 ring-neutral-200",
+          ].join(" ")}
+        >
+          {soldOut ? "Sold out" : `${slotsRemaining} of ${totalSlots} spots left`}
+        </span>
+
+        <button
+          type="button"
+          onClick={() => setIsSaved((v) => !v)}
+          aria-pressed={isSaved}
+          aria-label={isSaved ? "Remove from saved" : "Save for later"}
+          className="absolute top-2 right-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white/90 text-neutral-500 ring-1 ring-neutral-200 transition-[color,transform] duration-150 hover:text-neutral-900 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
+        >
+          <BookmarkIcon filled={isSaved} />
+        </button>
       </div>
 
-      <div className="flex flex-1 flex-col gap-2 px-1">
-        <div className="flex items-center justify-between gap-2">
-          <p className="truncate text-lg font-semibold leading-snug text-neutral-900">{name}</p>
-          <Badge variant="count" label={`${postsRequired} ${postsRequired === 1 ? "post" : "posts"}`} />
+      <div className="flex flex-col">
+        <div className="flex items-center gap-1 text-[12px] text-neutral-400">
+          <span className="truncate">{brandName}</span>
+          {verified && <VerifiedIcon />}
         </div>
-        <p className="text-sm leading-snug text-gray-400">
-          Get {months} {months === 1 ? "month" : "months"} of {name} {planName}
-        </p>
+
+        <Link href={soldOut ? "#" : `/software/${slug}`} tabIndex={soldOut ? -1 : undefined} className="mt-1 focus-visible:outline-none">
+          <p className="text-balance text-[14px] leading-snug font-semibold text-neutral-900">{title}</p>
+        </Link>
+
+        <p className="text-pretty mt-1 line-clamp-2 text-[13px] leading-relaxed text-neutral-400">{description}</p>
+
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {deliverables.map((deliverable) => (
+            <Badge key={deliverable} variant="tag" label={deliverable} />
+          ))}
+        </div>
       </div>
 
-      <Link
-        href={noSlots ? "#" : `/software/${slug}`}
-        aria-disabled={noSlots}
-        tabIndex={noSlots ? -1 : undefined}
-        className={[
-          "w-full rounded-xl py-3 text-center text-sm font-semibold transition-opacity",
-          noSlots
-            ? "pointer-events-none cursor-not-allowed bg-gray-100 text-gray-400"
-            : "bg-neutral-900 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] hover:opacity-90",
-        ].join(" ")}
-      >
-        {noSlots ? "No slots" : "View Brief"}
-      </Link>
+      <div className="flex items-end justify-between">
+        <div>
+          <p className="text-[15px] font-semibold tabular-nums text-neutral-900">${retailValue}</p>
+          <p className="text-[11px] text-neutral-400">retail value</p>
+        </div>
+        <Button
+          variant="dark"
+          size="sm"
+          iconLeft={<CartIcon />}
+          disabled={soldOut}
+          style={{ borderRadius: "8px", boxShadow: "none" }}
+        >
+          {soldOut ? "Sold out" : "Add to cart"}
+        </Button>
+      </div>
     </article>
   );
 }

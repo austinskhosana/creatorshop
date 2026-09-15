@@ -30,16 +30,16 @@ export default function MeshGradientPanel({
         className="pointer-events-none absolute inset-0 -z-20 h-full w-full"
         shape="none"
         fit="cover"
-        colorBack="#D8D8DA"
+        colorBack="#DCDCDE"
         colorTint="#ffffff"
-        repetition={5}
-        softness={0.55}
-        shiftRed={0.3}
-        shiftBlue={0.3}
+        repetition={4}
+        softness={0.8}
+        shiftRed={0.12}
+        shiftBlue={0.12}
         distortion={0.1}
         contour={0.15}
         angle={45}
-        speed={1}
+        speed={0.5}
         scale={1}
         worldWidth={800}
         worldHeight={800}
@@ -48,7 +48,11 @@ export default function MeshGradientPanel({
       <div
         aria-hidden="true"
         className="absolute -z-10 overflow-hidden"
-        style={{ inset: borderWidth, borderRadius: Math.max(radius - borderWidth, 0) }}
+        style={{
+          inset: borderWidth,
+          borderRadius: Math.max(radius - borderWidth, 0),
+          boxShadow: "0 0 0 1px rgba(0,0,0,0.14), inset 0 1px 2px rgba(0,0,0,0.06)",
+        }}
       >
         {shaded ? (
           <TerminalgraphShader
@@ -62,6 +66,15 @@ export default function MeshGradientPanel({
       </div>
 
       {children}
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          borderRadius: radius,
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.85), inset 0 0 0 1px rgba(0,0,0,0.1)",
+        }}
+      />
     </div>
   );
 }

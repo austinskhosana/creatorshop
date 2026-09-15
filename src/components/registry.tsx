@@ -14,7 +14,16 @@ import { DeadlineTimer } from "@/components/molecules/DeadlineTimer";
 import { CategoryCard } from "@/components/organisms/CategoryCard";
 import { CreatorDirectoryCard } from "@/components/organisms/CreatorDirectoryCard";
 import { ListingCard } from "@/components/organisms/ListingCard";
+import { ListingsToolbarDemo } from "@/components/organisms/ListingsToolbar";
+import { ListingGrid } from "@/components/organisms/ListingGrid";
+import { CategoryNavListDemo } from "@/components/molecules/CategoryNavList";
+import { TopBar } from "@/components/organisms/TopBar";
+import { PromoBanner } from "@/components/organisms/PromoBanner";
+import { CuratedRow } from "@/components/organisms/CuratedRow";
 import { Sidebar } from "@/components/organisms/Sidebar";
+import { AppShell } from "@/components/templates/AppShell";
+import { ExploreSoftwarePage } from "@/components/pages/ExploreSoftwarePage";
+import { SavedPage } from "@/components/pages/SavedPage";
 import { CampaignCard } from "@/components/organisms/CampaignCard";
 import { SectionCard } from "@/components/organisms/SectionCard";
 import { KeyReveal } from "@/components/organisms/KeyReveal";
@@ -71,6 +80,8 @@ export interface RegistryEntry {
   description: string;
   /** "before" = ported as-is from archive/pre-atomic-rebuild, not yet redesigned. Omit once redesigned. */
   stage?: "before";
+  /** Full-screen layouts (templates/pages with a Sidebar, etc.) — render edge-to-edge instead of in the centered preview column. */
+  fullBleed?: boolean;
   variants: RegistryVariant[];
 }
 
@@ -624,36 +635,205 @@ export const registry: RegistryEntry[] = [
   {
     name: "Listing card",
     level: "organisms",
-    description: "Logo, plan/post-count badge, and CTA with a slots-remaining state.",
-    stage: "before",
+    description: "Grey image placeholder, stock count, a bookmark toggle, deliverable tags, retail value, and an Add to cart CTA.",
     variants: [
       {
         name: "Default",
         preview: (
-          <div className="w-56">
+          <div className="w-72">
             <ListingCard
               slug="acme-tool"
-              name="Acme Tool"
-              planName="Pro plan"
-              months={3}
-              postsRequired={2}
+              brandName="Acme"
+              title="Acme Pro — Workflow Tool"
+              description="Automate the busywork so your team can focus on the work that matters."
+              deliverables={["IG Reel · 3mo"]}
+              retailValue={180}
               slotsRemaining={4}
+              totalSlots={10}
             />
           </div>
         ),
       },
       {
-        name: "Full",
+        name: "Sold out",
         preview: (
-          <div className="w-56">
+          <div className="w-72">
             <ListingCard
               slug="acme-tool"
-              name="Acme Tool"
-              planName="Pro plan"
-              months={3}
-              postsRequired={2}
+              brandName="Acme"
+              title="Acme Pro — Workflow Tool"
+              description="Automate the busywork so your team can focus on the work that matters."
+              deliverables={["IG Reel · 3mo"]}
+              retailValue={180}
               slotsRemaining={0}
+              totalSlots={10}
             />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Listings toolbar",
+    level: "organisms",
+    description: "Platform, price-tier, and access-duration filters, an in-stock toggle, a live result count, and a sort dropdown.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-full max-w-3xl">
+            <ListingsToolbarDemo />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Listing grid",
+    level: "organisms",
+    description: "Responsive grid of listing cards with a built-in empty state.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-full max-w-4xl">
+            <ListingGrid
+              listings={[
+                {
+                  slug: "acme-tool",
+                  brandName: "Acme",
+                  title: "Acme Pro — Workflow Tool",
+                  description: "Automate the busywork so your team can focus on the work that matters.",
+                  deliverables: ["IG Reel · 3mo"],
+                  retailValue: 180,
+                  months: 3,
+                  slotsRemaining: 4,
+                  totalSlots: 10,
+                  category: "AI Tools",
+                },
+                {
+                  slug: "beta-app",
+                  brandName: "Beta",
+                  title: "Beta Team — Design Systems",
+                  description: "Keep every screen in sync with a single source of design truth.",
+                  deliverables: ["YouTube review · 6mo"],
+                  retailValue: 288,
+                  months: 6,
+                  slotsRemaining: 0,
+                  totalSlots: 12,
+                  category: "Design",
+                },
+                {
+                  slug: "gamma-ai",
+                  brandName: "Gamma",
+                  title: "Gamma Growth — Email Marketing",
+                  description: "Automated flows and segmentation for creators launching a product.",
+                  deliverables: ["X thread · 1mo"],
+                  retailValue: 96,
+                  months: 3,
+                  slotsRemaining: 2,
+                  totalSlots: 8,
+                  category: "Marketing",
+                },
+              ]}
+            />
+          </div>
+        ),
+      },
+      {
+        name: "Empty",
+        preview: (
+          <div className="w-full max-w-3xl">
+            <ListingGrid listings={[]} />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Promo banner",
+    level: "organisms",
+    description: "Full-width store banner — eyebrow pill, headline, and copy on a brand-tinted mesh gradient.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-full max-w-3xl">
+            <PromoBanner
+              eyebrow="No cash. No gifting. A real transaction."
+              title="Pay with a post."
+              description="Shop vetted software from real brands and pay with content. Add products to your cart, check out in one tap, and unlock access when your post goes live."
+            />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Curated row",
+    level: "organisms",
+    description: "A titled, horizontally-scrollable row of listing cards — used for Featured and Recently added sections on the shop page.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-full max-w-4xl">
+            <CuratedRow
+              title="Featured products"
+              subtitle="Hand-picked this week"
+              listings={[
+                {
+                  slug: "acme-tool",
+                  brandName: "Acme",
+                  title: "Acme Pro — Workflow Tool",
+                  description: "Automate the busywork so your team can focus on the work that matters.",
+                  deliverables: ["IG Reel · 3mo"],
+                  retailValue: 180,
+                  months: 3,
+                  slotsRemaining: 4,
+                  totalSlots: 10,
+                  category: "AI Tools",
+                },
+              ]}
+            />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Category nav list",
+    level: "molecules",
+    description: "Vertical category list with live counts and a left-border active state — lives inside the sidebar on the shop page.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-56">
+            <CategoryNavListDemo />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Top bar",
+    level: "organisms",
+    description: "Slim global header — logo and a cart icon with a live item-count badge.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-full max-w-lg">
+            <TopBar cartCount={2} />
+          </div>
+        ),
+      },
+      {
+        name: "Empty cart",
+        preview: (
+          <div className="w-full max-w-lg">
+            <TopBar cartCount={0} />
           </div>
         ),
       },
@@ -662,20 +842,31 @@ export const registry: RegistryEntry[] = [
   {
     name: "Sidebar",
     level: "organisms",
-    description: "Nav rail, role-filtered items, and account block — Clerk dependency removed, role/user now passed as props.",
-    stage: "before",
+    description: "Light-mode nav rail — search, role-filtered nav with Saved/Messages counts, an optional category slot, and an account block with a real sign-out control.",
     variants: [
       {
         name: "Creator",
-        preview: <Sidebar role="CREATOR" activeHref="/explore" userName="Jordan Lee" />,
+        preview: (
+          <div className="h-[600px]">
+            <Sidebar role="CREATOR" activeHref="/explore" userName="Jordan Lee" savedCount={7} messagesCount={3} />
+          </div>
+        ),
       },
       {
         name: "Brand",
-        preview: <Sidebar role="BRAND" activeHref="/applications" userName="Jordan Lee" />,
+        preview: (
+          <div className="h-[600px]">
+            <Sidebar role="BRAND" activeHref="/applications" userName="Jordan Lee" />
+          </div>
+        ),
       },
       {
         name: "Both",
-        preview: <Sidebar role="BOTH" activeHref="/shops" userName="Jordan Lee" />,
+        preview: (
+          <div className="h-[600px]">
+            <Sidebar role="BOTH" activeHref="/shops" userName="Jordan Lee" />
+          </div>
+        ),
       },
     ],
   },
@@ -1429,6 +1620,46 @@ export const registry: RegistryEntry[] = [
       },
     ],
   },
+  {
+    name: "App shell",
+    level: "templates",
+    description: "Sidebar + scrollable content region — the layout every dashboard page is built on.",
+    fullBleed: true,
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <AppShell>
+            <div className="flex h-full items-center justify-center p-10 text-sm text-gray-400">Page content goes here</div>
+          </AppShell>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Explore software",
+    level: "pages",
+    description: "The shop — creators browse software to pay for with a post. Sidebar search and category counts, an access-length/sort toolbar, and a grid of grey-placeholder product cards. Light mode, editorial density, Toolfolio-inspired.",
+    fullBleed: true,
+    variants: [
+      {
+        name: "Default",
+        preview: <ExploreSoftwarePage />,
+      },
+    ],
+  },
+  {
+    name: "Saved",
+    level: "pages",
+    description: "Bookmarked products — same grid and card treatment as the store, with an empty state pointing back to Shop.",
+    fullBleed: true,
+    variants: [
+      {
+        name: "Default",
+        preview: <SavedPage />,
+      },
+    ],
+  },
 ];
 
 export const ATOMIC_LEVELS: { key: AtomicLevel; label: string }[] = [
@@ -1473,7 +1704,6 @@ export const roadmap: PlannedComponent[] = [
   { name: "Campaign stats panel", level: "organisms", note: "Stat tiles for a campaign's history view" },
 
   // Templates
-  { name: "App shell", level: "templates", note: "Sidebar + scrollable content — was copy-pasted across 7+ layout files" },
   { name: "Auth shell", level: "templates", note: "Centered layout for sign-in / onboarding" },
   { name: "Swipe review layout", level: "templates", note: "Full-screen card stack + action bar + progress" },
   { name: "Public profile layout", level: "templates", note: "Header + content sections" },
@@ -1484,7 +1714,6 @@ export const roadmap: PlannedComponent[] = [
   { name: "Sign up / landing", level: "pages", note: "/ — currently just redirects or shows sign-up, no marketing content" },
   { name: "Sign in", level: "pages", note: "/sign-in" },
   { name: "Onboarding", level: "pages", note: "/onboarding" },
-  { name: "Explore software", level: "pages", note: "/explore" },
   { name: "Software listing", level: "pages", note: "/software/[slug]" },
   { name: "My shops", level: "pages", note: "/shops" },
   { name: "Shop delivery", level: "pages", note: "/shops/[id]" },

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/atoms/Button";
 import { Navbar } from "@/components/organisms/Navbar";
 import { PixelTrail } from "@/components/atoms/PixelTrail";
@@ -47,15 +48,11 @@ export default function HeroSection() {
           />
         </div>
 
-        <Button
-          variant="dark"
-          size="md"
-          pill
-          className="pointer-events-auto order-2 min-w-[150px]"
-          style={{ boxShadow: "none" }}
-        >
-          Sign Up
-        </Button>
+        <Link href="/explore" className="pointer-events-auto order-2">
+          <Button variant="dark" size="md" pill className="min-w-[150px]" style={{ boxShadow: "none" }}>
+            Sign Up
+          </Button>
+        </Link>
 
         <SocialCapitalCard className="order-3 mt-12 max-w-md sm:mt-0 sm:order-1" />
       </div>

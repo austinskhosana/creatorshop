@@ -29,6 +29,7 @@ export default function BrandCardVisual({ className }: BrandCardVisualProps) {
         alt="Creatorshop brand card — 4000 1234 5678 9010, A. Skhosana, expires 07/29"
         width={1440}
         height={909}
+        sizes="(min-width: 640px) 448px, calc(100vw - 48px)"
         className="w-full"
       />
     </div>

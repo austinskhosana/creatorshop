@@ -25,7 +25,7 @@ export default function FAQItem({ question, answer, defaultOpen = false }: FAQIt
         aria-expanded={open}
         className="pointer-events-auto flex w-full items-center justify-between gap-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
       >
-        <span className="font-medium text-neutral-900">{question}</span>
+        <span className="font-geist-mono text-sm font-normal text-neutral-900">{question}</span>
         <motion.svg
           width="16"
           height="16"
@@ -53,7 +53,7 @@ export default function FAQItem({ question, answer, defaultOpen = false }: FAQIt
             transition={{ duration: reduce ? 0.15 : 0.2, ease: EASE_OUT }}
             style={{ overflow: "hidden" }}
           >
-            <p className="pt-3 leading-relaxed text-neutral-500">{answer}</p>
+            <p className="pt-3 font-geist-mono text-sm leading-relaxed text-neutral-500">{answer}</p>
           </motion.div>
         )}
       </AnimatePresence>

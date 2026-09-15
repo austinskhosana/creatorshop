@@ -34,6 +34,15 @@ export default async function ComponentVariantPage({
 
   if (!entry || !match) notFound();
 
+  if (entry.fullBleed) {
+    return (
+      <div className="relative">
+        <BackButton href={`/design-system/${slugify(entry.name)}`} position="right" fixed />
+        {match.preview}
+      </div>
+    );
+  }
+
   return (
     <div className="relative flex min-h-[calc(100vh-3.5rem)] flex-col items-center justify-center px-6 py-20">
       <BackButton href={`/design-system/${slugify(entry.name)}`} />
