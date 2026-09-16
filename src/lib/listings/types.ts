@@ -1,6 +1,7 @@
 export interface Listing {
   slug: string;
   brandName: string;
+  websiteUrl?: string;
   title: string;
   description: string;
   deliverables: string[];

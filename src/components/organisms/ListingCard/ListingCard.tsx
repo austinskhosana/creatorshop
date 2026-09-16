@@ -2,12 +2,19 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, useAnimationControls, useReducedMotion } from "framer-motion";
+import { ArrowTopRightOnSquareIcon, BookmarkIcon as BookmarkOutlineIcon } from "@heroicons/react/24/outline";
+import { BookmarkIcon as BookmarkSolidIcon } from "@heroicons/react/24/solid";
 import Badge from "@/components/atoms/Badge/Badge";
 import Button from "@/components/atoms/Button/Button";
+import BrandLogo from "@/components/atoms/BrandLogo/BrandLogo";
+import { cn } from "@/lib/utils";
 
 interface ListingCardProps {
   slug: string;
+  brandName?: string;
+  websiteUrl?: string;
   title: string;
   description: string;
   deliverables: string[];
@@ -15,16 +22,6 @@ interface ListingCardProps {
   slotsRemaining: number;
   totalSlots: number;
   saved?: boolean;
-}
-
-function ImagePlaceholderIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8 text-neutral-300">
-      <rect x="3" y="3" width="18" height="18" rx="2" />
-      <circle cx="8.5" cy="8.5" r="1.5" />
-      <path d="M21 15l-5-5L5 21" />
-    </svg>
-  );
 }
 
 function InstagramIcon() {
@@ -56,8 +53,8 @@ function YouTubeIcon() {
 
 function XIcon() {
   return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" className="h-3 w-3">
-      <path d="M4 4l16 16M20 4L4 20" />
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="h-3 w-3">
+      <path d="M18.901 1.153h3.68l-8.04 9.19 9.46 12.504h-7.406l-5.8-7.584-6.64 7.584H.479l8.6-9.83L.01 1.154h7.594l5.243 6.932 6.054-6.932Zm-1.29 19.674h2.039L6.496 3.042H4.307z" />
     </svg>
   );
 }
@@ -71,41 +68,17 @@ function getDeliverableIcon(deliverable: string) {
   return undefined;
 }
 
-function BookmarkIcon({ filled }: { filled: boolean }) {
-  return (
-    <span className="relative block h-4 w-4">
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className={[
-          "absolute inset-0 h-4 w-4 transition-opacity duration-150 ease-[cubic-bezier(0.2,0,0,1)]",
-          filled ? "opacity-0" : "opacity-100",
-        ].join(" ")}
-      >
-        <path d="M6 3.75A1.75 1.75 0 0 1 7.75 2h8.5A1.75 1.75 0 0 1 18 3.75V21l-6-3.75L6 21V3.75Z" />
-      </svg>
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className={[
-          "absolute inset-0 h-4 w-4 transition-opacity duration-150 ease-[cubic-bezier(0.2,0,0,1)]",
-          filled ? "opacity-100" : "opacity-0",
-        ].join(" ")}
-      >
-        <path d="M6 3.75A1.75 1.75 0 0 1 7.75 2h8.5A1.75 1.75 0 0 1 18 3.75V21l-6-3.75L6 21V3.75Z" />
-      </svg>
-    </span>
-  );
+const CONTENT_TYPE_LABELS: Record<string, string> = {
+  "IG Reel": "Reel",
+  "IG carousel": "Carousel",
+  "YouTube review": "Video Review",
+  TikTok: "Video",
+  "X thread": "Thread",
+};
+
+function formatDeliverable(deliverable: string) {
+  const [base] = deliverable.split(" · ");
+  return CONTENT_TYPE_LABELS[base] ?? base;
 }
 
 function CartIcon() {
@@ -120,86 +93,86 @@ function CartIcon() {
 
 export default function ListingCard({
   slug,
+  brandName,
+  websiteUrl,
   title,
   description,
   deliverables,
   retailValue,
   slotsRemaining,
-  totalSlots,
   saved = false,
 }: ListingCardProps) {
   const [isSaved, setIsSaved] = useState(saved);
   const soldOut = slotsRemaining === 0;
+  const displayBrandName = brandName ?? title.split(" ")[0];
+  const destination = websiteUrl ?? `/software/${slug}`;
+  const router = useRouter();
   const cartIconControls = useAnimationControls();
   const reduceMotion = useReducedMotion();
 
-  function handleAddToCart() {
+  async function handleAddToCart() {
     if (reduceMotion) {
-      cartIconControls.start({ opacity: [1, 0.4, 1], transition: { duration: 0.3, ease: "easeOut" } });
-      return;
+      await cartIconControls.start({ opacity: [1, 0.4, 1], transition: { duration: 0.3, ease: "easeOut" } });
+    } else {
+      await cartIconControls.start({ scale: 1.3, rotate: -12, transition: { duration: 0.12, ease: [0.23, 1, 0.32, 1] } });
+      await cartIconControls.start({ scale: 1, rotate: 0, transition: { type: "spring", duration: 0.4, bounce: 0.3 } });
     }
-    cartIconControls
-      .start({ scale: 1.3, rotate: -12, transition: { duration: 0.12, ease: [0.23, 1, 0.32, 1] } })
-      .then(() => cartIconControls.start({ scale: 1, rotate: 0, transition: { type: "spring", duration: 0.4, bounce: 0.3 } }));
+    router.push(`/software/${slug}`);
   }
 
   return (
-    <article className="flex flex-col gap-3 rounded-3xl border border-neutral-200 p-4">
-      <div className="relative">
-        {soldOut ? (
-          <div className="flex aspect-[16/10] items-center justify-center rounded-xl border border-neutral-200 bg-neutral-100" aria-label={`${title} is sold out`}>
-            <ImagePlaceholderIcon />
-          </div>
-        ) : (
-          <Link href={`/software/${slug}`} className="rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2">
-            <div className="flex aspect-[16/10] items-center justify-center rounded-xl border border-neutral-200 bg-neutral-100">
-              <ImagePlaceholderIcon />
-            </div>
-          </Link>
-        )}
-
-        <span
-          className={[
-            "pointer-events-none absolute top-2 left-2 rounded-full px-2 py-0.5 text-[11px] font-medium",
-            soldOut ? "bg-neutral-900 text-white" : "bg-white/90 text-neutral-600 ring-1 ring-neutral-200",
-          ].join(" ")}
-        >
-          {soldOut ? "Sold out" : `${slotsRemaining} of ${totalSlots} spots left`}
-        </span>
-
-        <button
-          type="button"
-          onClick={() => setIsSaved((v) => !v)}
-          aria-pressed={isSaved}
-          aria-label={isSaved ? "Remove from saved" : "Save for later"}
-          className="absolute top-2 right-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white/90 text-neutral-500 ring-1 ring-neutral-200 transition-[color,transform] duration-150 hover:text-neutral-900 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
-        >
-          <BookmarkIcon filled={isSaved} />
-        </button>
+    <article className="flex h-full min-h-[260px] flex-col rounded-[20px] border border-neutral-200 bg-white p-4">
+      <div className="flex items-start justify-between">
+        <Link href={`/software/${slug}`} aria-label={`View ${title}`} className="rounded-[19px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2">
+          <BrandLogo slug={slug} name={displayBrandName} />
+        </Link>
+        <div className="flex items-center gap-2">
+          <a
+            href={destination}
+            target={websiteUrl ? "_blank" : undefined}
+            rel={websiteUrl ? "noreferrer" : undefined}
+            aria-label={websiteUrl ? `Visit ${displayBrandName} website` : `View ${title}`}
+            className="flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 text-neutral-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
+          >
+            <ArrowTopRightOnSquareIcon aria-hidden="true" className="h-3.5 w-3.5" strokeWidth={1.75} />
+          </a>
+          <button
+            type="button"
+            onClick={() => setIsSaved((v) => !v)}
+            aria-pressed={isSaved}
+            aria-label={isSaved ? "Remove from saved" : "Save for later"}
+            className={cn(
+              "flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900",
+              isSaved ? "text-neutral-950" : "text-neutral-400",
+            )}
+          >
+            {isSaved ? <BookmarkSolidIcon aria-hidden="true" className="h-4 w-4" /> : <BookmarkOutlineIcon aria-hidden="true" className="h-4 w-4" strokeWidth={1.75} />}
+          </button>
+        </div>
       </div>
 
-      <div className="flex flex-col">
+      <div className="mt-auto pt-5">
         {soldOut ? (
-          <p className="text-balance text-[14px] leading-snug font-semibold text-neutral-900">{title}</p>
+          <p className="text-balance text-[16px] leading-snug font-semibold tracking-[-0.025em] text-neutral-950">{title}</p>
         ) : (
           <Link href={`/software/${slug}`} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2">
-            <p className="text-balance text-[14px] leading-snug font-semibold text-neutral-900">{title}</p>
+            <p className="text-balance text-[16px] leading-snug font-semibold tracking-[-0.025em] text-neutral-950">{title}</p>
           </Link>
         )}
 
-        <p className="text-pretty mt-1 line-clamp-2 text-[13px] leading-relaxed text-neutral-400">{description}</p>
+        <p className="text-pretty mt-2 line-clamp-2 text-[13px] leading-[1.55] text-neutral-500">{description}</p>
 
-        <div className="mt-2 flex flex-wrap gap-1.5">
+        <div className="mt-3 flex flex-wrap gap-1.5">
           {deliverables.map((deliverable) => (
-            <Badge key={deliverable} variant="tag" label={deliverable} icon={getDeliverableIcon(deliverable)} />
+            <Badge key={deliverable} variant="tag" label={formatDeliverable(deliverable)} icon={getDeliverableIcon(deliverable)} />
           ))}
         </div>
       </div>
 
-      <div className="flex items-end justify-between">
+      <div className="mt-3 flex items-end justify-between border-t border-neutral-100 pt-3">
         <div>
           <p className="text-[15px] font-semibold tabular-nums text-neutral-900">${retailValue}</p>
-          <p className="text-[11px] text-neutral-400">retail value</p>
+          <p className="text-[11px] text-neutral-400">Retail value</p>
         </div>
         <Button
           variant="dark"

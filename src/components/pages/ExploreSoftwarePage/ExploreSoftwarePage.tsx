@@ -7,9 +7,11 @@ import ListingsToolbar from "@/components/organisms/ListingsToolbar/ListingsTool
 import ListingGrid from "@/components/organisms/ListingGrid/ListingGrid";
 import CategoryNavList from "@/components/molecules/CategoryNavList/CategoryNavList";
 import PromoBanner from "@/components/organisms/PromoBanner/PromoBanner";
-import CuratedRow from "@/components/organisms/CuratedRow/CuratedRow";
+import Pagination from "@/components/molecules/Pagination/Pagination";
 import { CATEGORY_LABELS, DEFAULT_EXPLORE_FILTERS, filterListings, type ExploreFilters, type ExploreSort } from "@/lib/listings/explore";
 import type { Listing } from "@/lib/listings/types";
+
+const PAGE_SIZE = 9;
 
 function SparkleIcon() {
   return <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="h-[15px] w-[15px]"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8" /></svg>;
@@ -78,11 +80,24 @@ export default function ExploreSoftwarePage({ listings: allListings }: ExploreSo
 
     if (!serialized || value === defaultValue) params.delete(paramName[key]);
     else params.set(paramName[key], serialized);
+    params.delete("page");
 
     window.history.replaceState(null, "", params.size ? `${pathname}?${params.toString()}` : pathname);
   }
 
+  function goToPage(nextPage: number) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (nextPage <= 1) params.delete("page");
+    else params.set("page", String(nextPage));
+
+    window.history.replaceState(null, "", params.size ? `${pathname}?${params.toString()}` : pathname);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   const visibleListings = useMemo(() => filterListings(allListings, filters), [allListings, filters]);
+  const totalPages = Math.max(1, Math.ceil(visibleListings.length / PAGE_SIZE));
+  const page = Math.min(Math.max(1, Number(searchParams.get("page")) || 1), totalPages);
+  const paginatedListings = visibleListings.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const categories = useMemo(
     () => [
       { id: "all", label: "All products", count: allListings.filter((listing) => listing.title.toLocaleLowerCase().includes(filters.search.trim().toLocaleLowerCase()) || listing.brandName.toLocaleLowerCase().includes(filters.search.trim().toLocaleLowerCase())).length },
@@ -95,9 +110,6 @@ export default function ExploreSoftwarePage({ listings: allListings }: ExploreSo
     ],
     [allListings, filters.search],
   );
-
-  const featured = allListings.slice(0, 3);
-  const recentlyAdded = allListings.slice(3, 6);
 
   return (
     <AppShell
@@ -128,9 +140,13 @@ export default function ExploreSoftwarePage({ listings: allListings }: ExploreSo
           />
         </div>
         <PromoBanner eyebrow="No cash. No gifting. A real transaction." title="Pay with a post." description="Shop vetted software from real brands and pay with content. Add products to your cart, check out in one tap, and unlock access when your post goes live." />
-        <CuratedRow title="Featured products" subtitle="Hand-picked this week" listings={featured} />
-        <CuratedRow title="Recently added" subtitle="Fresh on the shelves" listings={recentlyAdded} />
-        <section><h2 className="mb-4 text-[16px] font-semibold text-neutral-900">All products</h2><ListingGrid listings={visibleListings} /></section>
+        <section>
+          <h2 className="mb-4 text-[16px] font-semibold text-neutral-900">All products</h2>
+          <ListingGrid listings={paginatedListings} />
+          <div className="mt-8">
+            <Pagination page={page} totalPages={totalPages} onPageChange={goToPage} />
+          </div>
+        </section>
       </div>
     </AppShell>
   );

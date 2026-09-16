@@ -14,9 +14,15 @@ import { DeadlineTimer } from "@/components/molecules/DeadlineTimer";
 import { CategoryCard } from "@/components/organisms/CategoryCard";
 import { CreatorDirectoryCard } from "@/components/organisms/CreatorDirectoryCard";
 import { ListingCard } from "@/components/organisms/ListingCard";
+import { BrandLogo } from "@/components/atoms/BrandLogo";
+import { PaymentOptionRow } from "@/components/molecules/PaymentOptionRow";
+import { ListingHeader } from "@/components/organisms/ListingHeader";
+import { PayWithCard } from "@/components/organisms/PayWithCard";
+import { ListingDetailPage } from "@/components/pages/ListingDetailPage";
 import { ListingsToolbarDemo } from "@/components/organisms/ListingsToolbar";
 import { ListingGrid } from "@/components/organisms/ListingGrid";
 import { CategoryNavListDemo } from "@/components/molecules/CategoryNavList";
+import { PaginationDemo } from "@/components/molecules/Pagination";
 import { TopBar } from "@/components/organisms/TopBar";
 import { PromoBanner } from "@/components/organisms/PromoBanner";
 import { CuratedRow } from "@/components/organisms/CuratedRow";
@@ -673,6 +679,52 @@ export const registry: RegistryEntry[] = [
     ],
   },
   {
+    name: "Listing header",
+    level: "organisms",
+    description: "Brand logo, category, title, and description, centered — sits above the pay-with panel on a listing's detail page.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-full max-w-md">
+            <ListingHeader slug="paper" brandName="Paper" title="Paper Pro" description="An AI-native design canvas where what you draw is real HTML and CSS, not a proprietary file format." category="Design" />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Pay with card",
+    level: "organisms",
+    description: "Deliverable picker with per-option pricing, a spots-remaining meter, Add to cart / Save actions, and a shareable product link.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-full max-w-md">
+            <PayWithCard listing={MOCK_LISTINGS[0]} />
+          </div>
+        ),
+      },
+      {
+        name: "Multiple options",
+        preview: (
+          <div className="w-full max-w-md">
+            <PayWithCard listing={MOCK_LISTINGS[3]} />
+          </div>
+        ),
+      },
+      {
+        name: "Sold out",
+        preview: (
+          <div className="w-full max-w-md">
+            <PayWithCard listing={{ ...MOCK_LISTINGS[0], slotsRemaining: 0 }} />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
     name: "Listings toolbar",
     level: "organisms",
     description: "Platform, price-tier, and access-duration filters, an in-stock toggle, a live result count, and a sort dropdown.",
@@ -746,6 +798,17 @@ export const registry: RegistryEntry[] = [
             <ListingGrid listings={[]} />
           </div>
         ),
+      },
+    ],
+  },
+  {
+    name: "Pagination",
+    level: "molecules",
+    description: "Prev/next arrows and numbered pages with ellipsis truncation for long ranges — paginates the store grid.",
+    variants: [
+      {
+        name: "Default",
+        preview: <PaginationDemo />,
       },
     ],
   },
@@ -1209,6 +1272,29 @@ export const registry: RegistryEntry[] = [
     ],
   },
   {
+    name: "Payment option row",
+    level: "molecules",
+    description: "Radio-style row for choosing which deliverable to pay with — label, access length, and price.",
+    variants: [
+      {
+        name: "Unselected",
+        preview: (
+          <div className="w-80">
+            <PaymentOptionRow label="Instagram Reel" meta="Access for 3 months" price={48} selected={false} onSelect={() => {}} />
+          </div>
+        ),
+      },
+      {
+        name: "Selected",
+        preview: (
+          <div className="w-80">
+            <PaymentOptionRow label="Instagram Reel" meta="Access for 3 months" price={48} selected onSelect={() => {}} />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
     name: "Poster card",
     level: "molecules",
     description: "Square-cornered brand-green tile with a step number, pixel-font headline, and mono description — used in the \"How it works\" section.",
@@ -1659,6 +1745,22 @@ export const registry: RegistryEntry[] = [
       },
     ],
   },
+  {
+    name: "Software listing",
+    level: "pages",
+    description: "Product detail as a centered checkout moment rather than a two-column page — no product image, brand logo above the fold, description and pay-with panel stacked and centered in the viewport.",
+    fullBleed: true,
+    variants: [
+      {
+        name: "Default",
+        preview: <ListingDetailPage listing={MOCK_LISTINGS[0]} />,
+      },
+      {
+        name: "Multiple deliverables",
+        preview: <ListingDetailPage listing={MOCK_LISTINGS[3]} />,
+      },
+    ],
+  },
 ];
 
 export const ATOMIC_LEVELS: { key: AtomicLevel; label: string }[] = [
@@ -1692,8 +1794,6 @@ export const roadmap: PlannedComponent[] = [
 
   // Organisms
   { name: "Payment card visual", level: "organisms", note: "Decorative bank-card visual for a listing's plan — was 3 inconsistent versions" },
-  { name: "Listing header", level: "organisms", note: "Logo, name, plan details on a listing page" },
-  { name: "Apply form", level: "organisms", note: "Deliverable picker + application form on a listing page" },
   { name: "Campaign option card", level: "organisms", note: "3D-tilt hub tile — was duplicated identically in two pages" },
   { name: "Campaign form", level: "organisms", note: "Brief, deliverables, reward, and deadline" },
   { name: "Listing row", level: "organisms", note: "A brand's own listing in a management list" },
@@ -1713,7 +1813,6 @@ export const roadmap: PlannedComponent[] = [
   { name: "Sign up / landing", level: "pages", note: "/ — currently just redirects or shows sign-up, no marketing content" },
   { name: "Sign in", level: "pages", note: "/sign-in" },
   { name: "Onboarding", level: "pages", note: "/onboarding" },
-  { name: "Software listing", level: "pages", note: "/software/[slug]" },
   { name: "My shops", level: "pages", note: "/shops" },
   { name: "Shop delivery", level: "pages", note: "/shops/[id]" },
   { name: "Applications inbox (swipe review)", level: "pages", note: "/applications" },
