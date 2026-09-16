@@ -23,6 +23,7 @@ import { CuratedRow } from "@/components/organisms/CuratedRow";
 import { Sidebar } from "@/components/organisms/Sidebar";
 import { AppShell } from "@/components/templates/AppShell";
 import { ExploreSoftwarePage } from "@/components/pages/ExploreSoftwarePage";
+import { MOCK_LISTINGS } from "@/lib/mock-listings";
 import { SavedPage } from "@/components/pages/SavedPage";
 import { CampaignCard } from "@/components/organisms/CampaignCard";
 import { SectionCard } from "@/components/organisms/SectionCard";
@@ -643,8 +644,7 @@ export const registry: RegistryEntry[] = [
           <div className="w-72">
             <ListingCard
               slug="acme-tool"
-              brandName="Acme"
-              title="Acme Pro — Workflow Tool"
+              title="Acme Pro"
               description="Automate the busywork so your team can focus on the work that matters."
               deliverables={["IG Reel · 3mo"]}
               retailValue={180}
@@ -660,8 +660,7 @@ export const registry: RegistryEntry[] = [
           <div className="w-72">
             <ListingCard
               slug="acme-tool"
-              brandName="Acme"
-              title="Acme Pro — Workflow Tool"
+              title="Acme Pro"
               description="Automate the busywork so your team can focus on the work that matters."
               deliverables={["IG Reel · 3mo"]}
               retailValue={180}
@@ -1644,7 +1643,7 @@ export const registry: RegistryEntry[] = [
     variants: [
       {
         name: "Default",
-        preview: <ExploreSoftwarePage />,
+        preview: <ExploreSoftwarePage listings={MOCK_LISTINGS} />,
       },
     ],
   },

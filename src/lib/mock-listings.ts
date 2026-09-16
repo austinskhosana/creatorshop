@@ -1,10 +1,10 @@
-import type { Listing } from "@/components/organisms/ListingGrid/ListingGrid";
+import type { Listing } from "@/lib/listings/types";
 
 export const MOCK_LISTINGS: Listing[] = [
   {
     slug: "quill-ai",
     brandName: "Quill",
-    title: "Quill AI — Writing Copilot",
+    title: "Quill AI",
     description: "Draft, edit, and repurpose long-form writing with an AI copilot trained on your voice.",
     deliverables: ["IG Reel · 3mo", "TikTok · 1mo"],
     retailValue: 180,
@@ -17,7 +17,7 @@ export const MOCK_LISTINGS: Listing[] = [
   {
     slug: "framecraft",
     brandName: "Framecraft",
-    title: "Framecraft Pro — Design Systems",
+    title: "Framecraft Pro",
     description: "Build and maintain design systems with live component sync across Figma and code.",
     deliverables: ["YouTube review · 6mo"],
     retailValue: 288,
@@ -31,7 +31,7 @@ export const MOCK_LISTINGS: Listing[] = [
   {
     slug: "loopmail",
     brandName: "Loopmail",
-    title: "Loopmail Growth — Email Marketing",
+    title: "Loopmail Growth",
     description: "Automated email flows and audience segmentation for creators launching a product.",
     deliverables: ["X thread · 1mo"],
     retailValue: 96,
@@ -44,7 +44,7 @@ export const MOCK_LISTINGS: Listing[] = [
   {
     slug: "codeharbor",
     brandName: "Codeharbor",
-    title: "Codeharbor Pro — Cloud IDE",
+    title: "Codeharbor Pro",
     description: "A full cloud dev environment with instant previews and one-click deploys.",
     deliverables: ["YouTube review · 3mo", "TikTok · 3mo"],
     retailValue: 348,
@@ -57,7 +57,7 @@ export const MOCK_LISTINGS: Listing[] = [
   {
     slug: "tasknest",
     brandName: "Tasknest",
-    title: "Tasknest Team — Project Planning",
+    title: "Tasknest Team",
     description: "Lightweight project planning built for small creative teams and solo founders.",
     deliverables: ["IG Reel · 3mo"],
     retailValue: 120,
@@ -70,7 +70,7 @@ export const MOCK_LISTINGS: Listing[] = [
   {
     slug: "pixelforge",
     brandName: "Pixelforge",
-    title: "Pixelforge Studio — Asset Generation",
+    title: "Pixelforge Studio",
     description: "Generate on-brand social assets in seconds from a single style reference.",
     deliverables: ["IG carousel · 6mo", "TikTok · 1mo"],
     retailValue: 216,
@@ -83,7 +83,7 @@ export const MOCK_LISTINGS: Listing[] = [
   {
     slug: "sparkcopy",
     brandName: "Sparkcopy",
-    title: "Sparkcopy Pro — AI Copywriting",
+    title: "Sparkcopy Pro",
     description: "Turn a rough brief into ad copy, captions, and landing page sections in one pass.",
     deliverables: ["TikTok · 3mo"],
     retailValue: 150,
@@ -97,7 +97,7 @@ export const MOCK_LISTINGS: Listing[] = [
   {
     slug: "adreach",
     brandName: "Adreach",
-    title: "Adreach Growth — Paid Ads Manager",
+    title: "Adreach Growth",
     description: "Plan, launch, and report on paid campaigns across every major ad platform.",
     deliverables: ["X thread · 1mo", "IG Reel · 3mo"],
     retailValue: 264,
@@ -110,7 +110,7 @@ export const MOCK_LISTINGS: Listing[] = [
   {
     slug: "shipdesk",
     brandName: "Shipdesk",
-    title: "Shipdesk Pro — Release Management",
+    title: "Shipdesk Pro",
     description: "Ship changelogs, track releases, and notify users automatically from one dashboard.",
     deliverables: ["YouTube review · 6mo"],
     retailValue: 204,

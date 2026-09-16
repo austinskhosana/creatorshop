@@ -1,21 +1,6 @@
 import ListingCard from "@/components/organisms/ListingCard/ListingCard";
 import EmptyState from "@/components/molecules/EmptyState/EmptyState";
-
-export interface Listing {
-  slug: string;
-  brandName: string;
-  title: string;
-  description: string;
-  deliverables: string[];
-  retailValue: number;
-  months: number;
-  slotsRemaining: number;
-  totalSlots: number;
-  category?: string | null;
-  platform?: string | null;
-  verified?: boolean;
-  saved?: boolean;
-}
+import type { Listing } from "@/lib/listings/types";
 
 interface ListingGridProps {
   listings: Listing[];
