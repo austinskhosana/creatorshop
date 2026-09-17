@@ -8,7 +8,7 @@ interface SelectableChipProps {
 
 export default function SelectableChip({ label, selected, onClick, tone = "dark" }: SelectableChipProps) {
   const selectedClass =
-    tone === "lime" ? "bg-[#EDFFD0] border-[#EDFFD0] text-[#3A7A00]" : "bg-neutral-900 border-neutral-900 text-white";
+    tone === "lime" ? "bg-[#EDFFD0] border-[#EDFFD0] text-neutral-900" : "bg-neutral-900 border-neutral-900 text-white";
 
   return (
     <button

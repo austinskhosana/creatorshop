@@ -1,6 +1,6 @@
 "use client";
 
-import AppShell from "@/components/templates/AppShell/AppShell";
+import { CreatorShell } from "@/components/templates/CreatorShell";
 import ListingGrid from "@/components/organisms/ListingGrid/ListingGrid";
 import { MOCK_LISTINGS } from "@/lib/mock-listings";
 
@@ -8,7 +8,7 @@ export default function SavedPage() {
   const saved = MOCK_LISTINGS.filter((listing) => listing.saved);
 
   return (
-    <AppShell activeHref="/saved" userName="Jordan Lee" cartCount={2} savedCount={saved.length} messagesCount={3}>
+    <CreatorShell>
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-8 py-8">
         <div>
           <h1 className="text-2xl font-semibold text-neutral-900">Saved</h1>
@@ -22,6 +22,6 @@ export default function SavedPage() {
           emptyAction={{ label: "Browse the store", href: "/explore" }}
         />
       </div>
-    </AppShell>
+    </CreatorShell>
   );
 }

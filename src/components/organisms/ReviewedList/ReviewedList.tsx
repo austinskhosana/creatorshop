@@ -28,7 +28,7 @@ export default function ReviewedList({ reviewed }: ReviewedListProps) {
           <span className="text-[13px] font-semibold text-neutral-900">Reviewed this session</span>
           <div className="flex items-center gap-1.5">
             {approvedCount > 0 && (
-              <span className="rounded-full bg-[#A3FF38]/20 px-2 py-0.5 text-[11px] font-medium text-[#3A7A00]">
+              <span className="rounded-full bg-[#A3FF38]/20 px-2 py-0.5 text-[11px] font-medium text-neutral-900">
                 {approvedCount} approved
               </span>
             )}

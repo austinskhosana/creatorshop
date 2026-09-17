@@ -3,11 +3,35 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary: #171717;
+  --primary-foreground: #fafafa;
+  --secondary: #f5f5f5;
+  --secondary-foreground: #171717;
+  --muted: #f5f5f5;
+  --muted-foreground: #737373;
+  --accent: #f5f5f5;
+  --accent-foreground: #171717;
+  --destructive: #dc2626;
+  --border: #e5e5e5;
+  --input: #e5e5e5;
+  --ring: #171717;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
   --font-sans: 'Satoshi', sans-serif;
   --font-marker: var(--font-permanent-marker), cursive;
   --font-mono: var(--font-space-mono), monospace;
@@ -19,4 +43,43 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: 'Satoshi', sans-serif;
+}
+
+/* Lime is a surface/action accent, never a text colour. Keep this guardrail
+   global so legacy and newly composed components cannot reintroduce green copy. */
+[class*="text-[#73b61f]"],
+[class*="text-[#477a0b]"],
+[class*="text-[#3A7A00]"],
+[class*="text-[#3E7300]"],
+[class*="text-[#1a4a00]"],
+[class*="text-[#2A6000]"],
+[class*="text-green-"],
+[class*="text-emerald-"] {
+  color: #171717 !important;
+}
+
+/* These existing accent-text treatments sit on dark surfaces. */
+[class*="text-[#A3FF38]"] {
+  color: #ffffff !important;
+}
+
+/* Creator-area screens inherit the compact product-card geometry from Explore:
+   transaction surfaces are 20px, nested controls are 12–14px, and borders
+   establish structure without dashboard-style elevation. */
+.creator-page [class~="rounded-[2rem]"],
+.creator-page [class~="rounded-[1.75rem]"],
+.creator-page [class~="rounded-[1.6rem]"] {
+  border-radius: 20px !important;
+}
+
+.creator-page [class*="shadow-[0_12px_50px"],
+.creator-page [class*="shadow-[0_15px_60px"],
+.creator-page [class*="hover:shadow-[0_12px_40px"] {
+  box-shadow: none !important;
+}
+
+.creator-page [class~="text-4xl"] {
+  font-size: 1.875rem !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.025em !important;
 }

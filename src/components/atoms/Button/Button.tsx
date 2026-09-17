@@ -1,7 +1,7 @@
 import { ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-type ButtonVariant = "primary" | "dark" | "secondary" | "danger";
+type ButtonVariant = "primary" | "accent" | "dark" | "secondary" | "danger";
 type ButtonSize = "sm" | "md" | "lg";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -18,6 +18,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
+    "bg-neutral-900 text-white border border-neutral-800 shadow-[inset_0_0.5px_1px_rgba(255,255,255,0.15),inset_0_-1px_1.2px_rgba(18,18,18,1),0_2px_3px_-1px_rgba(13,13,13,0.5)] hover:bg-neutral-800 focus-visible:ring-neutral-900",
+  accent:
     "bg-[#A3FF38] text-black border border-[#82F200] shadow-[inset_3px_3px_6px_rgba(255,255,255,0.4)] hover:brightness-95 focus-visible:ring-[#82F200]",
   dark: "bg-neutral-900 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] hover:bg-neutral-800 focus-visible:ring-neutral-900",
   secondary:

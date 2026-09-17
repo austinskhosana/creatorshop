@@ -50,7 +50,7 @@ export default function RootLayout({
           href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700&display=swap"
         />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-white">
         <main className="flex-1">{children}</main>
       </body>
     </html>

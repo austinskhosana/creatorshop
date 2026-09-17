@@ -13,12 +13,12 @@ interface BadgeProps {
 
 const styles: Record<BadgeVariant, string> = {
   PENDING: "bg-yellow-50 text-yellow-700 ring-1 ring-yellow-200",
-  APPROVED: "bg-[#A3FF38]/20 text-green-800 ring-1 ring-[#A3FF38]/40",
+  APPROVED: "bg-[#A3FF38]/20 text-neutral-900 ring-1 ring-[#A3FF38]/40",
   DENIED: "bg-red-50 text-red-600 ring-1 ring-red-200",
   DELIVERED: "bg-blue-50 text-blue-700 ring-1 ring-blue-200",
   COMPLETED: "bg-neutral-900 text-white",
   REVOKED: "bg-gray-100 text-gray-500",
-  count: "bg-[#A3FF38]/40 text-[#3E7300]",
+  count: "bg-[#A3FF38]/40 text-neutral-900",
   tag: "bg-white text-gray-600 border border-gray-200",
   stat: "bg-neutral-900 text-white",
   default: "bg-gray-100 text-gray-600 border border-gray-200",

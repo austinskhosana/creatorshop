@@ -1,15 +1,18 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRightStartOnRectangleIcon,
   BookmarkIcon,
   BuildingOffice2Icon,
   ChatBubbleLeftRightIcon,
+  Cog6ToothIcon,
   HeartIcon,
   InboxIcon,
   MagnifyingGlassIcon,
   MegaphoneIcon,
   ShieldCheckIcon,
   ShoppingBagIcon,
+  ShoppingCartIcon,
   Squares2X2Icon,
   UserIcon,
   UsersIcon,
@@ -27,7 +30,7 @@ type NavItem = {
   href: string;
   icon: React.ReactNode;
   roles: Role[];
-  countKey?: "saved" | "messages";
+  countKey?: "cart" | "saved" | "messages";
 };
 
 const NAV_ITEMS: NavItem[] = [
@@ -35,8 +38,10 @@ const NAV_ITEMS: NavItem[] = [
   { id: "shops", label: "My Shops", href: "/shops", icon: <Squares2X2Icon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"] },
   { id: "saved", label: "Saved", href: "/saved", icon: <BookmarkIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"], countKey: "saved" },
   { id: "wishlist", label: "Wishlist", href: "/wishlist", icon: <HeartIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"] },
+  { id: "cart", label: "Cart", href: "/cart", icon: <ShoppingCartIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"], countKey: "cart" },
   { id: "messages", label: "Messages", href: "/messages", icon: <ChatBubbleLeftRightIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BRAND", "BOTH"], countKey: "messages" },
   { id: "profile", label: "Profile", href: "/profile", icon: <UserIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"] },
+  { id: "settings", label: "Settings", href: "/settings", icon: <Cog6ToothIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BRAND", "BOTH"] },
   { id: "brand-profile", label: "Profile", href: "/brand-profile", icon: <BuildingOffice2Icon className={SIDEBAR_ICON_CLASS} />, roles: ["BRAND"] },
   { id: "admin", label: "Admin", href: "/admin", icon: <ShieldCheckIcon className={SIDEBAR_ICON_CLASS} />, roles: ["BRAND"] },
   { id: "applications", label: "Applications", href: "/applications", icon: <InboxIcon className={SIDEBAR_ICON_CLASS} />, roles: ["BRAND", "BOTH"] },
@@ -81,6 +86,7 @@ interface SidebarProps {
   onSignOut?: () => void;
   searchValue?: string;
   onSearchChange?: (value: string) => void;
+  cartCount?: number;
   savedCount?: number;
   messagesCount?: number;
   /** Extra content rendered between the primary nav and the user profile — e.g. a category list on the shop page. */
@@ -96,6 +102,7 @@ export default function Sidebar({
   onSignOut,
   searchValue,
   onSearchChange,
+  cartCount,
   savedCount,
   messagesCount,
   children,
@@ -103,10 +110,13 @@ export default function Sidebar({
   onNavigate,
 }: SidebarProps) {
   const visibleItems = NAV_ITEMS.filter((item) => item.roles.includes(role));
-  const counts: Record<string, number | undefined> = { saved: savedCount, messages: messagesCount };
+  const counts: Record<string, number | undefined> = { cart: cartCount, saved: savedCount, messages: messagesCount };
 
   return (
     <nav className={cn("flex h-full w-64 flex-shrink-0 flex-col border-r border-neutral-200 bg-white px-4 py-6 font-sans", className)}>
+      <Link href="/explore" onClick={onNavigate} className="mb-8 flex items-center px-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2">
+        <Image src="/Logo.svg" alt="Creatorshop" width={142} height={41} className="h-8 w-auto" priority />
+      </Link>
       {onSearchChange && (
         <div className="relative mb-6 px-0">
           <span aria-hidden="true" className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-neutral-600">

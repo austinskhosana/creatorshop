@@ -52,17 +52,17 @@ export default function ReviewedPill({ reviewed }: ReviewedPillProps) {
         className="fixed right-6 bottom-6 z-40 flex cursor-pointer items-center gap-2 rounded-full bg-[#A3FF38] py-2.5 pr-4 pl-3 shadow-lg shadow-black/10"
         aria-label={`${reviewed.length} reviewed — click to see decisions`}
       >
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 flex-shrink-0 text-[#1a4a00]">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 flex-shrink-0 text-neutral-900">
           <path
             fillRule="evenodd"
             d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
             clipRule="evenodd"
           />
         </svg>
-        <span className="text-[13px] leading-none font-bold text-[#1a4a00]">{reviewed.length}</span>
+        <span className="text-[13px] leading-none font-bold text-neutral-900">{reviewed.length}</span>
         <div className="flex items-center gap-1.5 border-l border-[#1a4a00]/20 pl-1.5">
-          {approvedCount > 0 && <span className="text-[11px] font-semibold text-[#1a4a00]/70">✓{approvedCount}</span>}
-          {deniedCount > 0 && <span className="text-[11px] font-semibold text-[#1a4a00]/70">✗{deniedCount}</span>}
+          {approvedCount > 0 && <span className="text-[11px] font-semibold text-neutral-600">✓{approvedCount}</span>}
+          {deniedCount > 0 && <span className="text-[11px] font-semibold text-neutral-600">✗{deniedCount}</span>}
         </div>
       </motion.button>
 
@@ -103,7 +103,7 @@ export default function ReviewedPill({ reviewed }: ReviewedPillProps) {
                   <h2 className="text-[16px] font-bold text-neutral-900">Reviewed this session</h2>
                   <div className="mt-1 flex items-center gap-2">
                     {approvedCount > 0 && (
-                      <span className="rounded-full bg-[#A3FF38]/20 px-2 py-0.5 text-[11px] font-medium text-[#3A7A00]">
+                      <span className="rounded-full bg-[#A3FF38]/20 px-2 py-0.5 text-[11px] font-medium text-neutral-900">
                         {approvedCount} approved
                       </span>
                     )}

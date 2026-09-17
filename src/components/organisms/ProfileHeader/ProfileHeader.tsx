@@ -10,7 +10,7 @@ export default function ProfileHeader({ displayName, location, audienceSize, onE
     <div className="bg-gradient-to-b from-[#A3FF38]/40 to-white px-8 pt-8 pb-6">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl border border-[#A3FF38]/40 bg-[#A3FF38]/30 text-[24px] font-bold text-[#2A6000]">
+          <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl border border-[#A3FF38]/40 bg-[#A3FF38]/30 text-[24px] font-bold text-neutral-900">
             {displayName ? displayName[0].toUpperCase() : "?"}
           </div>
           <div>

@@ -33,7 +33,7 @@ export default function CreatorDirectoryCard({
 
       <div className="flex flex-wrap gap-2 px-1">
         {niches.slice(0, 2).map((niche) => (
-          <span key={niche} className="rounded-xl bg-[#EDFFD0] px-4 py-1.5 text-[13px] font-medium text-[#3A7A00]">
+          <span key={niche} className="rounded-xl bg-[#EDFFD0] px-4 py-1.5 text-[13px] font-medium text-neutral-900">
             {niche}
           </span>
         ))}

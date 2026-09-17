@@ -5,7 +5,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import AppShell from "@/components/templates/AppShell/AppShell";
 import ListingsToolbar from "@/components/organisms/ListingsToolbar/ListingsToolbar";
 import ListingGrid from "@/components/organisms/ListingGrid/ListingGrid";
-import CategoryNavList from "@/components/molecules/CategoryNavList/CategoryNavList";
+import { StoreSidebarCategoriesView } from "@/components/organisms/StoreSidebarCategories/StoreSidebarCategories";
 import PromoBanner from "@/components/organisms/PromoBanner/PromoBanner";
 import Pagination from "@/components/molecules/Pagination/Pagination";
 import { CATEGORY_LABELS, DEFAULT_EXPLORE_FILTERS, filterListings, type ExploreFilters, type ExploreSort } from "@/lib/listings/explore";
@@ -120,7 +120,7 @@ export default function ExploreSoftwarePage({ listings: allListings }: ExploreSo
       cartCount={2}
       savedCount={7}
       messagesCount={3}
-      sidebarChildren={<CategoryNavList categories={categories} activeId={filters.category} onChange={(value) => updateFilter("category", value)} />}
+      sidebarChildren={<StoreSidebarCategoriesView categories={categories} activeId={filters.category} onChange={(value) => updateFilter("category", value)} />}
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-10 px-5 py-6 sm:px-8 sm:py-8">
         <div>
