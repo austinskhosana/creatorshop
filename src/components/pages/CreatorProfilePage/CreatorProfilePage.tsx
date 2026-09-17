@@ -43,21 +43,22 @@ export default function CreatorProfilePage() {
   return (
     <CreatorShell>
       <main className="relative min-h-screen w-full px-4 py-6 sm:px-5 sm:py-8">
-        <div className="absolute top-6 right-4 left-4 z-10 mx-auto flex max-w-[760px] justify-end sm:top-8 sm:right-5 sm:left-5">
-          <Link
-            href="/settings"
-            className="inline-flex h-10 items-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 text-sm font-semibold text-neutral-900 transition-[background-color,border-color,transform] duration-150 hover:border-neutral-300 hover:bg-neutral-50 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
-          >
-            <PencilSquareIcon aria-hidden="true" className="size-4" />
-            Edit profile
-          </Link>
-        </div>
-
         <div className="flex min-h-[calc(100vh-3rem)] w-full items-center justify-center sm:min-h-[calc(100vh-4rem)]">
-          <section
-            aria-labelledby="profile-name"
-            className="w-full max-w-[760px] overflow-hidden rounded-[28px] border border-neutral-200 bg-white p-3 sm:p-4"
-          >
+          <div className="w-full max-w-[760px]">
+            <div className="flex justify-end">
+              <Link
+                href="/settings"
+                className="inline-flex h-10 items-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 text-sm font-semibold text-neutral-900 transition-[background-color,border-color,transform] duration-150 hover:border-neutral-300 hover:bg-neutral-50 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
+              >
+                <PencilSquareIcon aria-hidden="true" className="size-4" />
+                Edit profile
+              </Link>
+            </div>
+
+            <section
+              aria-labelledby="profile-name"
+              className="mt-3 w-full overflow-hidden rounded-[28px] border border-neutral-200 bg-white p-3 sm:p-4"
+            >
             <div className="relative h-44 overflow-hidden rounded-[20px] border border-neutral-200 bg-white sm:h-[190px] sm:rounded-[22px]">
               <TerminalgraphShader
                 theme="light"
@@ -119,7 +120,8 @@ export default function CreatorProfilePage() {
                 </ul>
               </div>
             </div>
-          </section>
+            </section>
+          </div>
         </div>
       </main>
     </CreatorShell>

@@ -2,9 +2,6 @@
 
 import Image from "next/image";
 import {
-  ArrowUpIcon,
-  CheckCircleIcon,
-  ChevronDownIcon,
   EllipsisHorizontalIcon,
   FaceSmileIcon,
   MagnifyingGlassIcon,
@@ -12,10 +9,8 @@ import {
   PaperClipIcon,
   PencilSquareIcon,
   PlusIcon,
-  ShieldCheckIcon,
 } from "@heroicons/react/24/outline";
 import { useMemo, useState } from "react";
-import Button from "@/components/atoms/Button/Button";
 import Avatar from "@/components/atoms/Avatar/Avatar";
 import { CreatorShell } from "@/components/templates/CreatorShell";
 import { cn } from "@/lib/utils";
@@ -33,7 +28,7 @@ type Thread = {
 };
 
 const threads: Thread[] = [
-  { id: "paper", name: "Paper", detail: "Paper Pro · Instagram carousel", preview: "Your shop has been approved.", time: "10:42 AM", unread: true, online: true, image: "/logos/paper.jpeg" },
+  { id: "paper", name: "Paper", detail: "Paper Pro · Instagram carousel", preview: "We're excited to see what you create.", time: "10:42 AM", unread: true, online: true, image: "/logos/paper.jpeg" },
   { id: "canva", name: "Canva", detail: "Canva Pro · Short-form video", preview: "We left feedback on your draft.", time: "Yesterday", image: "/logos/canva.jpg" },
   { id: "Notion", name: "Notion", detail: "Notion Plus · Product tutorial", preview: "Thanks for sending that over!", time: "Tue", image: "/logos/notion.jpg" },
   { id: "elevenlabs", name: "ElevenLabs", detail: "Creator program", preview: "Your access is ready to use.", time: "Mon", image: "/logos/elevenlabs.png" },
@@ -42,7 +37,7 @@ const threads: Thread[] = [
 
 function ThreadAvatar({ thread, size = "md" }: { thread: Thread; size?: "sm" | "md" | "lg" }) {
   if (thread.image) {
-    return <Image src={thread.image} alt="" width={44} height={44} className={cn("shrink-0 rounded-xl border border-neutral-100 object-contain", size === "sm" ? "size-9" : size === "lg" ? "size-11" : "size-10")} />;
+    return <Image src={thread.image} alt="" width={44} height={44} className={cn("shrink-0 rounded-xl object-contain ring-1 ring-black/10", size === "sm" ? "size-9" : size === "lg" ? "size-11" : "size-10")} />;
   }
   return <Avatar name={thread.name} size={size} className="border-0 ring-0" />;
 }
@@ -52,10 +47,6 @@ export default function MessagesPage() {
   const [query, setQuery] = useState("");
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState<string[]>([]);
-  const [showProof, setShowProof] = useState(false);
-  const [proofUrl, setProofUrl] = useState("");
-  const [disclosed, setDisclosed] = useState(false);
-  const [proofSubmitted, setProofSubmitted] = useState(false);
 
   const activeThread = threads.find((thread) => thread.id === activeId) ?? threads[0];
   const filteredThreads = useMemo(
@@ -73,41 +64,42 @@ export default function MessagesPage() {
 
   return (
     <CreatorShell>
-      <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-[1440px] bg-white lg:px-6 lg:py-6">
-        <div className="grid w-full overflow-hidden border-y border-neutral-200 bg-white lg:min-h-[calc(100vh-7rem)] lg:grid-cols-[21rem_minmax(0,1fr)] lg:rounded-2xl lg:border">
-          <aside className="flex min-h-0 flex-col border-b border-neutral-200 lg:border-r lg:border-b-0">
-            <div className="border-b border-neutral-100 p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-[11px] font-semibold tracking-[0.16em] text-neutral-400 uppercase">Workspace</p>
-                  <h1 className="mt-0.5 text-xl font-semibold tracking-tight">Messages</h1>
-                </div>
-                <button type="button" aria-label="Start a new message" className="grid size-9 place-items-center rounded-xl border border-neutral-200 text-neutral-700 transition hover:border-neutral-400 hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900">
-                  <PencilSquareIcon className="size-4" />
-                </button>
+      <div className="flex h-screen min-h-0 w-full bg-white">
+        <div className="grid h-full min-h-0 w-full grid-rows-[minmax(0,16rem)_minmax(0,1fr)] overflow-hidden bg-white lg:grid-cols-[21rem_minmax(0,1fr)] lg:grid-rows-1">
+          <aside className="flex h-full min-h-0 flex-col border-b border-neutral-200 lg:border-r lg:border-b-0">
+            <div className="flex h-[72px] shrink-0 items-center justify-between border-b border-neutral-200 px-4">
+              <div>
+                <p className="text-[10px] font-semibold tracking-[0.14em] text-neutral-400 uppercase">Inbox</p>
+                <h1 className="mt-0.5 text-lg font-semibold tracking-[-0.02em] text-neutral-950">Messages</h1>
               </div>
-              <label className="relative mt-4 block">
+              <button type="button" aria-label="Start a new message" className="grid size-10 place-items-center rounded-xl border border-neutral-200 text-neutral-600 transition-[background-color,border-color,color,transform] duration-150 hover:border-neutral-300 hover:bg-neutral-50 hover:text-neutral-950 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2">
+                <PencilSquareIcon className="size-[18px]" />
+              </button>
+            </div>
+
+            <div className="shrink-0 border-b border-neutral-100 px-4 py-3.5">
+              <label className="relative block">
                 <MagnifyingGlassIcon aria-hidden="true" className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-neutral-400" />
-                <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search messages" aria-label="Search messages" className="w-full rounded-xl bg-neutral-100 py-2.5 pr-3 pl-9 text-sm outline-none placeholder:text-neutral-400 focus:bg-white focus:ring-2 focus:ring-neutral-900" />
+                <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search conversations" aria-label="Search conversations" className="h-10 w-full rounded-xl bg-neutral-100 pr-3 pl-9 text-sm text-neutral-900 outline-none transition-[background-color,box-shadow] duration-150 placeholder:text-neutral-400 focus:bg-white focus:ring-2 focus:ring-neutral-900" />
               </label>
-              <div className="mt-4 flex gap-2" aria-label="Message filters">
-                <button type="button" className="rounded-full bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white">All</button>
-                <button type="button" className="rounded-full border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-600 transition hover:border-neutral-400">Unread <span className="ml-1 text-neutral-400">1</span></button>
+              <div className="mt-3 flex gap-1.5" aria-label="Message filters">
+                <button type="button" className="min-h-8 rounded-full bg-neutral-900 px-3 text-xs font-medium text-white transition-transform duration-150 active:scale-[0.96]">All</button>
+                <button type="button" className="min-h-8 rounded-full border border-neutral-200 px-3 text-xs font-medium text-neutral-600 transition-[background-color,border-color,color,transform] duration-150 hover:border-neutral-300 hover:bg-neutral-50 hover:text-neutral-900 active:scale-[0.96]">Unread <span className="ml-1 tabular-nums text-neutral-400">1</span></button>
               </div>
             </div>
 
-            <div className="min-h-0 flex-1 overflow-y-auto px-2 py-2" aria-label="Conversation list">
+            <div className="min-h-0 flex-1 overflow-y-auto px-2 py-2.5" aria-label="Conversation list">
               {filteredThreads.map((thread) => {
                 const selected = thread.id === activeId;
                 return (
-                  <button key={thread.id} type="button" onClick={() => setActiveId(thread.id)} className={cn("relative flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900", selected ? "bg-neutral-100" : "hover:bg-neutral-50")}>
+                  <button key={thread.id} type="button" onClick={() => setActiveId(thread.id)} className={cn("relative flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-[background-color,transform] duration-150 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-inset", selected ? "bg-neutral-100" : "hover:bg-neutral-50")}>
                     <div className="relative">
                       <ThreadAvatar thread={thread} size="sm" />
                       {thread.online ? <span className="absolute -right-0.5 -bottom-0.5 size-3 rounded-full border-2 border-white bg-[#A3FF38]" /> : null}
                     </div>
                     <span className="min-w-0 flex-1">
-                      <span className="flex items-baseline justify-between gap-3"><span className="truncate text-sm font-semibold text-neutral-900">{thread.name}</span><span className="shrink-0 text-[11px] text-neutral-400">{thread.time}</span></span>
-                      <span className="mt-0.5 flex items-center gap-2"><span className={cn("truncate text-xs", thread.unread ? "font-medium text-neutral-700" : "text-neutral-500")}>{thread.preview}</span>{thread.unread ? <span className="size-1.5 shrink-0 rounded-full bg-neutral-900" /> : null}</span>
+                      <span className="flex items-baseline justify-between gap-3"><span className="truncate text-sm font-semibold text-neutral-900">{thread.name}</span><span className="shrink-0 text-[11px] tabular-nums text-neutral-400">{thread.time}</span></span>
+                      <span className="mt-1 flex items-center gap-2"><span className={cn("truncate text-xs leading-4", thread.unread ? "font-medium text-neutral-700" : "text-neutral-500")}>{thread.preview}</span>{thread.unread ? <span className="size-1.5 shrink-0 rounded-full bg-neutral-900" /> : null}</span>
                     </span>
                   </button>
                 );
@@ -116,47 +108,44 @@ export default function MessagesPage() {
             </div>
           </aside>
 
-          <section className="flex min-h-[680px] min-w-0 flex-col">
-            <header className="flex items-center justify-between border-b border-neutral-200 px-5 py-4">
+          <section className="flex min-h-0 min-w-0 flex-col">
+            <header className="flex h-[72px] shrink-0 items-center justify-between border-b border-neutral-200 px-5 sm:px-6">
               <div className="flex min-w-0 items-center gap-3">
                 <div className="relative"><ThreadAvatar thread={activeThread} /><span className="absolute -right-0.5 -bottom-0.5 size-3 rounded-full border-2 border-white bg-[#A3FF38]" /></div>
-                <div className="min-w-0"><h2 className="truncate text-sm font-semibold">{activeThread.name}</h2><p className="truncate text-xs text-neutral-500">{activeThread.detail}</p></div>
+                <div className="min-w-0"><h2 className="truncate text-[15px] font-semibold tracking-[-0.01em] text-neutral-950">{activeThread.name}</h2><p className="mt-0.5 truncate text-xs text-neutral-500">{activeThread.detail}</p></div>
               </div>
-              <div className="flex items-center gap-1">
-                <button type="button" aria-label="Search this conversation" className="grid size-9 place-items-center rounded-lg text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-900"><MagnifyingGlassIcon className="size-4" /></button>
-                <button type="button" aria-label="More conversation options" className="grid size-9 place-items-center rounded-lg text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-900"><EllipsisHorizontalIcon className="size-5" /></button>
+              <div className="flex items-center gap-0.5">
+                <button type="button" aria-label="Search this conversation" className="grid size-10 place-items-center rounded-xl text-neutral-500 transition-[background-color,color,transform] duration-150 hover:bg-neutral-100 hover:text-neutral-900 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"><MagnifyingGlassIcon className="size-[18px]" /></button>
+                <button type="button" aria-label="More conversation options" className="grid size-10 place-items-center rounded-xl text-neutral-500 transition-[background-color,color,transform] duration-150 hover:bg-neutral-100 hover:text-neutral-900 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"><EllipsisHorizontalIcon className="size-5" /></button>
               </div>
             </header>
 
-            <div className="flex-1 overflow-y-auto bg-white px-5 py-6 sm:px-8">
-              <div className="mx-auto max-w-3xl space-y-5">
-                <p className="mx-auto w-fit rounded-full border border-neutral-200 bg-white px-3 py-1 text-[10px] font-semibold tracking-[0.08em] text-neutral-400 uppercase">Today · 10:42 AM</p>
+            <div className="min-h-0 flex-1 overflow-y-auto bg-white px-5 py-7 sm:px-8 sm:py-9">
+              <div className="mx-auto flex max-w-3xl flex-col gap-7">
+                <p className="mx-auto text-[10px] font-semibold tracking-[0.1em] text-neutral-400 uppercase">Today · 10:42 AM</p>
 
-                <div className="rounded-2xl border border-neutral-200 bg-white p-4 sm:p-5">
-                  <div className="flex items-start gap-3"><span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#edffd4]"><CheckCircleIcon className="size-5 text-neutral-900" /></span><div><p className="text-sm font-semibold">Your shop was approved</p><p className="mt-1 text-sm leading-6 text-neutral-600">You&apos;re cleared to create your Paper Pro carousel. Submit the live post by <strong className="font-semibold text-neutral-900">September 25</strong> to unlock your three-month membership.</p></div></div>
-                  {!proofSubmitted ? <Button size="sm" className="mt-4" onClick={() => setShowProof((visible) => !visible)} iconRight={showProof ? <ChevronDownIcon className="size-3.5" /> : <ArrowUpIcon className="size-3.5" />}>Submit proof</Button> : null}
-                  {showProof && !proofSubmitted ? <form onSubmit={(event) => { event.preventDefault(); if (proofUrl.trim() && disclosed) { setProofSubmitted(true); setShowProof(false); } }} className="mt-4 border-t border-neutral-100 pt-4"><label className="block text-xs font-medium text-neutral-700">Live post URL<input required type="url" value={proofUrl} onChange={(event) => setProofUrl(event.target.value)} placeholder="https://instagram.com/p/..." className="mt-2 w-full rounded-xl border border-neutral-200 px-3 py-2.5 text-sm outline-none focus:border-neutral-900" /></label><label className="mt-3 flex cursor-pointer items-start gap-2 text-xs leading-5 text-neutral-600"><input required type="checkbox" checked={disclosed} onChange={(event) => setDisclosed(event.target.checked)} className="mt-0.5 size-4 accent-neutral-900" />I included the required sponsored-content disclosure.</label><div className="mt-4 flex items-center gap-2"><Button type="submit" size="sm" disabled={!proofUrl.trim() || !disclosed}>Send for review</Button><button type="button" onClick={() => setShowProof(false)} className="px-2 py-1.5 text-xs font-medium text-neutral-500 hover:text-neutral-900">Cancel</button></div></form> : null}
-                  {proofSubmitted ? <p className="mt-4 rounded-xl bg-neutral-100 px-3 py-2 text-xs font-medium text-neutral-700">Proof submitted — Paper will review it shortly.</p> : null}
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex items-end gap-2.5"><ThreadAvatar thread={activeThread} size="sm" /><div className="max-w-[min(78%,36rem)] rounded-2xl rounded-bl-[5px] bg-neutral-100 px-4 py-2.5 text-sm leading-[1.55] text-neutral-700">We&apos;re excited to see how you make Paper your own. Let us know if you have questions about the product.</div></div>
+                  <p className="pl-[46px] text-[11px] tabular-nums text-neutral-400">Paper · 10:45 AM</p>
                 </div>
 
-                <div className="flex items-end gap-2"><ThreadAvatar thread={activeThread} size="sm" /><div className="max-w-[78%] rounded-2xl rounded-bl-sm bg-neutral-100 px-4 py-3 text-sm leading-6 text-neutral-700">We&apos;re excited to see how you make Paper your own. Let us know if you have questions about the product.</div></div>
-                <p className="pl-12 text-[11px] text-neutral-400">Paper · 10:45 AM</p>
-
-                {sent.map((text, index) => <div key={`${text}-${index}`} className="ml-auto max-w-[78%] rounded-2xl rounded-br-sm bg-neutral-900 px-4 py-3 text-sm leading-6 text-white"><p>{text}</p><p className="mt-1 text-[11px] text-white/55">You · now</p></div>)}
-
-                <div className="flex items-start gap-3 rounded-2xl border border-dashed border-neutral-300 bg-white/70 p-4"><span className="grid size-9 shrink-0 place-items-center rounded-xl bg-neutral-100"><ShieldCheckIcon className="size-5" /></span><div><p className="text-sm font-semibold">Access unlocks after proof is confirmed</p><p className="mt-1 text-xs leading-5 text-neutral-500">Your Paper Pro membership and receipt will appear in this conversation.</p></div></div>
+                {sent.map((text, index) => (
+                  <div key={`${text}-${index}`} className="ml-auto flex max-w-[min(78%,36rem)] flex-col items-end gap-1.5">
+                    <div className="rounded-2xl rounded-br-[5px] bg-neutral-900 px-4 py-2.5 text-sm leading-[1.55] text-white">{text}</div>
+                    <p className="text-[11px] tabular-nums text-neutral-400">You · now</p>
+                  </div>
+                ))}
               </div>
             </div>
 
-            <form onSubmit={sendMessage} className="border-t border-neutral-200 bg-white p-4 sm:px-6">
-              <div className="flex items-end gap-2 rounded-2xl border border-neutral-200 bg-white p-2 focus-within:border-neutral-400">
-                <button type="button" aria-label="Add attachment" className="grid size-9 shrink-0 place-items-center rounded-xl text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-900"><PlusIcon className="size-5" /></button>
-                <textarea value={message} onChange={(event) => setMessage(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); event.currentTarget.form?.requestSubmit(); } }} rows={1} placeholder={`Message ${activeThread.name}`} aria-label={`Message ${activeThread.name}`} className="max-h-32 min-h-9 flex-1 resize-none bg-transparent py-2 text-sm outline-none placeholder:text-neutral-400" />
-                <button type="button" aria-label="Attach a file" className="hidden size-9 place-items-center rounded-xl text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-900 sm:grid"><PaperClipIcon className="size-4" /></button>
-                <button type="button" aria-label="Add emoji" className="hidden size-9 place-items-center rounded-xl text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-900 sm:grid"><FaceSmileIcon className="size-5" /></button>
-                <button type="submit" aria-label="Send message" disabled={!message.trim()} className="grid size-9 shrink-0 place-items-center rounded-xl bg-neutral-900 text-white transition hover:bg-neutral-700 disabled:cursor-not-allowed disabled:bg-neutral-200 disabled:text-neutral-400"><PaperAirplaneIcon className="size-4" /></button>
+            <form onSubmit={sendMessage} className="shrink-0 border-t border-neutral-200 bg-white px-4 py-3.5 sm:px-6">
+              <div className="flex items-end gap-1.5 rounded-xl border border-neutral-200 bg-white p-1.5 transition-[border-color,box-shadow] duration-150 focus-within:border-neutral-400 focus-within:ring-4 focus-within:ring-neutral-100">
+                <button type="button" aria-label="Add attachment" className="grid size-10 shrink-0 place-items-center rounded-lg text-neutral-500 transition-[background-color,color,transform] duration-150 hover:bg-neutral-100 hover:text-neutral-900 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"><PlusIcon className="size-5" /></button>
+                <textarea value={message} onChange={(event) => setMessage(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); event.currentTarget.form?.requestSubmit(); } }} rows={1} placeholder={`Message ${activeThread.name}`} aria-label={`Message ${activeThread.name}`} className="max-h-32 min-h-10 flex-1 resize-none bg-transparent px-1 py-2.5 text-sm leading-5 text-neutral-900 outline-none placeholder:text-neutral-400" />
+                <button type="button" aria-label="Attach a file" className="hidden size-10 shrink-0 place-items-center rounded-lg text-neutral-500 transition-[background-color,color,transform] duration-150 hover:bg-neutral-100 hover:text-neutral-900 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 sm:grid"><PaperClipIcon className="size-[18px]" /></button>
+                <button type="button" aria-label="Add emoji" className="hidden size-10 shrink-0 place-items-center rounded-lg text-neutral-500 transition-[background-color,color,transform] duration-150 hover:bg-neutral-100 hover:text-neutral-900 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 sm:grid"><FaceSmileIcon className="size-5" /></button>
+                <button type="submit" aria-label="Send message" disabled={!message.trim()} className="grid size-10 shrink-0 place-items-center rounded-lg bg-neutral-900 text-white transition-[background-color,color,transform] duration-150 hover:bg-neutral-700 active:scale-[0.96] disabled:cursor-not-allowed disabled:bg-neutral-100 disabled:text-neutral-300 disabled:active:scale-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"><PaperAirplaneIcon className="size-[18px]" /></button>
               </div>
-              <p className="mt-2 pl-2 text-[10px] text-neutral-400">Press Enter to send · Shift + Enter for a new line</p>
             </form>
           </section>
         </div>
