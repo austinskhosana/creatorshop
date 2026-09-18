@@ -63,7 +63,7 @@ export default function CampaignReferences({ listing }: { listing: Listing }) {
   const name = listing.brandName || listing.title;
 
   return (
-    <aside aria-labelledby="campaign-references-heading" className="w-full max-w-[460px]">
+    <aside aria-labelledby="campaign-references-heading" className="mx-auto flex w-full max-w-[460px] flex-col items-start">
       <p className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[11px] font-medium tracking-[0.08em] text-neutral-700">
         <MegaphoneIcon aria-hidden="true" className="h-3.5 w-3.5" />
         Campaign references
@@ -75,7 +75,7 @@ export default function CampaignReferences({ listing }: { listing: Listing }) {
         Realistic post examples that clarify the voice, pace, and product story without prescribing an exact script.
       </p>
 
-      <div className="mt-6 space-y-3">
+      <div className="mt-6 w-full space-y-3 text-left">
         {REFERENCE_POSTS.map((post) => (
           <article key={post.timestamp} className="rounded-[16px] border border-neutral-200 bg-white p-5 transition-colors hover:border-neutral-300">
             <div className="flex items-start justify-between gap-3">

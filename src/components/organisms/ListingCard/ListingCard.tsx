@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, useAnimationControls, useReducedMotion } from "framer-motion";
-import { ArrowTopRightOnSquareIcon, BookmarkIcon as BookmarkOutlineIcon } from "@heroicons/react/24/outline";
+import { ArrowTopRightOnSquareIcon, BookmarkIcon as BookmarkOutlineIcon, MegaphoneIcon } from "@heroicons/react/24/outline";
 import { BookmarkIcon as BookmarkSolidIcon } from "@heroicons/react/24/solid";
 import Badge from "@/components/atoms/Badge/Badge";
 import Button from "@/components/atoms/Button/Button";
@@ -38,16 +38,6 @@ function formatDeliverable(deliverable: string) {
   return CONTENT_TYPE_LABELS[base] ?? base;
 }
 
-function CartIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5">
-      <circle cx="9" cy="20" r="1.1" />
-      <circle cx="17" cy="20" r="1.1" />
-      <path d="M2.5 3.5h2.1l1.8 10.9a1.75 1.75 0 0 0 1.73 1.47h8.6a1.75 1.75 0 0 0 1.73-1.47L19.9 7.5H5.9" />
-    </svg>
-  );
-}
-
 export default function ListingCard({
   slug,
   brandName,
@@ -64,15 +54,15 @@ export default function ListingCard({
   const displayBrandName = brandName ?? title.split(" ")[0];
   const destination = websiteUrl ?? `/software/${slug}`;
   const router = useRouter();
-  const cartIconControls = useAnimationControls();
+  const campaignIconControls = useAnimationControls();
   const reduceMotion = useReducedMotion();
 
-  async function handleAddToCart() {
+  async function handleViewCampaign() {
     if (reduceMotion) {
-      await cartIconControls.start({ opacity: [1, 0.4, 1], transition: { duration: 0.3, ease: "easeOut" } });
+      await campaignIconControls.start({ opacity: [1, 0.4, 1], transition: { duration: 0.3, ease: "easeOut" } });
     } else {
-      await cartIconControls.start({ scale: 1.3, rotate: -12, transition: { duration: 0.12, ease: [0.23, 1, 0.32, 1] } });
-      await cartIconControls.start({ scale: 1, rotate: 0, transition: { type: "spring", duration: 0.4, bounce: 0.3 } });
+      await campaignIconControls.start({ scale: 1.3, rotate: -12, transition: { duration: 0.12, ease: [0.23, 1, 0.32, 1] } });
+      await campaignIconControls.start({ scale: 1, rotate: 0, transition: { type: "spring", duration: 0.4, bounce: 0.3 } });
     }
     router.push(`/software/${slug}`);
   }
@@ -135,11 +125,11 @@ export default function ListingCard({
           variant="dark"
           size="sm"
           iconLeft={
-            <motion.span className="inline-flex" animate={cartIconControls}>
-              <CartIcon />
+            <motion.span className="inline-flex" animate={campaignIconControls}>
+              <MegaphoneIcon aria-hidden="true" className="h-3.5 w-3.5" strokeWidth={1.75} />
             </motion.span>
           }
-          onClick={handleAddToCart}
+          onClick={handleViewCampaign}
           disabled={soldOut}
           style={{
             borderRadius: "8px",
@@ -155,7 +145,7 @@ export default function ListingCard({
             ].join(", "),
           }}
         >
-          {soldOut ? "Sold out" : "Add to cart"}
+          {soldOut ? "Sold out" : "View Campaign"}
         </Button>
       </div>
     </article>

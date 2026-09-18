@@ -1,12 +1,14 @@
 "use client";
 
-import { ArrowPathIcon, CalendarIcon, ChatBubbleLeftEllipsisIcon, ClockIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
+import { ArrowPathIcon, ArrowRightIcon, CalendarIcon, ChatBubbleLeftEllipsisIcon, ClockIcon, DocumentTextIcon, KeyIcon } from "@heroicons/react/24/outline";
+import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CREATOR_SHOPS, type CreatorShop, type ShopState } from "@/lib/mock-creator";
 import BrandLogo from "@/components/atoms/BrandLogo/BrandLogo";
 import Badge from "@/components/atoms/Badge/Badge";
 import Button from "@/components/atoms/Button/Button";
+import CampaignChoiceModal from "@/components/organisms/CampaignChoiceModal";
 import ShopStateBadge from "@/components/molecules/ShopStateBadge/ShopStateBadge";
 import { CreatorShell } from "@/components/templates/CreatorShell";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -25,10 +27,36 @@ function getDeliverableTag(tier: string) {
   return { label: "Thread", icon: <XIcon /> };
 }
 
+function AccessReadyCard({ shop }: { shop: CreatorShop }) {
+  const router = useRouter();
+
+  return (
+    <button
+      type="button"
+      onClick={() => router.push(`/shops/${shop.id}/access`)}
+      className="group relative mb-4 flex w-full overflow-hidden rounded-[20px] border border-neutral-200 bg-white p-5 text-left text-neutral-950 outline-none transition-[border-color,transform] duration-150 active:scale-[0.99] focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2 sm:items-center sm:p-6"
+    >
+      <span className="relative grid size-12 shrink-0 place-items-center rounded-[14px] bg-neutral-100 text-neutral-950">
+        <KeyIcon className="size-5" />
+        <span className="absolute top-1.5 right-1.5 size-2 rounded-full border-2 border-neutral-100 bg-[#A3FF38]" />
+      </span>
+      <span className="relative ml-4 min-w-0 flex-1">
+        <span className="block text-[11px] font-semibold tracking-[0.14em] text-neutral-400 uppercase">Access ready</span>
+        <span className="mt-1 block text-lg font-semibold tracking-[-0.025em]">Your {shop.product} is ready to reveal</span>
+        <span className="mt-1 hidden text-[13px] text-neutral-500 sm:block">Unlock your {shop.access} subscription and redemption code.</span>
+      </span>
+      <span className="relative ml-4 hidden min-h-10 items-center gap-2 rounded-lg bg-[linear-gradient(180deg,#323232_0%,#222222_100%)] px-4 py-2.5 text-xs font-medium text-white shadow-[inset_0_0.5px_1px_rgba(255,255,255,0.15),inset_0_-1px_1.2px_0.35px_rgba(18,18,18,1),0_2px_3px_-1px_rgba(13,13,13,0.5),0_0_0_1px_rgba(51,51,51,1)] transition-[filter] duration-150 group-hover:brightness-125 sm:flex">
+        Reveal access
+        <ArrowRightIcon className="size-4 transition-transform duration-150 group-hover:translate-x-0.5" />
+      </span>
+    </button>
+  );
+}
+
 function ShopCard({ shop, onViewCampaign }: { shop: CreatorShop; onViewCampaign: (shop: CreatorShop) => void }) {
   const router = useRouter();
   const action = shop.state === "approved" ? "View campaign" : shop.state === "expired" ? "Shop again" : shop.state === "active" ? "View access" : "Open thread";
-  const actionHref = shop.state === "expired" ? "/explore" : "/messages";
+  const actionHref = shop.state === "expired" ? "/explore" : shop.state === "active" ? `/shops/${shop.id}/access` : "/messages";
   const actionIcon = shop.state === "expired" ? <ArrowPathIcon className="size-3.5" /> : shop.state === "active" ? <DocumentTextIcon className="size-3.5" /> : <ChatBubbleLeftEllipsisIcon className="size-3.5" />;
   const deliverable = getDeliverableTag(shop.tier);
 
@@ -40,8 +68,7 @@ function ShopCard({ shop, onViewCampaign }: { shop: CreatorShop; onViewCampaign:
       </div>
 
       <div className="mt-auto pt-5">
-        <p className="text-xs font-medium text-neutral-500">{shop.brand}</p>
-        <h2 className="mt-0.5 text-[16px] leading-snug font-semibold tracking-[-0.025em] text-neutral-950">{shop.product}</h2>
+        <h2 className="text-[16px] leading-snug font-semibold tracking-[-0.025em] text-neutral-950">{shop.product}</h2>
         <p className="mt-2 line-clamp-2 text-[13px] leading-[1.55] text-neutral-500">{shop.description}</p>
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <Badge variant="tag" label={deliverable.label} icon={deliverable.icon} />
@@ -74,5 +101,5 @@ export default function MyShopsPage() {
   const filter = filters[selected];
   const shops = CREATOR_SHOPS.filter(shop => filter.states.includes(shop.state));
 
-  return <CreatorShell><div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12"><div><h1 className="text-4xl font-bold tracking-tight">My Shops</h1><p className="mt-2 text-sm text-neutral-500">Everything you’ve shopped, in one place.</p></div><Tabs value={String(selected)} onValueChange={value => setSelected(Number(value))} className="mt-9"><TabsList>{filters.map((filter, index) => <TabsTrigger key={filter.label} value={String(index)}>{filter.label}<span className="ml-1.5 text-xs font-medium">{CREATOR_SHOPS.filter(shop => filter.states.includes(shop.state)).length}</span></TabsTrigger>)}</TabsList><TabsContent value={String(selected)} className="mt-7"><div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{shops.map(shop => <ShopCard key={shop.id} shop={shop} onViewCampaign={setCampaignShop} />)}</div>{shops.length === 0 ? <div className="rounded-[2rem] border border-dashed border-neutral-300 bg-white py-20 text-center"><ClockIcon className="mx-auto size-7 text-neutral-400" /><h2 className="mt-4 text-lg font-bold">Nothing here yet.</h2><p className="mt-1 text-sm text-neutral-500">Your {filter.label.toLowerCase()} shops will appear here.</p></div> : null}</TabsContent></Tabs></div>{campaignShop ? <div className="fixed inset-0 z-50 grid place-items-center bg-neutral-950/45 p-4" onMouseDown={() => setCampaignShop(null)}><div role="dialog" aria-modal="true" aria-labelledby="campaign-choice-title" className="w-full max-w-lg rounded-[20px] bg-white p-5 shadow-2xl sm:p-6" onMouseDown={event => event.stopPropagation()}><button type="button" onClick={() => setCampaignShop(null)} aria-label="Close campaign options" className="float-right grid size-8 place-items-center rounded-full text-neutral-400 hover:bg-neutral-100 hover:text-neutral-950">×</button><p className="text-xs font-semibold tracking-[0.14em] text-neutral-500 uppercase">{campaignShop.brand} campaign</p><h2 id="campaign-choice-title" className="mt-2 text-2xl font-bold tracking-tight">Ready to pay with your post?</h2><p className="mt-2 max-w-md text-sm leading-6 text-neutral-500">Create a {campaignShop.tier.toLowerCase()} for {campaignShop.product}, then send it to {campaignShop.brand} for approval by {campaignShop.deadline}.</p><div className="mt-6 grid gap-3 sm:grid-cols-2"><button type="button" onClick={() => router.push("/messages")} className="rounded-xl border border-neutral-200 p-4 text-left transition hover:border-neutral-400 hover:bg-neutral-50"><ChatBubbleLeftEllipsisIcon className="size-5 text-neutral-700" /><p className="mt-4 text-sm font-semibold">Chat with {campaignShop.brand}</p><p className="mt-1 text-xs leading-5 text-neutral-500">Ask a question or get campaign guidance first.</p></button><button type="button" onClick={() => router.push(`/post-builder/${campaignShop.id}`)} className="rounded-xl bg-neutral-900 p-4 text-left text-white transition hover:bg-neutral-800"><DocumentTextIcon className="size-5" /><p className="mt-4 text-sm font-semibold">Pay with a post</p><p className="mt-1 text-xs leading-5 text-neutral-400">Build the post in-app and submit it for approval.</p></button></div></div></div> : null}</CreatorShell>;
+  return <CreatorShell><div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12"><div><h1 className="text-4xl font-bold tracking-tight">My Shops</h1><p className="mt-2 text-sm text-neutral-500">Everything you’ve shopped, in one place.</p></div><Tabs value={String(selected)} onValueChange={value => setSelected(Number(value))} className="mt-9"><TabsList>{filters.map((filter, index) => <TabsTrigger key={filter.label} value={String(index)}>{filter.label}<span className="ml-1.5 text-xs font-medium">{CREATOR_SHOPS.filter(shop => filter.states.includes(shop.state)).length}</span></TabsTrigger>)}</TabsList><TabsContent value={String(selected)} className="mt-7">{selected === 1 && shops[0] ? <AccessReadyCard shop={shops[0]} /> : null}<div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{shops.map(shop => <ShopCard key={shop.id} shop={shop} onViewCampaign={setCampaignShop} />)}</div>{shops.length === 0 ? <div className="rounded-[2rem] border border-dashed border-neutral-300 bg-white py-20 text-center"><ClockIcon className="mx-auto size-7 text-neutral-400" /><h2 className="mt-4 text-lg font-bold">Nothing here yet.</h2><p className="mt-1 text-sm text-neutral-500">Your {filter.label.toLowerCase()} shops will appear here.</p></div> : null}</TabsContent></Tabs></div><AnimatePresence>{campaignShop ? <CampaignChoiceModal shop={campaignShop} onClose={() => setCampaignShop(null)} onChat={() => router.push("/messages")} onPayWithPost={() => router.push(`/post-builder/${campaignShop.id}`)} /> : null}</AnimatePresence></CreatorShell>;
 }

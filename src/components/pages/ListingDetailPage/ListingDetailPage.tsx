@@ -130,7 +130,7 @@ export default function ListingDetailPage({ listing }: ListingDetailPageProps) {
             </div>
           </div>
 
-          <div className="hidden border-l border-neutral-200 px-10 pt-[116px] pb-10 lg:block">
+          <div className="hidden border-l border-neutral-200 pt-[116px] pr-2 pb-10 pl-10 lg:block">
             <CampaignReferences listing={listing} />
           </div>
         </div>
