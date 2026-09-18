@@ -1,5 +1,5 @@
 <!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
+# Next.js 16 project guidance
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+This version has breaking changes. Before changing routing, configuration, caching, server/client boundaries, or other Next.js APIs, read the relevant guide in `node_modules/next/dist/docs/` and heed deprecation notices. Isolated component styling and copy edits do not require a framework-doc read.
 <!-- END:nextjs-agent-rules -->

@@ -1,171 +1,68 @@
-# Creatorshop — Component Library Kickoff
+# Creatorshop — Agent Guide
 
-## What this is right now
-The Creatorshop product plan is archived at `archive/marketplace-v1/` — not
-deleted, just parked. We're not building product features yet.
+## Current state
 
-Instead: an internal component library, built one component at a time,
-following atomic design. Each finished component gets posted publicly
-(build in public) before moving to the next one.
+Creatorshop is a Next.js 16 web app and an actively evolving atomic component library. Product screens currently use mock data; authentication, persistence, payments, and external services are not wired yet.
 
-This library currently lives inside the Creatorshop repo at `/design-system`,
-but it's decoupled from any product decisions — it may become its own
-standalone tool later.
+The current product scope and business constraints live in `PRODUCT.md`. Historical plans live under `archive/` and are reference material only.
 
----
+## Working rules
 
-## Reference: the prior full build
-Before this reset, Creatorshop had a fully built-out version of the
-marketplace app — real pages and components, not just the plan. That work
-lives on the `archive/pre-atomic-rebuild` branch on GitHub
-(`austinskhosana/creatorshop`), for one purpose only: checking prior UX
-decisions while designing a new component or page here.
+1. Preserve existing uncommitted work. Inspect the diff before changing a file.
+2. Read only the context needed for the task. Do not preload `archive/`, every registry module, or every design skill.
+3. For Next.js routing, configuration, caching, server/client boundaries, or framework APIs, read the relevant bundled guide in `node_modules/next/dist/docs/` first.
+4. Keep UI components focused. Extract a distinct reusable card, form section, toolbar, status display, or interaction when it is reused or makes its parent materially easier to understand.
+5. Do not add authentication, databases, email, payments, or external services unless the task explicitly requires them.
+6. Do not fabricate live listings, testimonials, customers, or traction. Mock data must be clearly fictional.
 
-**Styling and UX only.** Pull layout, copy, spacing, and interaction
-patterns from it. Never pull in anything functional from that branch —
-no dependencies (Clerk, Prisma, Supabase, Resend, svix, pg), no database
-wiring, no auth, no API routes. Those get rebuilt fresh, on purpose, when
-there's real product work to wire up.
+## Component organization
 
-**This is temporary.** Once the full marketplace app is rebuilt and ships
-as the final product — not just the component library — delete the
-`archive/pre-atomic-rebuild` branch (and any other stale reference
-branches). It's a build aid, not something that should persist in the
-shipped repo.
-
----
-
-## Atomic design levels
-Build in this order. Don't skip ahead — a molecule shouldn't exist before
-the atoms it's made of do.
-
-| Level | What it means | Example |
-|---|---|---|
-| Atoms | Smallest possible unit, can't be broken down further | Button, Input, Badge, Avatar |
-| Molecules | A small group of atoms working as one unit | Search field (Input + Button), Labeled field |
-| Organisms | Groups of molecules/atoms forming a distinct section | Navbar, Card with actions, Form |
-| Templates | Layout structure, no real content | Page shell with header/sidebar/content slots |
-| Pages | Templates with real content in place | An actual finished screen |
-
----
-
-## The workflow for every new component
-1. Build the component under `src/components/{level}/{ComponentName}/`
-2. Add one entry to `src/components/registry.tsx` — this is what makes it
-   show up on `/design-system` automatically, grouped by level
-3. Check it against the design skills before calling it done (see below)
-4. Post it — screenshot or clip from `/design-system`, component by component
-
----
-
-## Component file convention
-Established by the existing `Button` atom — follow this shape:
-
-```
-src/components/atoms/Button/
-  Button.tsx     ← the component, default export
-  index.ts       ← re-export
+```text
+src/components/
+  atoms/       smallest reusable controls and visuals
+  molecules/   small combinations of atoms
+  organisms/   substantial sections and workflows
+  templates/   content-agnostic page structure
+  pages/       composed application screens
 ```
 
-```tsx
-// Button.tsx pattern to follow
-import { cn } from "@/lib/utils";
+Each component normally uses:
 
-type ButtonVariant = "primary" | "dark" | "secondary" | "danger";
-type ButtonSize = "sm" | "md" | "lg";
-
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-}
-// ...variant/size style maps, then the component using cn()
+```text
+src/components/{level}/{ComponentName}/
+  ComponentName.tsx
+  index.ts
 ```
 
-Registry entry — each variant becomes its own page under
-`/design-system/{component}/{variant}`:
+The design-system catalog is modularized under `src/components/registry/`. Add a preview entry to the matching atomic-level file; do not rebuild a single monolithic registry.
 
-```tsx
-// registry.tsx — one object per component
-{
-  name: "Button",
-  level: "atoms",
-  description: "Primary, dark, secondary, and danger variants in three sizes.",
-  variants: [
-    { name: "Primary", preview: (/* live JSX for this variant/state */) },
-    { name: "Dark", preview: (/* ... */) },
-    // one entry per variant or notable state (loading, disabled, etc.)
-  ],
-}
-```
+## UI completion checklist
 
----
+Apply this concise checklist during implementation. Invoke a specialized design skill only when the task needs a deeper audit.
 
-## Decomposition rule (lesson from the prior build)
-The prior build (`archive/pre-atomic-rebuild`) got this wrong: whole pages
-were built as one monolithic component instead of being decomposed. Concrete
-examples worth not repeating:
-- `ExploreClient.tsx` (113 lines) and `ShopsClient.tsx` (174 lines) each
-  hand-rolled an identical ~40-line animated filter-pill tab bar inline —
-  duplicated verbatim instead of extracted once.
-- `SoftwareListingClient.tsx` (263 lines) inlined 7-8 distinct visual chunks
-  (hero/logo block, a full `PayWithPostCard`, a deliverable-picker button
-  group, a multi-state application form/CTA) as nested ternaries in one JSX
-  return.
-- `ShopsClient.tsx` also defined a full `ShopCard` as an unexported local
-  function inside the client file instead of extracting it.
-- `CreatorCard.tsx` and `BrandCard.tsx` were near-identical files (same
-  tilt animation, same layout) that should have been one component
-  parameterized by icon/title/copy.
-
-**The rule going forward**: before a page or organism is "done", every
-visually distinct chunk — a card, a status pill, a filter bar, an empty
-state, a form section, a CTA block — is its own file under
-`src/components/{level}/`, never inline JSX in a page-level file. If a
-chunk of JSX gets copy-pasted into a second page, that's the signal to stop
-and extract it into a molecule/organism instead.
-
-The one part of the old build that *was* decomposed well: `src/components/ui/`
-(Badge, Card, Avatar, EmptyState, Button, Input, Textarea, Skeleton,
-ErrorState) — genuinely atomic, single-concern, prop-driven. That's the
-shape to match, not the page-level files.
-
----
-
-## Design quality bar
-Before marking a component done, run it against these skills:
-- `emil-design-eng` — polish philosophy, animation decisions, invisible details
-- `make-interfaces-feel-better` — hover states, shadows, borders, micro-interactions
-- `userinterface-wiki` — broader UI/UX patterns, file:line findings
-
-Every interactive component needs: hover, active, focus-visible, and
-disabled states shown in its registry preview — not just the default state.
-
----
+- Match the established Tailwind tokens and nearby component conventions.
+- Interactive controls have hover, active, focus-visible, disabled, loading, and error states where applicable.
+- Touch targets are at least 40px in dense UI and preferably 44px on touch-oriented surfaces.
+- Transitions name explicit properties; avoid `transition-all`.
+- Motion has a functional purpose, stays subtle, and respects reduced motion.
+- Dynamic numbers use tabular numerals when width changes would cause layout shift.
+- Icons use the existing icon family and visually match adjacent text weight.
+- Labels, keyboard behavior, and ARIA state remain correct.
+- Run `npm run lint` and `npm run build` after structural changes.
 
 ## Stack
-| Layer | Tool |
-|---|---|
-| Framework | Next.js 16 (app router) |
-| Styling | Tailwind 4 |
-| Animation | Framer Motion |
-| Component catalog | `/design-system` + `src/components/registry.tsx` |
 
-Auth, database, and email packages (Clerk, Prisma, Resend, svix, pg) have
-been removed from `package.json` — they're archived with the product plan
-and can come back when there's product work to wire up.
+- Next.js 16 App Router
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- Framer Motion
+- `/design-system` for component previews
 
----
+## Useful entry points
 
-## Current inventory
-| Component | Level | Status |
-|---|---|---|
-| Button | atoms | Done — primary/dark/secondary/danger × sm/md/lg, plus loading/full-width/icon states |
-
----
-
-## Session kickoff prompt for Claude Code
-Paste this at the start of each Claude Code session:
-
-"We're building Creatorshop's component library from scratch, one atomic
-component at a time, following the workflow in CLAUDE.md. Check the
-'Current inventory' table for what exists, then help me build the next one."
+- Product context: `PRODUCT.md`
+- Routes: `src/app/`
+- Components: `src/components/`
+- Design-system registry: `src/components/registry/`
+- Shared mock listings: `src/lib/mock-listings.ts`

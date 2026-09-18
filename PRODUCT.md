@@ -35,7 +35,7 @@ Creatorshop lets creators get free software access by pitching a post/deliverabl
 - Creator side is free — creators "pay" with content/services, not cash.
 - No plan-tier feature-gating on the brand side (all features ship under the one price) unless tiering is decided later.
 - Currently a single web codebase in active development (this repo); mobile is future scope, not current.
-- Currently building an internal atomic-design component library (`/design-system` in this repo) before product screens are wired to real data — Button, Avatar, Badge, Card, Input, Skeleton, Textarea atoms in progress.
+- The internal atomic-design component library and multiple product screens are implemented under `src/components/`; `/design-system` catalogs their variants. Screens still use mock/local state rather than production services.
 - A prior full build of the marketplace app exists on GitHub branch `archive/pre-atomic-rebuild` — usable only as a styling/UX reference (layout, copy, spacing, interaction patterns), never for functional code, dependencies, or data wiring.
 
 ## Brand Commitments

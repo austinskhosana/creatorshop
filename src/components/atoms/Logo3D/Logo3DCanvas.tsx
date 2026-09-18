@@ -2,7 +2,7 @@
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, Lightformer, useGLTF } from "@react-three/drei";
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 
 function ChromeSymbol({
@@ -26,34 +26,34 @@ function ChromeSymbol({
     onReady?.();
   }, [onReady]);
 
-  const model = useRef(scene.clone(true));
-  const normalized = useRef(false);
+  const model = useMemo(() => {
+    const clone = scene.clone(true);
 
-  model.current.traverse((child) => {
-    if (child instanceof THREE.Mesh) {
-      child.material = new THREE.MeshPhysicalMaterial({
-        color: "#e8e8ea",
-        metalness: 1,
-        roughness: 0.18,
-        clearcoat: 1,
-        clearcoatRoughness: 0.08,
-      });
-    }
-  });
+    clone.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        child.material = new THREE.MeshPhysicalMaterial({
+          color: "#e8e8ea",
+          metalness: 1,
+          roughness: 0.18,
+          clearcoat: 1,
+          clearcoatRoughness: 0.08,
+        });
+      }
+    });
 
-  // Normalize every model to the same on-screen size regardless of how it
-  // was authored/exported, so different .glb files read as consistently
-  // sized when swapped into this same component.
-  if (!normalized.current) {
-    const box = new THREE.Box3().setFromObject(model.current);
+    // Normalize every model to the same on-screen size regardless of how it
+    // was authored/exported, so different .glb files read as consistently
+    // sized when swapped into this same component.
+    const box = new THREE.Box3().setFromObject(clone);
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
     const maxDimension = Math.max(size.x, size.y, size.z) || 1;
     const targetSize = 1.8;
-    model.current.scale.multiplyScalar(targetSize / maxDimension);
-    model.current.position.sub(center.multiplyScalar(targetSize / maxDimension));
-    normalized.current = true;
-  }
+    clone.scale.multiplyScalar(targetSize / maxDimension);
+    clone.position.sub(center.multiplyScalar(targetSize / maxDimension));
+
+    return clone;
+  }, [scene]);
 
   useFrame((state, delta) => {
     if (!groupRef.current) return;
@@ -68,7 +68,7 @@ function ChromeSymbol({
 
   return (
     <group ref={groupRef}>
-      <primitive object={model.current} />
+      <primitive object={model} />
     </group>
   );
 }

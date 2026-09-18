@@ -64,7 +64,7 @@ export default function CampaignReferences({ listing }: { listing: Listing }) {
 
   return (
     <aside aria-labelledby="campaign-references-heading" className="w-full max-w-[460px]">
-      <p className="flex items-center gap-1.5 text-[11px] font-medium tracking-[0.08em] text-neutral-700">
+      <p className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[11px] font-medium tracking-[0.08em] text-neutral-700">
         <MegaphoneIcon aria-hidden="true" className="h-3.5 w-3.5" />
         Campaign references
       </p>

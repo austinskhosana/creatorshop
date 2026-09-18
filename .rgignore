@@ -1,0 +1,6 @@
+# Large/generated directories and historical context should only be read explicitly.
+.next/
+node_modules/
+.agents/
+.claude/skills/
+archive/

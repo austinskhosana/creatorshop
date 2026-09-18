@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { registry } from "@/components/registry";
 import { slugify } from "@/lib/utils";
 import { BackButton } from "../../_components/BackButton";
@@ -38,7 +39,7 @@ export default async function ComponentVariantPage({
     return (
       <div className="relative">
         <BackButton href={`/design-system/${slugify(entry.name)}`} position="right" fixed />
-        {match.preview}
+        <Suspense fallback={<PreviewFallback />}>{match.preview}</Suspense>
       </div>
     );
   }
@@ -57,8 +58,14 @@ export default async function ComponentVariantPage({
           </p>
         )}
 
-        <div className="mt-10 flex items-center justify-center">{match.preview}</div>
+        <div className="mt-10 flex items-center justify-center">
+          <Suspense fallback={<PreviewFallback />}>{match.preview}</Suspense>
+        </div>
       </div>
     </div>
   );
+}
+
+function PreviewFallback() {
+  return <div className="h-24 w-full animate-pulse rounded-xl bg-neutral-100" aria-label="Loading component preview" />;
 }

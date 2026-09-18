@@ -1,13 +1,13 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowPathIcon, ChatBubbleLeftEllipsisIcon, CheckCircleIcon, ClockIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
+import { ArrowPathIcon, CalendarIcon, ChatBubbleLeftEllipsisIcon, ClockIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CREATOR_SHOPS, type CreatorShop, type ShopState } from "@/lib/mock-creator";
 import BrandLogo from "@/components/atoms/BrandLogo/BrandLogo";
 import Badge from "@/components/atoms/Badge/Badge";
 import Button from "@/components/atoms/Button/Button";
+import ShopStateBadge from "@/components/molecules/ShopStateBadge/ShopStateBadge";
 import { CreatorShell } from "@/components/templates/CreatorShell";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -26,9 +26,8 @@ function getDeliverableTag(tier: string) {
 }
 
 function ShopCard({ shop, onViewCampaign }: { shop: CreatorShop; onViewCampaign: (shop: CreatorShop) => void }) {
+  const router = useRouter();
   const action = shop.state === "approved" ? "View campaign" : shop.state === "expired" ? "Shop again" : shop.state === "active" ? "View access" : "Open thread";
-  const statusMessage: Record<ShopState, string> = { pending: "Shop in review", approved: "Post approved", posted: "Post in review", active: "Access active", expired: "Access expired", overdue: "Post overdue", declined: "Shop declined", withdrawn: "Shop withdrawn" };
-  const statusIcon = shop.state === "approved" || shop.state === "active" ? <CheckCircleIcon className="size-3.5 shrink-0" /> : shop.state === "expired" ? <ArrowPathIcon className="size-3.5 shrink-0" /> : shop.state === "declined" || shop.state === "withdrawn" ? <DocumentTextIcon className="size-3.5 shrink-0" /> : <ClockIcon className="size-3.5 shrink-0" />;
   const actionHref = shop.state === "expired" ? "/explore" : "/messages";
   const actionIcon = shop.state === "expired" ? <ArrowPathIcon className="size-3.5" /> : shop.state === "active" ? <DocumentTextIcon className="size-3.5" /> : <ChatBubbleLeftEllipsisIcon className="size-3.5" />;
   const deliverable = getDeliverableTag(shop.tier);
@@ -37,15 +36,17 @@ function ShopCard({ shop, onViewCampaign }: { shop: CreatorShop; onViewCampaign:
     <article className="flex min-h-[260px] flex-col rounded-[20px] border border-neutral-200 bg-white p-4">
       <div className="flex items-start justify-between gap-3">
         <BrandLogo slug={shop.id === "dia" ? "dia-browser" : shop.id} name={shop.brand} />
-        <Badge variant="tag" label={`${shop.access.replace("months", "month")} subscription`} />
+        <ShopStateBadge state={shop.state} />
       </div>
 
       <div className="mt-auto pt-5">
         <p className="text-xs font-medium text-neutral-500">{shop.brand}</p>
         <h2 className="mt-0.5 text-[16px] leading-snug font-semibold tracking-[-0.025em] text-neutral-950">{shop.product}</h2>
         <p className="mt-2 line-clamp-2 text-[13px] leading-[1.55] text-neutral-500">{shop.description}</p>
-        <div className="mt-3"><Badge variant="tag" label={deliverable.label} icon={deliverable.icon} /></div>
-        <div className="mt-3 flex items-center gap-2 rounded-lg bg-neutral-100 px-3 py-2.5 text-xs text-neutral-600">{statusIcon}<span>{statusMessage[shop.state]}</span></div>
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <Badge variant="tag" label={deliverable.label} icon={deliverable.icon} />
+          <Badge variant="tag" label={`${shop.access.replace("months", "month")} subscription`} icon={<CalendarIcon className="size-3" />} />
+        </div>
       </div>
 
       <div className="mt-3 flex items-end justify-between border-t border-neutral-100 pt-3">
@@ -53,42 +54,15 @@ function ShopCard({ shop, onViewCampaign }: { shop: CreatorShop; onViewCampaign:
           <p className="text-[15px] font-semibold tabular-nums text-neutral-900">${shop.value}</p>
           <p className="text-[11px] text-neutral-400">Retail value</p>
         </div>
-        {shop.state === "approved" ? (
-          <Button
-            variant="dark"
-            size="sm"
-            iconLeft={actionIcon}
-            onClick={() => onViewCampaign(shop)}
-            style={{
-              borderRadius: "8px",
-              padding: "8px 14px",
-              fontWeight: 500,
-              letterSpacing: "normal",
-              background: "linear-gradient(180deg, #323232 0%, #222222 100%)",
-              boxShadow: "inset 0 0.5px 1px rgba(255,255,255,0.15), inset 0 -1px 1.2px 0.35px rgba(18,18,18,1), 0 2px 3px -1px rgba(13,13,13,0.5), 0 0 0 1px rgba(51,51,51,1)",
-            }}
-          >
-            {action}
-          </Button>
-        ) : (
-          <Link href={actionHref} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2">
-            <Button
-              variant="dark"
-              size="sm"
-              iconLeft={actionIcon}
-              style={{
-                borderRadius: "8px",
-                padding: "8px 14px",
-                fontWeight: 500,
-                letterSpacing: "normal",
-                background: "linear-gradient(180deg, #323232 0%, #222222 100%)",
-                boxShadow: "inset 0 0.5px 1px rgba(255,255,255,0.15), inset 0 -1px 1.2px 0.35px rgba(18,18,18,1), 0 2px 3px -1px rgba(13,13,13,0.5), 0 0 0 1px rgba(51,51,51,1)",
-              }}
-            >
-              {action}
-            </Button>
-          </Link>
-        )}
+        <Button
+          variant="premium"
+          size="sm"
+          iconLeft={actionIcon}
+          onClick={() => (shop.state === "approved" ? onViewCampaign(shop) : router.push(actionHref))}
+          style={{ borderRadius: "8px", padding: "8px 14px", fontWeight: 500, letterSpacing: "normal" }}
+        >
+          {action}
+        </Button>
       </div>
     </article>
   );

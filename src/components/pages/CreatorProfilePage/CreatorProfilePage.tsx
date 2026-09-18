@@ -44,11 +44,11 @@ export default function CreatorProfilePage() {
     <CreatorShell>
       <main className="relative min-h-screen w-full px-4 py-6 sm:px-5 sm:py-8">
         <div className="flex min-h-[calc(100vh-3rem)] w-full items-center justify-center sm:min-h-[calc(100vh-4rem)]">
-          <div className="w-full max-w-[760px]">
+          <div className="w-full max-w-[650px]">
             <div className="flex justify-end">
               <Link
                 href="/settings"
-                className="inline-flex h-10 items-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 text-sm font-semibold text-neutral-900 transition-[background-color,border-color,transform] duration-150 hover:border-neutral-300 hover:bg-neutral-50 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
+                className="inline-flex h-10 items-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 text-sm font-medium text-neutral-900 transition-[background-color,border-color,transform] duration-150 hover:border-neutral-300 hover:bg-neutral-50 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
               >
                 <PencilSquareIcon aria-hidden="true" className="size-4" />
                 Edit profile
@@ -57,9 +57,9 @@ export default function CreatorProfilePage() {
 
             <section
               aria-labelledby="profile-name"
-              className="mt-3 w-full overflow-hidden rounded-[28px] border border-neutral-200 bg-white p-3 sm:p-4"
+              className="mt-3 w-full overflow-hidden rounded-[32px] border border-neutral-200 bg-white p-3 sm:p-3.5"
             >
-            <div className="relative h-44 overflow-hidden rounded-[20px] border border-neutral-200 bg-white sm:h-[190px] sm:rounded-[22px]">
+            <div className="relative h-36 overflow-hidden rounded-[24px] border border-neutral-200 bg-white sm:h-40 sm:rounded-[26px]">
               <TerminalgraphShader
                 theme="light"
                 background={{ dark: "#052e12", light: "#ffffff" }}
@@ -67,47 +67,49 @@ export default function CreatorProfilePage() {
               />
             </div>
 
-            <div className="relative mt-4 rounded-[20px] border border-neutral-200 bg-white px-5 pt-24 pb-7 sm:rounded-[22px] sm:px-8 sm:pt-[108px] sm:pb-8">
-              <div className="absolute -top-[68px] left-5 size-[116px] overflow-hidden rounded-full bg-neutral-100 ring-[5px] ring-white sm:-top-[76px] sm:left-8 sm:size-[140px] sm:ring-[6px]">
-                <Image
-                  src={CREATOR.avatar}
-                  alt={`${CREATOR.name}'s profile photo`}
-                  fill
-                  priority
-                  sizes="(min-width: 640px) 140px, 116px"
-                  className="object-cover"
-                />
+            <div className="relative mt-3.5 rounded-[24px] border border-neutral-200 bg-white px-5 pt-20 pb-5 sm:rounded-[26px] sm:px-7 sm:pt-[88px] sm:pb-6">
+              <div className="absolute -top-[58px] left-5 size-[104px] rounded-full shadow-sm sm:-top-16 sm:left-7 sm:size-[120px]">
+                <div className="relative size-full overflow-hidden rounded-full border-[5px] border-white bg-neutral-100 sm:border-[6px]">
+                  <Image
+                    src={CREATOR.avatar}
+                    alt={`${CREATOR.name}'s profile photo`}
+                    fill
+                    priority
+                    sizes="(min-width: 640px) 120px, 104px"
+                    className="object-cover"
+                  />
+                </div>
               </div>
 
-              <div className="absolute top-4 right-4 inline-flex h-11 items-center gap-2 rounded-xl bg-neutral-100 px-3.5 text-sm font-medium text-neutral-900 sm:top-[18px] sm:right-[18px] sm:h-11 sm:px-4 sm:text-base">
+              <div className="absolute top-4 right-4 inline-flex h-10 items-center gap-2 rounded-xl bg-neutral-100 px-3.5 text-sm font-medium text-neutral-900 sm:top-4 sm:right-4">
                 <UserIcon aria-hidden="true" className="size-4" />
                 <span>{CREATOR.followers} Followers</span>
               </div>
 
               <div className="max-w-4xl">
-                <h1 id="profile-name" className="text-[28px] font-bold tracking-[-0.035em] text-neutral-950 sm:text-[26px]">
+                <h1 id="profile-name" className="text-[26px] font-bold tracking-[-0.035em] text-neutral-950 sm:text-2xl">
                   {CREATOR.name}
                 </h1>
-                <p className="mt-1 text-lg tracking-[-0.025em] text-neutral-900 sm:text-xl">{CREATOR.handle}</p>
-                <p className="mt-5 max-w-4xl text-[16px] leading-7 text-neutral-500 sm:mt-4 sm:text-[17px] sm:leading-7">
+                <p className="mt-1 text-base tracking-[-0.025em] text-neutral-900 sm:text-lg">{CREATOR.handle}</p>
+                <p className="mt-4 max-w-4xl text-[15px] leading-6 text-neutral-500 sm:text-base sm:leading-6">
                   {CREATOR.bio}
                 </p>
               </div>
 
-              <div className="mt-8 sm:mt-6">
-                <h2 className="text-lg font-bold tracking-tight text-neutral-900 sm:text-xl">Niches</h2>
-                <ul className="mt-4 flex flex-wrap gap-2.5 sm:mt-4 sm:gap-3" aria-label="Creator niches">
+              <div className="mt-6 sm:mt-5">
+                <h2 className="text-lg font-bold tracking-tight text-neutral-900">Niches</h2>
+                <ul className="mt-3 flex flex-wrap gap-2.5" aria-label="Creator niches">
                   {CREATOR.niches.map((niche) => (
-                    <li key={niche} className="rounded-xl bg-neutral-100 px-5 py-2.5 text-sm font-medium text-neutral-900 sm:min-w-28 sm:px-5 sm:py-2.5 sm:text-center sm:text-base">
+                    <li key={niche} className="rounded-xl bg-neutral-100 px-4 py-2 text-sm font-medium text-neutral-900 sm:min-w-24 sm:text-center">
                       {niche}
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div className="mt-8 sm:mt-7">
-                <h2 className="text-lg font-bold tracking-tight text-neutral-900 sm:text-xl">Socials</h2>
-                <ul className="mt-4 flex flex-wrap gap-2.5 sm:mt-4 sm:gap-3" aria-label="Creator social profiles">
+              <div className="mt-6">
+                <h2 className="text-lg font-bold tracking-tight text-neutral-900">Socials</h2>
+                <ul className="mt-3 flex flex-wrap gap-2.5" aria-label="Creator social profiles">
                   {CREATOR.platforms.map((platform) => (
                     <li
                       key={platform.name}

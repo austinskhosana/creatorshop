@@ -2,7 +2,7 @@
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { ContactShadows, Environment, Float, Lightformer, useTexture } from "@react-three/drei";
-import { Suspense, useMemo, useRef } from "react";
+import { Suspense, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three-stdlib";
 import { cn } from "@/lib/utils";
@@ -16,9 +16,16 @@ const EDGE_COLOR = "#16181b";
 
 function Card() {
   const texture = useTexture(CARD_IMAGE);
-  texture.colorSpace = THREE.SRGBColorSpace;
+  const displayTexture = useMemo(() => {
+    const clone = texture.clone();
+    clone.colorSpace = THREE.SRGBColorSpace;
+    clone.needsUpdate = true;
+    return clone;
+  }, [texture]);
   const tiltRef = useRef<THREE.Group>(null);
   const { pointer } = useThree();
+
+  useEffect(() => () => displayTexture.dispose(), [displayTexture]);
 
   const geometry = useMemo(
     () => new RoundedBoxGeometry(CARD_WIDTH, CARD_HEIGHT, CARD_DEPTH, 6, CARD_RADIUS),
@@ -43,7 +50,7 @@ function Card() {
           <meshStandardMaterial attach="material-3" color={EDGE_COLOR} roughness={0.35} metalness={0.6} envMapIntensity={1.2} />
           <meshPhysicalMaterial
             attach="material-4"
-            map={texture}
+            map={displayTexture}
             roughness={0.3}
             metalness={0.1}
             clearcoat={0.8}

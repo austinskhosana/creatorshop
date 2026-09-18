@@ -58,7 +58,6 @@ function PaginationLink({
           variant: isActive ? "outline" : "ghost",
           size,
         }),
-        "transition-transform duration-150 ease-out active:scale-90",
         className
       )}
       {...props}

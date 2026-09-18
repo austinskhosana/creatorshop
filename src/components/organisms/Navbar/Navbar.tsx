@@ -42,6 +42,7 @@ function MenuIcon({ open }: { open: boolean }) {
         stroke="currentColor"
         strokeWidth="2"
         strokeLinecap="round"
+        initial={false}
         animate={{ opacity: open ? 0 : 1 }}
         transition={{ duration: reduce ? 0 : 0.15, ease: EASE_OUT }}
       />

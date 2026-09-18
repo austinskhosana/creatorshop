@@ -92,30 +92,30 @@ export default function ListingDetailPage({ listing }: ListingDetailPageProps) {
         />
       }
     >
-      <div className="flex h-full flex-col px-5 py-6 sm:px-8 sm:py-8">
-        <Breadcrumb>
-          <BreadcrumbList className="gap-2 text-[13px] text-neutral-400 sm:gap-2">
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild className="text-neutral-400 hover:text-neutral-600">
-                <Link href="/explore">Shop</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator className="text-neutral-400" />
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild className="text-neutral-400 hover:text-neutral-600">
-                <Link href="/explore">Software</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator className="text-neutral-400" />
-            <BreadcrumbItem>
-              <BreadcrumbPage className="font-medium text-neutral-900">{listing.title}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+      <div className="h-full px-5 sm:px-8">
+        <div className="mx-auto grid min-h-full w-full max-w-6xl lg:grid-cols-[minmax(0,1fr)_minmax(384px,484px)]">
+          <div className="min-w-0 py-6 sm:py-8 lg:pr-6">
+            <Breadcrumb>
+              <BreadcrumbList className="gap-2 text-[13px] text-neutral-400 sm:gap-2">
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild className="text-neutral-400 hover:text-neutral-600">
+                    <Link href="/explore">Shop</Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="text-neutral-400" />
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild className="text-neutral-400 hover:text-neutral-600">
+                    <Link href="/explore">Software</Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="text-neutral-400" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="font-medium text-neutral-900">{listing.title}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
 
-        <div className="mx-auto flex w-full max-w-6xl flex-1 items-start pt-16 pb-10">
-          <div className="grid w-full gap-10 lg:grid-cols-[minmax(0,1fr)_1px_minmax(360px,460px)] lg:gap-12">
-            <div className="flex min-w-0 flex-col items-start gap-8">
+            <div className="flex min-w-0 flex-col items-start gap-8 pt-16 pb-10">
               <ListingHeader
                 slug={listing.slug}
                 brandName={listing.brandName}
@@ -128,9 +128,9 @@ export default function ListingDetailPage({ listing }: ListingDetailPageProps) {
                 <PayWithCard listing={listing} saved={listing.saved} />
               </div>
             </div>
+          </div>
 
-            <div aria-hidden="true" className="hidden bg-neutral-200 lg:block" />
-
+          <div className="hidden border-l border-neutral-200 px-10 pt-[116px] pb-10 lg:block">
             <CampaignReferences listing={listing} />
           </div>
         </div>

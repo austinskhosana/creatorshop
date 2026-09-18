@@ -122,7 +122,7 @@ export default function ExploreSoftwarePage({ listings: allListings }: ExploreSo
       messagesCount={3}
       sidebarChildren={<StoreSidebarCategoriesView categories={categories} activeId={filters.category} onChange={(value) => updateFilter("category", value)} />}
     >
-      <div className="mx-auto flex max-w-6xl flex-col gap-10 px-5 py-6 sm:px-8 sm:py-8">
+      <div className="mx-auto flex min-h-full max-w-6xl flex-col gap-10 px-5 py-6 sm:px-8 sm:py-8">
         <div>
           <div className="mb-6"><h1 className="text-balance text-2xl font-semibold text-neutral-900">Store</h1></div>
           <ListingsToolbar
@@ -140,10 +140,10 @@ export default function ExploreSoftwarePage({ listings: allListings }: ExploreSo
           />
         </div>
         <PromoBanner eyebrow="No cash. No gifting. A real transaction." title="Pay with a post." description="Shop vetted software from real brands and pay with content. Add products to your cart, check out in one tap, and unlock access when your post goes live." />
-        <section>
+        <section className="flex flex-1 flex-col">
           <h2 className="mb-4 text-[16px] font-semibold text-neutral-900">All products</h2>
           <ListingGrid listings={paginatedListings} />
-          <div className="mt-8">
+          <div className="mt-auto pt-8">
             <Pagination page={page} totalPages={totalPages} onPageChange={goToPage} />
           </div>
         </section>

@@ -1,7 +1,7 @@
 import { ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-type ButtonVariant = "primary" | "accent" | "dark" | "secondary" | "danger";
+type ButtonVariant = "primary" | "accent" | "dark" | "premium" | "secondary" | "danger";
 type ButtonSize = "sm" | "md" | "lg";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -22,6 +22,8 @@ const variantStyles: Record<ButtonVariant, string> = {
   accent:
     "bg-[#A3FF38] text-black border border-[#82F200] shadow-[inset_3px_3px_6px_rgba(255,255,255,0.4)] hover:brightness-95 focus-visible:ring-[#82F200]",
   dark: "bg-neutral-900 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] hover:bg-neutral-800 focus-visible:ring-neutral-900",
+  premium:
+    "text-white bg-[linear-gradient(180deg,#323232_0%,#222222_100%)] shadow-[inset_0_0.5px_1px_rgba(255,255,255,0.15),inset_0_-1px_1.2px_0.35px_rgba(18,18,18,1),0_2px_3px_-1px_rgba(13,13,13,0.5),0_0_0_1px_rgba(51,51,51,1)] hover:brightness-125 focus-visible:ring-neutral-900",
   secondary:
     "bg-white text-neutral-900 border border-neutral-200 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.03)] hover:bg-neutral-50 focus-visible:ring-neutral-900",
   danger: "bg-red-500 text-white hover:bg-red-600 focus-visible:ring-red-500",

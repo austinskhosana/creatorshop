@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import AppShell from "@/components/templates/AppShell/AppShell";
 import { StoreSidebarCategories } from "@/components/organisms/StoreSidebarCategories";
 
@@ -23,7 +23,11 @@ export default function CreatorShell({ children }: { children: ReactNode }) {
       cartCount={2}
       savedCount={7}
       messagesCount={3}
-      sidebarChildren={<StoreSidebarCategories />}
+      sidebarChildren={
+        <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-neutral-100" aria-label="Loading shop categories" />}>
+          <StoreSidebarCategories />
+        </Suspense>
+      }
     >
       <div className="creator-page">{children}</div>
     </AppShell>
