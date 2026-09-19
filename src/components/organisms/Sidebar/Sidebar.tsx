@@ -22,9 +22,9 @@ import { cn } from "@/lib/utils";
 
 const SIDEBAR_ICON_CLASS = "h-[18px] w-[18px]";
 
-type Role = "CREATOR" | "BRAND" | "BOTH";
+export type Role = "CREATOR" | "BRAND" | "BOTH";
 
-type NavItem = {
+export type NavItem = {
   id: string;
   label: string;
   href: string;
@@ -33,7 +33,7 @@ type NavItem = {
   countKey?: "cart" | "saved" | "messages";
 };
 
-const NAV_ITEMS: NavItem[] = [
+export const NAV_ITEMS: NavItem[] = [
   { id: "shop", label: "Shop", href: "/explore", icon: <ShoppingBagIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"] },
   { id: "shops", label: "My Shops", href: "/shops", icon: <Squares2X2Icon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"] },
   { id: "saved", label: "Saved", href: "/saved", icon: <BookmarkIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"], countKey: "saved" },
@@ -93,6 +93,7 @@ interface SidebarProps {
   children?: ReactNode;
   className?: string;
   onNavigate?: () => void;
+  onOpenCommandPalette?: () => void;
 }
 
 export default function Sidebar({
@@ -108,6 +109,7 @@ export default function Sidebar({
   children,
   className,
   onNavigate,
+  onOpenCommandPalette,
 }: SidebarProps) {
   const visibleItems = NAV_ITEMS.filter((item) => item.roles.includes(role));
   const counts: Record<string, number | undefined> = { cart: cartCount, saved: savedCount, messages: messagesCount };
@@ -130,9 +132,14 @@ export default function Sidebar({
             aria-label="Search"
             className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-2 pr-12 pl-9 text-[13px] text-neutral-600 placeholder:text-neutral-600 transition-colors duration-150 focus:border-neutral-400 focus:bg-white focus:outline-none"
           />
-          <span aria-hidden="true" className="pointer-events-none absolute top-1/2 right-2.5 -translate-y-1/2 rounded-md border border-neutral-200 bg-white px-1.5 py-0.5 text-[10px] font-medium text-neutral-600">
+          <button
+            type="button"
+            onClick={onOpenCommandPalette}
+            aria-label="Open command menu"
+            className="absolute top-1/2 right-1.5 flex min-h-7 -translate-y-1/2 items-center rounded-md border border-neutral-200 bg-white px-1.5 text-[10px] font-medium text-neutral-600 transition-[border-color,color,transform] duration-150 hover:border-neutral-300 hover:text-neutral-950 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-1"
+          >
             ⌘K
-          </span>
+          </button>
         </div>
       )}
 

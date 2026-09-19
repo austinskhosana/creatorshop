@@ -1,16 +1,23 @@
-import { ArrowPathIcon, CheckCircleIcon, ClockIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
-import Badge from "@/components/atoms/Badge/Badge";
 import type { ShopState } from "@/lib/mock-creator";
 
 const copy: Record<ShopState, string> = { pending: "Shop in review", approved: "Post approved", posted: "Post in review", active: "Access active", expired: "Access expired", overdue: "Post overdue", declined: "Shop declined", withdrawn: "Shop withdrawn" };
 
-function getStateIcon(state: ShopState) {
-  if (state === "approved" || state === "active") return <CheckCircleIcon className="size-3" />;
-  if (state === "expired") return <ArrowPathIcon className="size-3" />;
-  if (state === "declined" || state === "withdrawn") return <DocumentTextIcon className="size-3" />;
-  return <ClockIcon className="size-3" />;
-}
+const dotColor: Record<ShopState, string> = {
+  pending: "bg-yellow-400",
+  approved: "bg-[#A3FF38]",
+  posted: "bg-blue-400",
+  active: "bg-[#A3FF38]",
+  expired: "bg-neutral-300",
+  overdue: "bg-red-500",
+  declined: "bg-red-400",
+  withdrawn: "bg-neutral-400",
+};
 
 export default function ShopStateBadge({ state }: { state: ShopState }) {
-  return <Badge variant="tag" label={copy[state]} icon={getStateIcon(state)} />;
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-600">
+      <span aria-hidden="true" className={`size-1.5 shrink-0 rounded-full ${dotColor[state]}`} />
+      {copy[state]}
+    </span>
+  );
 }

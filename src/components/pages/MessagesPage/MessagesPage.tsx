@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { MessageBubble } from "@/components/molecules/MessageBubble";
+import { MessageBubble, type MessageContent } from "@/components/molecules/MessageBubble";
 import { ConversationHeader } from "@/components/organisms/ConversationHeader";
 import { MessageComposer } from "@/components/organisms/MessageComposer";
 import { ThreadList, type ThreadListEntry } from "@/components/organisms/ThreadList";
@@ -14,14 +14,14 @@ const threads: Thread[] = [
   { id: "canva", name: "Canva", detail: "Canva Pro · Short-form video", preview: "We left feedback on your draft.", time: "Yesterday", image: "/logos/canva.jpg" },
   { id: "Notion", name: "Notion", detail: "Notion Plus · Product tutorial", preview: "Thanks for sending that over!", time: "Tue", image: "/logos/notion.jpg" },
   { id: "elevenlabs", name: "ElevenLabs", detail: "Creator program", preview: "Your access is ready to use.", time: "Mon", image: "/logos/elevenlabs.png" },
-  { id: "mia", name: "Mia at Creatorshop", detail: "Creatorshop support", preview: "How can we help with your shop?", time: "Fri", online: true, image: "/Creatorshop Brand Symbol.webp" },
+  { id: "mia", name: "Austin at Creatorshop", detail: "Creatorshop support", preview: "How can we help with your shop?", time: "Fri", online: true, image: "/Creatorshop Brand Symbol.webp" },
 ];
 
 export default function MessagesPage() {
   const [activeId, setActiveId] = useState("paper");
   const [query, setQuery] = useState("");
   const [message, setMessage] = useState("");
-  const [sent, setSent] = useState<string[]>([]);
+  const [sent, setSent] = useState<MessageContent[]>([]);
   const [readIds, setReadIds] = useState<string[]>([]);
 
   const activeThread = threads.find((thread) => thread.id === activeId) ?? threads[0];
@@ -43,8 +43,12 @@ export default function MessagesPage() {
     event.preventDefault();
     const text = message.trim();
     if (!text) return;
-    setSent((messages) => [...messages, text]);
+    setSent((messages) => [...messages, { type: "text", text }]);
     setMessage("");
+  }
+
+  function sendContent(content: MessageContent) {
+    setSent((messages) => [...messages, content]);
   }
 
   return (
@@ -72,13 +76,19 @@ export default function MessagesPage() {
                   senderImage={activeThread.image}
                 />
 
-                {sent.map((text, index) => (
-                  <MessageBubble key={`${text}-${index}`} text={text} meta="You · now" variant="outgoing" />
+                {sent.map((content, index) => (
+                  <MessageBubble key={index} content={content} meta="You · now" variant="outgoing" />
                 ))}
               </div>
             </div>
 
-            <MessageComposer value={message} onChange={setMessage} onSubmit={sendMessage} placeholder={`Message ${activeThread.name}`} />
+            <MessageComposer
+              value={message}
+              onChange={setMessage}
+              onSubmit={sendMessage}
+              onSendContent={sendContent}
+              placeholder={`Message ${activeThread.name}`}
+            />
           </section>
         </div>
       </div>

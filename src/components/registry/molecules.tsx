@@ -13,6 +13,7 @@ import { PricingCard } from "@/components/molecules/PricingCard";
 import { BrandFAQItem } from "@/components/molecules/BrandFAQItem";
 import { BrandCardVisual } from "@/components/molecules/BrandCardVisual";
 import { BrandCard3D } from "@/components/molecules/BrandCard3D";
+import { AccessTicket } from "@/components/molecules/AccessTicket";
 import { PosterCard } from "@/components/molecules/PosterCard";
 import { FAQItem } from "@/components/molecules/FAQItem";
 import { ThreadAvatar } from "@/components/molecules/ThreadAvatar";
@@ -21,6 +22,17 @@ import { PaymentOptionPreview, ThreadListItemPreview } from "./interactive-previ
 import type { RegistryEntry } from "./types";
 
 export const moleculesEntries: RegistryEntry[] = [
+  {
+    name: "Access ticket",
+    level: "molecules",
+    description: "Double-sided access pass that auto-spins on its own axis; freezes flat when reduced motion is on.",
+    variants: [
+      {
+        name: "Default",
+        preview: <AccessTicket brand="Notion" product="Notion Plus" slug="notion" access="12 months" />,
+      },
+    ],
+  },
   {
     name: "Role selection card",
     level: "molecules",

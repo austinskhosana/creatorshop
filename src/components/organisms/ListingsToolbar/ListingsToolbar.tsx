@@ -71,7 +71,7 @@ function DropdownSelect({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         aria-label={ariaLabel}
-        className="appearance-none rounded-full border border-neutral-200 bg-white py-2 pr-8 pl-3.5 text-[13px] font-medium text-neutral-700 transition-colors duration-150 hover:border-neutral-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
+        className="appearance-none rounded-lg border border-neutral-200 bg-white py-2 pr-8 pl-3.5 text-[13px] font-medium text-neutral-700 transition-colors duration-150 hover:border-neutral-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -108,7 +108,7 @@ export default function ListingsToolbar({
           onClick={() => onInStockOnlyChange(!inStockOnly)}
           aria-pressed={inStockOnly}
           className={[
-            "rounded-full border px-3.5 py-2 text-[13px] font-medium transition-[background-color,border-color,color,transform] duration-150 active:scale-[0.96]",
+            "rounded-lg border px-3.5 py-2 text-[13px] font-medium transition-[background-color,border-color,color,transform] duration-150 active:scale-[0.96]",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2",
             inStockOnly ? "border-neutral-900 bg-neutral-900 text-white" : "border-neutral-200 text-neutral-700 hover:border-neutral-300",
           ].join(" ")}
