@@ -29,7 +29,7 @@ export const moleculesEntries: RegistryEntry[] = [
     variants: [
       {
         name: "Default",
-        preview: <AccessTicket brand="Notion" product="Notion Plus" slug="notion" access="12 months" />,
+        preview: <AccessTicket access="12 months" />,
       },
     ],
   },

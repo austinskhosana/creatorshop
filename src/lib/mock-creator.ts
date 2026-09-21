@@ -35,7 +35,7 @@ export const CREATOR = {
 };
 
 export const CREATOR_SHOPS: CreatorShop[] = [
-  { id: "paper", product: "Paper Pro", brand: "Paper", description: "An AI-native design canvas where what you draw is real HTML and CSS.", tier: "Instagram carousel", value: 48, access: "3 months", state: "approved", deadline: "Sep 25", logo: "/logos/paper.jpeg" },
+  { id: "paper", product: "Paper Pro", brand: "Paper", description: "An AI-native design canvas where what you draw is real HTML and CSS.", tier: "Instagram carousel", value: 48, access: "3 months", state: "active", accessEnd: "Dec 21, 2026", accessCode: "CS-PAPER-JL26-PRO", redemptionUrl: "https://paper.design", logo: "/logos/paper.jpeg" },
   { id: "cursor", product: "Cursor Pro", brand: "Cursor", description: "An AI code editor that reads your whole codebase as you write.", tier: "YouTube review", value: 120, access: "6 months", state: "posted", deadline: "Sep 18", logo: "/logos/cursor.jpg" },
   { id: "notion", product: "Notion Plus", brand: "Notion", description: "Docs, wikis, and project tracking in one connected workspace.", tier: "X thread", value: 120, access: "12 months", state: "active", accessEnd: "Oct 31, 2026", accessCode: "CS-NOTION-JL26-PLUS", redemptionUrl: "https://www.notion.so/product", logo: "/logos/notion.jpg" },
   { id: "dia", product: "Dia Browser", brand: "Dia", description: "An AI browser that understands your tabs and remembers your context.", tier: "TikTok", value: 60, access: "3 months", state: "expired", logo: "/logos/dia-browser.jpg" },

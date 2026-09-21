@@ -10,7 +10,7 @@ import { StoreSidebarCategories } from "@/components/organisms/StoreSidebarCateg
  * This component only centralizes those exact props; it must not introduce
  * a separate navigation or sidebar variation.
  */
-export default function CreatorShell({ children }: { children: ReactNode }) {
+export default function CreatorShell({ children, breadcrumb }: { children: ReactNode; breadcrumb?: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -29,7 +29,10 @@ export default function CreatorShell({ children }: { children: ReactNode }) {
         </Suspense>
       }
     >
-      <div className="creator-page">{children}</div>
+      <div className="creator-page">
+        {breadcrumb && <div className="px-5 py-4 sm:px-8">{breadcrumb}</div>}
+        {children}
+      </div>
     </AppShell>
   );
 }

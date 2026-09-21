@@ -1,9 +1,10 @@
-import BrandLogo from "@/components/atoms/BrandLogo/BrandLogo";
+"use client";
+
+import { useReducedMotion } from "framer-motion";
+import Image from "next/image";
+import { useTilt } from "@/hooks/use-tilt";
 
 interface AccessTicketProps {
-  brand: string;
-  product: string;
-  slug: string;
   access: string;
   className?: string;
 }
@@ -17,19 +18,24 @@ function TicketNotches() {
   );
 }
 
-export default function AccessTicket({ brand, product, slug, access, className }: AccessTicketProps) {
+export default function AccessTicket({ access, className }: AccessTicketProps) {
+  const reduceMotion = useReducedMotion();
+  const { rotateX, rotateY, handleMouseMove, handleMouseLeave } = useTilt(10);
+
   return (
-    <div className={`relative mx-auto h-52 w-80 sm:h-56 sm:w-96 ${className ?? ""}`}>
+    <div
+      onMouseMove={reduceMotion ? undefined : handleMouseMove}
+      onMouseLeave={reduceMotion ? undefined : handleMouseLeave}
+      style={{
+        transform: `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+        transition: "transform 0.15s ease-out",
+      }}
+      className={`relative mx-auto h-56 w-full max-w-sm sm:h-64 sm:max-w-md ${className ?? ""}`}
+    >
       <div className="relative size-full">
-        <div className="absolute inset-0 flex flex-col justify-between overflow-hidden rounded-2xl border border-neutral-200 bg-white p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+        <div className="absolute inset-0 flex flex-col justify-between overflow-hidden rounded-2xl border border-neutral-200 bg-white p-7 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
           <TicketNotches />
-          <div className="flex items-center gap-3.5">
-            <BrandLogo slug={slug} name={brand} size={42} />
-            <div className="min-w-0 text-left">
-              <p className="truncate text-[15px] font-semibold text-neutral-950 leading-tight">{product}</p>
-              <p className="text-sm text-neutral-400 leading-tight">{brand}</p>
-            </div>
-          </div>
+          <Image src="/Logo.svg" alt="Creatorshop" width={142} height={41} className="h-9 w-auto self-start" />
           <div className="flex items-center justify-between border-t border-dashed border-neutral-200 pt-3.5">
             <span className="text-[11px] font-medium tracking-[0.1em] text-neutral-400 uppercase">Access pass</span>
             <span className="text-[11px] font-semibold tracking-[0.1em] text-neutral-950 uppercase">{access}</span>
