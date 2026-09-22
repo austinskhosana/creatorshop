@@ -11,7 +11,7 @@ import { LabeledField } from "@/components/molecules/LabeledField";
 import { SelectableChipDemo } from "@/components/molecules/SelectableChip";
 import { PricingCard } from "@/components/molecules/PricingCard";
 import { BrandFAQItem } from "@/components/molecules/BrandFAQItem";
-import { BrandCardVisual } from "@/components/molecules/BrandCardVisual";
+import { BrandCardVisual, BrandCardVisualFlip } from "@/components/molecules/BrandCardVisual";
 import { BrandCard3D } from "@/components/molecules/BrandCard3D";
 import { AccessTicket } from "@/components/molecules/AccessTicket";
 import { PosterCard } from "@/components/molecules/PosterCard";
@@ -319,6 +319,18 @@ export const moleculesEntries: RegistryEntry[] = [
       {
         name: "Default",
         preview: <BrandCardVisual />,
+      },
+    ],
+  },
+  {
+    name: "Brand card visual (flip)",
+    level: "molecules",
+    description:
+      "Archived: the same autoplaying flip/tilt/sheen treatment as SocialCapitalCard, applied to the brand card. Not used live — the brand hero's MeshGradientPanel already has a continuously animated shader background, and stacking an autoplaying flip on top read as too much competing motion. Kept for a case study.",
+    variants: [
+      {
+        name: "Default",
+        preview: <BrandCardVisualFlip />,
       },
     ],
   },

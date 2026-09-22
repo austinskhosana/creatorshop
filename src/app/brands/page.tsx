@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/organisms/Navbar";
 import { BrandMomentSection } from "@/components/organisms/BrandMomentSection";
 import { BrandHeroSection } from "@/components/organisms/BrandHeroSection";
+import { CreatorArmySection } from "@/components/organisms/CreatorArmySection";
 import { FeatureGridSection } from "@/components/organisms/FeatureGridSection";
 import { PricingSection } from "@/components/organisms/PricingSection";
 import { BrandFAQSection } from "@/components/organisms/BrandFAQSection";
@@ -12,6 +13,7 @@ export default function BrandsPage() {
       <Navbar />
       <BrandHeroSection />
       <BrandMomentSection />
+      <CreatorArmySection />
       <FeatureGridSection />
       <PricingSection />
       <BrandFAQSection />

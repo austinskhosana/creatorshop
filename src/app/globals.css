@@ -34,6 +34,7 @@
   --color-ring: var(--ring);
   --font-sans: 'Satoshi', sans-serif;
   --font-marker: var(--font-permanent-marker), cursive;
+  --font-caveat: var(--font-caveat), cursive;
   --font-mono: var(--font-space-mono), monospace;
   --font-pixel: var(--font-geist-pixel-square);
   --font-geist-mono: var(--font-geist-mono);

@@ -8,12 +8,10 @@ import { SocialCapitalCard } from "@/components/organisms/SocialCapitalCard";
 import { TextScramble, SCRAMBLE_CHARS_ALPHANUMERIC } from "@/components/atoms/TextScramble";
 
 const HERO_COPY = "Trade posts for software access. A new way to pay, built for creators.";
-const HERO_COPY_MOBILE =
-  "Trade posts for software access. A new way to pay, built for\u00A0creators.";
 
-export default function HeroSection() {
+export default function HeroSectionB() {
   return (
-    <section className="sticky top-0 z-0 flex h-screen flex-col bg-white px-6 pt-10 pb-16 sm:px-10 sm:pb-20 lg:px-16 lg:pb-24">
+    <section className="sticky top-0 z-0 flex h-screen flex-col bg-white px-6 pt-10 pb-10 sm:px-10 sm:pb-14 lg:px-16 lg:pb-16">
       <PixelTrail
         pixelSize={16}
         fadeDuration={500}
@@ -34,42 +32,33 @@ export default function HeroSection() {
         <Navbar variant="compact" />
       </div>
 
+      {/* Conventional SaaS hero: big headline + copy up top, CTA, then the
+          product visual anchoring the section below — instead of the
+          original's small corner copy beside a large centered card. */}
       <div className="pointer-events-none flex flex-1 flex-col items-center justify-center gap-6 sm:gap-8">
-        <div className="order-1 max-w-xs text-center sm:hidden">
-          <h1 className="font-pixel text-3xl leading-tight text-neutral-900">
-            <TextScramble text="Your content is" chars={SCRAMBLE_CHARS_ALPHANUMERIC} />
+        <div className="mt-20 max-w-sm text-center sm:mt-32 sm:max-w-xl lg:max-w-3xl">
+          <h1 className="font-pixel text-3xl leading-[0.95] text-neutral-900 sm:text-5xl lg:text-6xl">
+            <TextScramble text="Your content is the" chars={SCRAMBLE_CHARS_ALPHANUMERIC} />
             <br />
-            <TextScramble text="the new cash" chars={SCRAMBLE_CHARS_ALPHANUMERIC} delay={80} />
+            <TextScramble text="new cash" chars={SCRAMBLE_CHARS_ALPHANUMERIC} delay={80} />
           </h1>
           <TextScramble
-            text={HERO_COPY_MOBILE}
+            text={HERO_COPY}
             chars={SCRAMBLE_CHARS_ALPHANUMERIC}
-            className="mt-2 font-mono text-[13px] leading-relaxed text-neutral-600"
+            className="mx-auto mt-5 max-w-xs font-mono text-[13px] leading-relaxed text-neutral-600 sm:mt-6 sm:max-w-md sm:text-base lg:max-w-lg"
           />
         </div>
 
-        <Link href="/explore" className="pointer-events-auto order-2">
+        <Link href="/explore" className="pointer-events-auto">
           <Button variant="dark" size="md" pill className="min-w-[150px]" style={{ boxShadow: "none" }}>
             Sign Up
           </Button>
         </Link>
 
-        <SocialCapitalCard className="order-3 mt-12 max-w-md sm:mt-0 sm:order-1" />
+        <SocialCapitalCard className="mt-10 w-full max-w-md sm:mt-14" />
       </div>
 
-      <div className="hidden sm:flex sm:items-end sm:justify-between sm:gap-6">
-        <div className="pointer-events-none max-w-md">
-          <TextScramble
-            text="Your content is the new cash"
-            chars={SCRAMBLE_CHARS_ALPHANUMERIC}
-            className="font-pixel text-xl text-neutral-900"
-          />
-          <TextScramble
-            text={HERO_COPY}
-            chars={SCRAMBLE_CHARS_ALPHANUMERIC}
-            className="mt-1 font-mono text-[13px] leading-relaxed text-neutral-600"
-          />
-        </div>
+      <div className="flex justify-end">
         <ScrollIndicator className="pointer-events-auto shrink-0" />
       </div>
     </section>

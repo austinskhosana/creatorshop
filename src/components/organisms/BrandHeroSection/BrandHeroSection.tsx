@@ -28,7 +28,7 @@ export default function BrandHeroSection() {
 
   return (
     <section className="bg-white px-6 pb-6 text-center sm:px-10 sm:pb-10 lg:px-16">
-      <div className="mx-auto max-w-3xl pt-16 sm:pt-20">
+      <div className="mx-auto max-w-3xl pt-24 sm:pt-32">
         <motion.h1
           className="text-4xl leading-tight font-medium text-neutral-900 sm:text-5xl"
           {...entranceProps(0, reduce)}

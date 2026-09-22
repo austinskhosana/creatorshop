@@ -7,13 +7,19 @@ import {
   GeistPixelLine,
 } from "geist/font/pixel";
 import { GeistMono } from "geist/font/mono";
-import { Permanent_Marker, Space_Mono } from "next/font/google";
+import { Caveat, Permanent_Marker, Space_Mono } from "next/font/google";
 import "./globals.css";
 
 const permanentMarker = Permanent_Marker({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-permanent-marker",
+});
+
+const caveat = Caveat({
+  weight: ["700"],
+  subsets: ["latin"],
+  variable: "--font-caveat",
 });
 
 const spaceMono = Space_Mono({
@@ -36,6 +42,7 @@ const fontVariables = [
   GeistMono.variable,
   permanentMarker.variable,
   spaceMono.variable,
+  caveat.variable,
 ].join(" ");
 
 export default function RootLayout({

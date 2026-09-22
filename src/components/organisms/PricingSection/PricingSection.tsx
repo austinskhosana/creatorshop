@@ -28,7 +28,7 @@ export default function PricingSection() {
   const reduce = useReducedMotion();
 
   return (
-    <section className="bg-white px-6 pt-24 text-center sm:px-10 sm:pt-36 lg:px-16 lg:pt-56">
+    <section className="bg-white px-6 pt-40 text-center sm:px-10 sm:pt-56 lg:px-16 lg:pt-72">
       <motion.h2
         className="text-2xl leading-tight font-medium tracking-tight text-neutral-900 sm:text-3xl"
         {...entranceProps(0, reduce)}

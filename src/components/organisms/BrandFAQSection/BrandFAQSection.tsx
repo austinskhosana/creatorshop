@@ -50,7 +50,7 @@ export default function BrandFAQSection() {
   const reduce = useReducedMotion();
 
   return (
-    <section className="bg-white px-6 pt-24 pb-20 text-center sm:px-10 sm:pt-36 sm:pb-48 lg:px-16 lg:pt-56">
+    <section className="bg-white px-6 pt-40 pb-40 text-center sm:px-10 sm:pt-56 sm:pb-56 lg:px-16 lg:pt-72 lg:pb-72">
       <motion.h2
         className="text-2xl leading-tight font-medium text-neutral-900 sm:text-3xl"
         {...entranceProps(reduce)}
