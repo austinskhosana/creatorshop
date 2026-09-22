@@ -13,8 +13,10 @@ import Link from "next/link";
 import { Fragment, useState } from "react";
 import BrandLogo from "@/components/atoms/BrandLogo/BrandLogo";
 import Button from "@/components/atoms/Button/Button";
+import { darkGradientButtonStyle } from "@/components/atoms/Button/darkGradientStyle";
 import { Fire } from "@/components/atoms/Fire";
 import { MeshGradientPanel } from "@/components/atoms/MeshGradientPanel";
+import { SCRAMBLE_CHARS_ALPHANUMERIC, TextScramble } from "@/components/atoms/TextScramble";
 import { CreatorShell } from "@/components/templates/CreatorShell";
 import type { CreatorShop } from "@/lib/mock-creator";
 
@@ -30,6 +32,12 @@ export default function AccessRevealPage({ shop }: { shop: CreatorShop }) {
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1800);
   }
+
+  // Each part of the code scrambles in left to right, starting once the card has settled.
+  const codeSegments = (shop.accessCode?.split("-") ?? []).map((part, index, parts) => ({
+    part,
+    delay: 350 + parts.slice(0, index).join("").length * 55,
+  }));
 
   const enter = reduceMotion
     ? { opacity: 1 }
@@ -90,11 +98,17 @@ export default function AccessRevealPage({ shop }: { shop: CreatorShop }) {
                     className="group mt-5 flex w-full items-center justify-between gap-3 rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-4 text-left outline-none transition-[background-color,border-color,transform] duration-150 hover:bg-white active:scale-[0.96] focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2"
                     aria-label="Copy access code"
                   >
-                    <span className="min-w-0 font-mono text-[15px] leading-6 font-bold tracking-[0.05em] break-all text-neutral-950 sm:text-base">
-                      {shop.accessCode?.split("-").map((part, index) => (
+                    <span className="min-w-0 font-mono text-[15px] leading-6 font-normal tracking-[0.05em] break-all text-neutral-950 sm:text-base">
+                      {codeSegments.map(({ part, delay }, index) => (
                         <Fragment key={index}>
                           {index > 0 && <span aria-hidden="true" className="text-neutral-300">-</span>}
-                          {part}
+                          <TextScramble
+                            text={part}
+                            chars={SCRAMBLE_CHARS_ALPHANUMERIC}
+                            delay={delay}
+                            duration={260 + part.length * 55}
+                            scrambleDuration={220}
+                          />
                         </Fragment>
                       ))}
                     </span>
@@ -107,7 +121,14 @@ export default function AccessRevealPage({ shop }: { shop: CreatorShop }) {
                   <p className="mt-2.5 flex items-center justify-center gap-1.5 text-center text-xs leading-4 text-neutral-400"><InformationCircleIcon aria-hidden="true" className="size-3.5 shrink-0" />Copy your code first, then paste it during redemption.</p>
 
                   <a href={shop.redemptionUrl} target="_blank" rel="noreferrer" className="mt-5 block">
-                    <Button fullWidth size="lg" variant="premium" className="min-h-11 rounded-[10px] tracking-normal" iconRight={<ArrowTopRightOnSquareIcon className="size-4" />}>Redeem with {shop.brand}</Button>
+                    <Button
+                      fullWidth
+                      variant="dark"
+                      iconRight={<ArrowTopRightOnSquareIcon className="size-4" />}
+                      style={{ ...darkGradientButtonStyle, padding: "12px 16px" }}
+                    >
+                      Redeem with {shop.brand}
+                    </Button>
                   </a>
                 </div>
               </MeshGradientPanel>

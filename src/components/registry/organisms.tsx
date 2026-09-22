@@ -38,6 +38,7 @@ import { Footer } from "@/components/organisms/Footer";
 import { ConversationHeader } from "@/components/organisms/ConversationHeader";
 import { MessageComposerDemo } from "@/components/organisms/MessageComposer";
 import { ThreadListDemo } from "@/components/organisms/ThreadList";
+import { ReceiptPrinter } from "@/components/organisms/ReceiptPrinter";
 import type { RegistryEntry } from "./types";
 
 const MOCK_APPLICATION: Application = {
@@ -818,5 +819,73 @@ export const organismsEntries: RegistryEntry[] = [
     description: "The inbox sidebar — header with a new-message action, search, unread filter, and the scrollable conversation list.",
     fullBleed: true,
     variants: [{ name: "Default", preview: <ThreadListDemo /> }],
-  }
+  },
+  {
+    name: "Receipt printer",
+    level: "organisms",
+    description: "A printer that feeds a receipt out of its slot one line at a time — processing, printing, and complete stages. Compose Machine, Header, Status, Screen, Output, and Paper.",
+    variants: [
+      {
+        name: "Processing",
+        preview: (
+          <ReceiptPrinter.Root stage="processing">
+            <ReceiptPrinter.Machine>
+              <ReceiptPrinter.Header>
+                <ReceiptPrinter.Status />
+              </ReceiptPrinter.Header>
+              <ReceiptPrinter.Screen>
+                <p className="font-mono text-lg text-white">Order #1042</p>
+              </ReceiptPrinter.Screen>
+            </ReceiptPrinter.Machine>
+          </ReceiptPrinter.Root>
+        ),
+      },
+      {
+        name: "Complete · light",
+        preview: (
+          <ReceiptPrinter.Root stage="complete" tone="light" animate={false}>
+            <ReceiptPrinter.Machine>
+              <ReceiptPrinter.Header>
+                <ReceiptPrinter.Status />
+              </ReceiptPrinter.Header>
+              <ReceiptPrinter.Screen>
+                <p className="font-mono text-lg">Order #1042</p>
+              </ReceiptPrinter.Screen>
+            </ReceiptPrinter.Machine>
+            <ReceiptPrinter.Output>
+              <ReceiptPrinter.Paper className="text-xs leading-5">
+                <p className="text-center text-[11px] tracking-[0.14em] uppercase">Receipt</p>
+                <div className="mt-4 flex justify-between"><span>Cursor Pro</span><span>$120</span></div>
+                <div className="mt-1 flex justify-between"><span>Higgsfield Starter</span><span>$57</span></div>
+                <div className="mt-4 flex justify-between font-bold"><span>Total</span><span>$177</span></div>
+              </ReceiptPrinter.Paper>
+            </ReceiptPrinter.Output>
+          </ReceiptPrinter.Root>
+        ),
+      },
+      {
+        name: "Complete",
+        preview: (
+          <ReceiptPrinter.Root stage="complete" animate={false}>
+            <ReceiptPrinter.Machine>
+              <ReceiptPrinter.Header>
+                <ReceiptPrinter.Status />
+              </ReceiptPrinter.Header>
+              <ReceiptPrinter.Screen>
+                <p className="font-mono text-lg text-white">Order #1042</p>
+              </ReceiptPrinter.Screen>
+            </ReceiptPrinter.Machine>
+            <ReceiptPrinter.Output>
+              <ReceiptPrinter.Paper className="text-xs leading-5">
+                <p className="text-center text-[11px] tracking-[0.14em] uppercase">Receipt</p>
+                <div className="mt-4 flex justify-between"><span>Cursor Pro</span><span>$120</span></div>
+                <div className="mt-1 flex justify-between"><span>Higgsfield Starter</span><span>$57</span></div>
+                <div className="mt-4 flex justify-between font-bold"><span>Total</span><span>$177</span></div>
+              </ReceiptPrinter.Paper>
+            </ReceiptPrinter.Output>
+          </ReceiptPrinter.Root>
+        ),
+      },
+    ],
+  },
 ];

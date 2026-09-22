@@ -16,16 +16,28 @@ interface MessageBubbleProps {
   variant?: "incoming" | "outgoing";
   senderName?: string;
   senderImage?: string;
+  /** Show the timestamp line. Turn off for all but the last message in a run from the same person. */
+  showMeta?: boolean;
+  /** Give the bubble its pointed corner. Only the last message in a run gets one. */
+  tail?: boolean;
 }
 
-function MediaBubble({ content, outgoing }: { content: MessageContent; outgoing: boolean }) {
+// Photos are the flex item themselves (no wrapper), so the bubble is exactly as wide as the
+// image and sits flush with its timestamp. The corner radius carries the chat "tail", and an
+// inset outline gives a white-background photo a hairline edge.
+const mediaImageClassName =
+  "block h-auto w-auto rounded-2xl outline outline-1 -outline-offset-1 outline-black/[0.06]";
+
+function MediaBubble({ content, outgoing, tail }: { content: MessageContent; outgoing: boolean; tail: boolean }) {
+  const tailClassName = tail ? (outgoing ? "rounded-br-[5px]" : "rounded-bl-[5px]") : "";
+
   if (content.type === "text") {
     return (
       <div
         className={
           outgoing
-            ? "rounded-2xl rounded-br-[5px] bg-neutral-900 px-4 py-2.5 text-sm leading-[1.55] text-white"
-            : "max-w-[min(78%,36rem)] rounded-2xl rounded-bl-[5px] bg-neutral-100 px-4 py-2.5 text-sm leading-[1.55] text-neutral-700"
+            ? `rounded-2xl ${tailClassName} bg-neutral-900 px-4 py-2.5 text-sm leading-[1.55] text-white`
+            : `max-w-[min(78%,36rem)] rounded-2xl ${tailClassName} bg-neutral-100 px-4 py-2.5 text-sm leading-[1.55] text-neutral-700`
         }
       >
         {content.text}
@@ -35,42 +47,42 @@ function MediaBubble({ content, outgoing }: { content: MessageContent; outgoing:
 
   if (content.type === "image") {
     return (
-      <div className={`overflow-hidden rounded-2xl ${outgoing ? "rounded-br-[5px]" : "rounded-bl-[5px]"}`}>
-        <Image
-          src={content.src}
-          alt={content.alt ?? "Shared image"}
-          width={320}
-          height={240}
-          className="block max-h-72 w-auto max-w-[min(78%,20rem)] rounded-2xl object-cover"
-          unoptimized
-        />
-      </div>
+      <Image
+        src={content.src}
+        alt={content.alt ?? "Shared image"}
+        width={320}
+        height={320}
+        className={`${mediaImageClassName} max-h-72 max-w-[min(20rem,100%)] ${tailClassName}`}
+        unoptimized
+      />
     );
   }
 
   if (content.type === "gif") {
     const isGradient = content.src.startsWith("linear-gradient") || content.src.startsWith("radial-gradient");
+    if (!isGradient) {
+      return (
+        <Image
+          src={content.src}
+          alt={content.alt ?? "GIF"}
+          width={240}
+          height={240}
+          className={`${mediaImageClassName} max-h-56 max-w-[min(16rem,100%)] ${tailClassName}`}
+          unoptimized
+        />
+      );
+    }
+
     return (
-      <div className={`overflow-hidden rounded-2xl ${outgoing ? "rounded-br-[5px]" : "rounded-bl-[5px]"}`}>
-        {isGradient ? (
-          <div
-            className="flex h-36 w-56 items-end rounded-2xl p-3"
-            style={{ background: content.src }}
-          >
-            {content.alt && (
-              <span className="rounded-lg bg-black/20 px-2 py-1 text-xs font-semibold text-white backdrop-blur-sm">{content.alt}</span>
-            )}
-          </div>
-        ) : (
-          <Image
-            src={content.src}
-            alt={content.alt ?? "GIF"}
-            width={240}
-            height={180}
-            className="block max-h-56 w-auto max-w-[min(78%,16rem)] rounded-2xl object-cover"
-            unoptimized
-          />
-        )}
+      <div className={`overflow-hidden rounded-2xl ${tailClassName}`}>
+        <div
+          className="flex h-36 w-56 items-end rounded-2xl p-3"
+          style={{ background: content.src }}
+        >
+          {content.alt && (
+            <span className="rounded-lg bg-black/20 px-2 py-1 text-xs font-semibold text-white backdrop-blur-sm">{content.alt}</span>
+          )}
+        </div>
       </div>
     );
   }
@@ -78,7 +90,7 @@ function MediaBubble({ content, outgoing }: { content: MessageContent; outgoing:
   return null;
 }
 
-export default function MessageBubble({ text, content, meta, variant = "incoming", senderName, senderImage }: MessageBubbleProps) {
+export default function MessageBubble({ text, content, meta, variant = "incoming", senderName, senderImage, showMeta = true, tail = true }: MessageBubbleProps) {
   const reduceMotion = useReducedMotion();
   const resolved: MessageContent = content ?? { type: "text", text: text ?? "" };
 
@@ -90,8 +102,8 @@ export default function MessageBubble({ text, content, meta, variant = "incoming
         transition={{ duration: 0.18, ease: "easeOut" }}
         className="ml-auto flex max-w-[min(78%,36rem)] flex-col items-end gap-1.5"
       >
-        <MediaBubble content={resolved} outgoing />
-        <p className="text-[11px] tabular-nums text-neutral-400">{meta}</p>
+        <MediaBubble content={resolved} outgoing tail={tail} />
+        {showMeta ? <p className="text-[11px] tabular-nums text-neutral-400">{meta}</p> : null}
       </motion.div>
     );
   }
@@ -101,14 +113,14 @@ export default function MessageBubble({ text, content, meta, variant = "incoming
       <div className="flex items-end gap-2.5">
         <ThreadAvatar name={senderName ?? ""} image={senderImage} size="sm" />
         {resolved.type === "text" ? (
-          <div className="max-w-[min(78%,36rem)] rounded-2xl rounded-bl-[5px] bg-neutral-100 px-4 py-2.5 text-sm leading-[1.55] text-neutral-700">
+          <div className={`max-w-[min(78%,36rem)] rounded-2xl ${tail ? "rounded-bl-[5px]" : ""} bg-neutral-100 px-4 py-2.5 text-sm leading-[1.55] text-neutral-700`}>
             {resolved.text}
           </div>
         ) : (
-          <MediaBubble content={resolved} outgoing={false} />
+          <MediaBubble content={resolved} outgoing={false} tail={tail} />
         )}
       </div>
-      <p className="pl-[46px] text-[11px] tabular-nums text-neutral-400">{meta}</p>
+      {showMeta ? <p className="pl-[46px] text-[11px] tabular-nums text-neutral-400">{meta}</p> : null}
     </div>
   );
 }

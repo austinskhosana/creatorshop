@@ -1,4 +1,8 @@
-export type ShopState = "pending" | "approved" | "posted" | "active" | "expired" | "overdue" | "declined" | "withdrawn";
+/**
+ * Where a shop is in the barter: pending → approved (upload a draft) → draft (brand reviewing it)
+ * → ready (draft approved: post it, then add proof of payment) → posted (brand checking the proof) → active.
+ */
+export type ShopState = "pending" | "approved" | "draft" | "ready" | "posted" | "active" | "expired" | "overdue" | "declined" | "withdrawn";
 
 export type CreatorShop = {
   id: string;
@@ -40,7 +44,9 @@ export const CREATOR_SHOPS: CreatorShop[] = [
   { id: "notion", product: "Notion Plus", brand: "Notion", description: "Docs, wikis, and project tracking in one connected workspace.", tier: "X thread", value: 120, access: "12 months", state: "active", accessEnd: "Oct 31, 2026", accessCode: "CS-NOTION-JL26-PLUS", redemptionUrl: "https://www.notion.so/product", logo: "/logos/notion.jpg" },
   { id: "dia", product: "Dia Browser", brand: "Dia", description: "An AI browser that understands your tabs and remembers your context.", tier: "TikTok", value: 60, access: "3 months", state: "expired", logo: "/logos/dia-browser.jpg" },
   { id: "elevenlabs", product: "ElevenLabs Creator", brand: "ElevenLabs", description: "Lifelike voiceovers and voice cloning built for creators.", tier: "YouTube review", value: 66, access: "3 months", state: "overdue", deadline: "Sep 14", logo: "/logos/elevenlabs.png" },
-  { id: "canva", product: "Canva Pro", brand: "Canva", description: "Design social posts, presentations, and more with ready-made templates.", tier: "TikTok", value: 54, access: "3 months", state: "pending", logo: "/logos/canva.jpg" },
+  { id: "canva", product: "Canva Pro", brand: "Canva", description: "Design social posts, presentations, and more with ready-made templates.", tier: "TikTok", value: 54, access: "3 months", state: "approved", deadline: "Oct 3", logo: "/logos/canva.jpg" },
+  { id: "higgsfield", product: "Higgsfield Starter", brand: "Higgsfield", description: "Turn a prompt into cinematic AI video, with motion presets and camera control.", tier: "TikTok", value: 57, access: "3 months", state: "ready", deadline: "Oct 6", logo: "/logos/higgsfield.jpg" },
+  { id: "procreate", product: "Procreate", brand: "Procreate", description: "The iPad illustration app, with a full brush engine and animation tools.", tier: "Instagram carousel", value: 13, access: "1 month", state: "draft", deadline: "Oct 8", logo: "/logos/procreate.jpg" },
   { id: "spotify", product: "Spotify Premium", brand: "Spotify", description: "Ad-free music with offline downloads and unlimited skips.", tier: "TikTok", value: 39, access: "3 months", state: "declined", logo: "/logos/spotify.jpg" },
 ];
 

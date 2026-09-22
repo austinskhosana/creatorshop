@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MessageBubble, type MessageContent } from "@/components/molecules/MessageBubble";
 import { ConversationHeader } from "@/components/organisms/ConversationHeader";
 import { MessageComposer } from "@/components/organisms/MessageComposer";
@@ -23,6 +23,21 @@ export default function MessagesPage() {
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState<MessageContent[]>([]);
   const [readIds, setReadIds] = useState<string[]>([]);
+  const threadRef = useRef<HTMLDivElement>(null);
+  // Follow the newest message — including after a photo finishes loading and grows the thread —
+  // unless the reader has scrolled up to look at something older.
+  const stickToBottom = useRef(true);
+
+  useEffect(() => {
+    const scroller = threadRef.current;
+    const content = scroller?.firstElementChild;
+    if (!scroller || !content) return;
+    const observer = new ResizeObserver(() => {
+      if (stickToBottom.current) scroller.scrollTop = scroller.scrollHeight;
+    });
+    observer.observe(content);
+    return () => observer.disconnect();
+  }, []);
 
   const activeThread = threads.find((thread) => thread.id === activeId) ?? threads[0];
   const filteredThreads = useMemo(
@@ -43,11 +58,13 @@ export default function MessagesPage() {
     event.preventDefault();
     const text = message.trim();
     if (!text) return;
+    stickToBottom.current = true;
     setSent((messages) => [...messages, { type: "text", text }]);
     setMessage("");
   }
 
   function sendContent(content: MessageContent) {
+    stickToBottom.current = true;
     setSent((messages) => [...messages, content]);
   }
 
@@ -67,8 +84,15 @@ export default function MessagesPage() {
           <section className="flex min-h-0 min-w-0 flex-col">
             <ConversationHeader name={activeThread.name} detail={activeThread.detail} image={activeThread.image} online={activeThread.online} />
 
-            <div className="min-h-0 flex-1 overflow-y-auto bg-white px-5 py-7 sm:px-8 sm:py-9">
-              <div className="mx-auto flex max-w-3xl flex-col gap-7">
+            <div
+              ref={threadRef}
+              onScroll={(event) => {
+                const el = event.currentTarget;
+                stickToBottom.current = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+              }}
+              className="min-h-0 flex-1 overflow-y-auto bg-white px-5 py-7 sm:px-8 sm:py-9"
+            >
+              <div className="mx-auto flex max-w-3xl flex-col">
                 <MessageBubble
                   text="We're excited to see how you make Paper your own. Let us know if you have questions about the product."
                   meta={`${activeThread.name} · 10:45 AM`}
@@ -76,9 +100,16 @@ export default function MessagesPage() {
                   senderImage={activeThread.image}
                 />
 
-                {sent.map((content, index) => (
-                  <MessageBubble key={index} content={content} meta="You · now" variant="outgoing" />
-                ))}
+                {/* Everything sent is from you: one run, so bubbles sit close together and only the
+                    last one carries the pointed corner and the timestamp. */}
+                {sent.map((content, index) => {
+                  const isLast = index === sent.length - 1;
+                  return (
+                    <div key={index} className={index === 0 ? "mt-7" : "mt-1"}>
+                      <MessageBubble content={content} meta="You · now" variant="outgoing" showMeta={isLast} tail={isLast} />
+                    </div>
+                  );
+                })}
               </div>
             </div>
 

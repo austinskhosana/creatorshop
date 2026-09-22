@@ -28,6 +28,8 @@ interface ListingCardProps {
 const CONTENT_TYPE_LABELS: Record<string, string> = {
   "IG Reel": "Reel",
   "IG carousel": "Carousel",
+  "IG Story": "Story",
+  "TikTok carousel": "Carousel",
   "YouTube review": "Video Review",
   TikTok: "Video",
   "X thread": "Thread",

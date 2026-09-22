@@ -3,6 +3,7 @@
 import { ArrowUpIcon, FaceSmileIcon, PhotoIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { darkGradientButtonStyle } from "@/components/atoms/Button/darkGradientStyle";
 import type { MessageContent } from "@/components/molecules/MessageBubble/MessageBubble";
 
 const EMOJI_GROUPS: { label: string; emojis: string[] }[] = [
@@ -113,7 +114,8 @@ function ImagePreview({ src, onRemove }: { src: string; onRemove: () => void }) 
   return (
     <div className="border-t border-neutral-100 bg-white px-4 py-3">
       <div className="relative inline-block">
-        <Image src={src} alt="Upload preview" width={120} height={90} className="h-20 w-auto rounded-xl border border-neutral-200 object-cover" unoptimized />
+        <Image src={src} alt="Upload preview" width={160} height={80} className="block h-20 w-auto max-w-[12rem] rounded-xl object-cover" unoptimized />
+        <span aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-black/[0.06] ring-inset" />
         <button
           type="button"
           onClick={onRemove}
@@ -132,6 +134,7 @@ export default function MessageComposer({ value, onChange, onSubmit, onSendConte
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
+  const canSend = Boolean(value.trim()) || Boolean(imagePreview);
 
   const togglePicker = useCallback((picker: ActivePicker) => {
     setActivePicker((current) => (current === picker ? null : picker));
@@ -237,7 +240,7 @@ export default function MessageComposer({ value, onChange, onSubmit, onSendConte
           GIF
         </button>
 
-        <div className="flex min-w-0 flex-1 items-center gap-1 rounded-full border border-neutral-200 bg-white py-1 pr-1 pl-4 transition-[border-color,box-shadow] duration-150 focus-within:border-neutral-400 focus-within:ring-4 focus-within:ring-neutral-100">
+        <div className="flex min-w-0 flex-1 items-center gap-1 rounded-xl border border-neutral-200 bg-white py-1 pr-1 pl-4 transition-[border-color,box-shadow] duration-150 focus-within:border-neutral-400 focus-within:ring-4 focus-within:ring-neutral-100">
           <input
             value={value}
             onChange={(event) => onChange(event.target.value)}
@@ -248,8 +251,10 @@ export default function MessageComposer({ value, onChange, onSubmit, onSendConte
           <button
             type="submit"
             aria-label="Send message"
-            disabled={!value.trim() && !imagePreview}
-            className="grid size-10 shrink-0 place-items-center rounded-full bg-neutral-900 text-white transition-[background-color,color,transform] duration-150 hover:bg-neutral-700 active:scale-[0.96] disabled:cursor-not-allowed disabled:bg-neutral-200 disabled:text-neutral-400 disabled:active:scale-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
+            disabled={!canSend}
+            // The same dark gradient + inset-highlight finish as the "View Campaign" buttons on the explore listing cards.
+            style={canSend ? darkGradientButtonStyle : undefined}
+            className="grid size-10 shrink-0 place-items-center rounded-lg bg-neutral-900 text-white transition-[background-color,color,filter,transform] duration-150 hover:brightness-125 active:scale-[0.96] disabled:cursor-not-allowed disabled:bg-neutral-200 disabled:text-neutral-400 disabled:hover:brightness-100 disabled:active:scale-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
           >
             <ArrowUpIcon className="size-[18px]" />
           </button>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import Button from "@/components/atoms/Button/Button";
+import { darkGradientButtonStyle } from "@/components/atoms/Button/darkGradientStyle";
 
 interface CartSummaryProps {
   total: number;
@@ -23,7 +24,7 @@ export default function CartSummary({ total, checkoutHref }: CartSummaryProps) {
         </div>
       </div>
       <Link href={checkoutHref} className="mt-5 block">
-        <Button variant="accent" size="lg" fullWidth iconLeft={<ShoppingCartIcon className="size-4" />}>
+        <Button variant="dark" size="lg" fullWidth iconLeft={<ShoppingCartIcon className="size-4" />} style={{ ...darkGradientButtonStyle, padding: "14px 20px" }}>
           Confirm your shop
         </Button>
       </Link>

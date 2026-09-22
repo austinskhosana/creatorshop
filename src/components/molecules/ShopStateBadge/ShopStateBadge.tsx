@@ -1,10 +1,12 @@
 import type { ShopState } from "@/lib/mock-creator";
 
-const copy: Record<ShopState, string> = { pending: "Shop in review", approved: "Post approved", posted: "Post in review", active: "Access active", expired: "Access expired", overdue: "Post overdue", declined: "Shop declined", withdrawn: "Shop withdrawn" };
+const copy: Record<ShopState, string> = { pending: "Shop in review", approved: "Shop approved", draft: "Draft in review", ready: "Draft approved", posted: "Proof in review", active: "Access active", expired: "Access expired", overdue: "Post overdue", declined: "Shop declined", withdrawn: "Shop withdrawn" };
 
 const dotColor: Record<ShopState, string> = {
   pending: "bg-yellow-400",
   approved: "bg-[#A3FF38]",
+  draft: "bg-blue-400",
+  ready: "bg-[#A3FF38]",
   posted: "bg-blue-400",
   active: "bg-[#A3FF38]",
   expired: "bg-neutral-300",
