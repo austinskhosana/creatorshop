@@ -1,3 +1,4 @@
+import { WishCardDemo } from "@/components/molecules/WishCard";
 import { Input } from "@/components/atoms/Input";
 import { CreatorCard, BrandCard } from "@/components/molecules/RoleSelectionCard";
 import { EmptyState, EmptyStateWithActionDemo } from "@/components/molecules/EmptyState";
@@ -9,6 +10,7 @@ import { CategoryNavListDemo } from "@/components/molecules/CategoryNavList";
 import { PaginationDemo } from "@/components/molecules/Pagination";
 import { LabeledField } from "@/components/molecules/LabeledField";
 import { SelectableChipDemo } from "@/components/molecules/SelectableChip";
+import { DropdownDemo } from "@/components/molecules/Dropdown";
 import { PricingCard } from "@/components/molecules/PricingCard";
 import { BrandFAQItem } from "@/components/molecules/BrandFAQItem";
 import { BrandCardVisual, BrandCardVisualFlip } from "@/components/molecules/BrandCardVisual";
@@ -461,5 +463,23 @@ export const moleculesEntries: RegistryEntry[] = [
         ),
       },
     ],
-  }
+  },
+  {
+    name: "Dropdown",
+    level: "molecules",
+    description: "Custom listbox select used for store filters and sorting. Opens anchored to its trigger, with keyboard navigation and typeahead.",
+    variants: [
+      { name: "Default", preview: <DropdownDemo /> },
+      { name: "Disabled", preview: <DropdownDemo disabled /> },
+    ],
+  },
+  {
+    name: "Wish card",
+    level: "molecules",
+    description: "A brand on the Genie Index, built like a listing card — logo and website link up top, name and description, then its category tag and the wish toggle.",
+    variants: [
+      { name: "Not wished", preview: <WishCardDemo /> },
+      { name: "Wished", preview: <WishCardDemo wished /> },
+    ],
+  },
 ];

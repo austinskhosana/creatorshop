@@ -240,7 +240,7 @@ export default function MessageComposer({ value, onChange, onSubmit, onSendConte
           GIF
         </button>
 
-        <div className="flex min-w-0 flex-1 items-center gap-1 rounded-xl border border-neutral-200 bg-white py-1 pr-1 pl-4 transition-[border-color,box-shadow] duration-150 focus-within:border-neutral-400 focus-within:ring-4 focus-within:ring-neutral-100">
+        <div className="flex min-w-0 flex-1 items-center gap-1 rounded-xl border border-neutral-200 bg-white py-1 pr-1 pl-4 transition-[border-color] duration-150 focus-within:border-neutral-300">
           <input
             value={value}
             onChange={(event) => onChange(event.target.value)}

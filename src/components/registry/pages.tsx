@@ -1,7 +1,7 @@
 import { ListingDetailPage } from "@/components/pages/ListingDetailPage";
 import { ExploreSoftwarePage } from "@/components/pages/ExploreSoftwarePage";
 import { MOCK_LISTINGS } from "@/lib/mock-listings";
-import { SavedPage } from "@/components/pages/SavedPage";
+import { GenieIndexPage } from "@/components/pages/GenieIndexPage";
 import { CartPage } from "@/components/pages/CartPage";
 import { MessagesPage } from "@/components/pages/MessagesPage";
 import type { RegistryEntry } from "./types";
@@ -20,14 +20,14 @@ export const pagesEntries: RegistryEntry[] = [
     ],
   },
   {
-    name: "Saved",
+    name: "Genie Index",
     level: "pages",
-    description: "Bookmarked products — same grid and card treatment as the store, with an empty state pointing back to Shop.",
+    description: "Creators wish for software that isn't on Creatorshop yet — a Make a wish banner above the Genie Index heading, All / My wishes tabs, and a grid of wish cards.",
     fullBleed: true,
     variants: [
       {
         name: "Default",
-        preview: <SavedPage />,
+        preview: <GenieIndexPage />,
       },
     ],
   },
@@ -43,7 +43,7 @@ export const pagesEntries: RegistryEntry[] = [
       },
       {
         name: "Empty",
-        preview: <CartPage initialItems={[]} />,
+        preview: <CartPage items={[]} />,
       },
     ],
   },

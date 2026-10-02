@@ -1,117 +1,106 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { MessageBubble, type MessageContent } from "@/components/molecules/MessageBubble";
+import { useMemo, useState } from "react";
+import type { MessageContent } from "@/components/molecules/MessageBubble";
 import { ConversationHeader } from "@/components/organisms/ConversationHeader";
+import { ConversationThread } from "@/components/organisms/ConversationThread";
 import { MessageComposer } from "@/components/organisms/MessageComposer";
 import { ThreadList, type ThreadListEntry } from "@/components/organisms/ThreadList";
 import { CreatorShell } from "@/components/templates/CreatorShell";
+import { inboxTimeFor, mockThreads, previewFor, type ChatMessage } from "@/lib/mock-messages";
 
-type Thread = ThreadListEntry & { detail: string };
-
-const threads: Thread[] = [
-  { id: "paper", name: "Paper", detail: "Paper Pro · Instagram carousel", preview: "We're excited to see what you create.", time: "10:42 AM", unread: true, image: "/logos/paper.jpeg" },
-  { id: "canva", name: "Canva", detail: "Canva Pro · Short-form video", preview: "We left feedback on your draft.", time: "Yesterday", image: "/logos/canva.jpg" },
-  { id: "Notion", name: "Notion", detail: "Notion Plus · Product tutorial", preview: "Thanks for sending that over!", time: "Tue", image: "/logos/notion.jpg" },
-  { id: "elevenlabs", name: "ElevenLabs", detail: "Creator program", preview: "Your access is ready to use.", time: "Mon", image: "/logos/elevenlabs.png" },
-  { id: "mia", name: "Austin at Creatorshop", detail: "Creatorshop support", preview: "How can we help with your shop?", time: "Fri", online: true, image: "/Creatorshop Brand Symbol.webp" },
-];
+const formatTime = (date: Date) => date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
 
 export default function MessagesPage() {
-  const [activeId, setActiveId] = useState("paper");
+  const [activeId, setActiveId] = useState(mockThreads[0].id);
   const [query, setQuery] = useState("");
   const [message, setMessage] = useState("");
-  const [sent, setSent] = useState<MessageContent[]>([]);
-  const [readIds, setReadIds] = useState<string[]>([]);
-  const threadRef = useRef<HTMLDivElement>(null);
-  // Follow the newest message — including after a photo finishes loading and grows the thread —
-  // unless the reader has scrolled up to look at something older.
-  const stickToBottom = useRef(true);
+  // What you've sent this session, kept per thread so switching conversations doesn't carry it along.
+  const [sentByThread, setSentByThread] = useState<Record<string, ChatMessage[]>>({});
+  // Below lg the inbox and the conversation are separate screens; this tracks which one is showing.
+  const [mobileView, setMobileView] = useState<"list" | "thread">("list");
+  const [readIds, setReadIds] = useState<string[]>([mockThreads[0].id]);
 
-  useEffect(() => {
-    const scroller = threadRef.current;
-    const content = scroller?.firstElementChild;
-    if (!scroller || !content) return;
-    const observer = new ResizeObserver(() => {
-      if (stickToBottom.current) scroller.scrollTop = scroller.scrollHeight;
-    });
-    observer.observe(content);
-    return () => observer.disconnect();
-  }, []);
-
-  const activeThread = threads.find((thread) => thread.id === activeId) ?? threads[0];
-  const filteredThreads = useMemo(
-    () =>
-      threads
-        .filter((thread) => `${thread.name} ${thread.preview}`.toLowerCase().includes(query.toLowerCase()))
-        .map((thread) => (readIds.includes(thread.id) ? { ...thread, unread: false } : thread)),
-    [query, readIds],
+  const activeThread = mockThreads.find((thread) => thread.id === activeId) ?? mockThreads[0];
+  const activeMessages = useMemo(
+    () => [...activeThread.messages, ...(sentByThread[activeThread.id] ?? [])],
+    [activeThread, sentByThread],
   );
-  const unreadCount = useMemo(() => filteredThreads.filter((thread) => thread.unread).length, [filteredThreads]);
+
+  const filteredThreads = useMemo<ThreadListEntry[]>(() => {
+    const needle = query.trim().toLowerCase();
+    return mockThreads.flatMap((thread) => {
+      const all = [...thread.messages, ...(sentByThread[thread.id] ?? [])];
+      const searchText = `${thread.name} ${thread.detail} ${all.map((m) => (m.content.type === "text" ? m.content.text : "")).join(" ")}`;
+      if (!searchText.toLowerCase().includes(needle)) return [];
+      const last = all[all.length - 1];
+      return [
+        {
+          id: thread.id,
+          name: thread.name,
+          image: thread.image,
+          online: thread.online,
+          official: thread.participant === "team",
+          preview: previewFor(last),
+          time: inboxTimeFor(last),
+          unread: thread.unread && !readIds.includes(thread.id),
+        },
+      ];
+    });
+  }, [query, readIds, sentByThread]);
+  const unreadCount = filteredThreads.filter((thread) => thread.unread).length;
 
   function selectThread(id: string) {
+    if (id !== activeId) setMessage("");
     setActiveId(id);
+    setMobileView("thread");
     setReadIds((ids) => (ids.includes(id) ? ids : [...ids, id]));
+  }
+
+  function sendContent(content: MessageContent) {
+    const sent: ChatMessage = { id: crypto.randomUUID(), from: "you", content, day: "Today", time: formatTime(new Date()) };
+    setSentByThread((byThread) => ({ ...byThread, [activeThread.id]: [...(byThread[activeThread.id] ?? []), sent] }));
   }
 
   function sendMessage(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const text = message.trim();
     if (!text) return;
-    stickToBottom.current = true;
-    setSent((messages) => [...messages, { type: "text", text }]);
+    sendContent({ type: "text", text });
     setMessage("");
-  }
-
-  function sendContent(content: MessageContent) {
-    stickToBottom.current = true;
-    setSent((messages) => [...messages, content]);
   }
 
   return (
     <CreatorShell>
-      <div className="flex h-screen min-h-0 w-full bg-white">
-        <div className="grid h-full min-h-0 w-full grid-rows-[minmax(0,16rem)_minmax(0,1fr)] overflow-hidden bg-white lg:grid-cols-[21rem_minmax(0,1fr)] lg:grid-rows-1">
-          <ThreadList
-            threads={filteredThreads}
-            activeId={activeId}
-            onSelect={selectThread}
-            query={query}
-            onQueryChange={setQuery}
-            unreadCount={unreadCount}
-          />
+      <div className="flex h-dvh min-h-0 w-full bg-white">
+        <div className="grid h-full min-h-0 w-full grid-cols-[minmax(0,1fr)] overflow-hidden bg-white lg:grid-cols-[21rem_minmax(0,1fr)]">
+          <div className={`min-h-0 ${mobileView === "thread" ? "hidden lg:block" : ""}`}>
+            <ThreadList
+              threads={filteredThreads}
+              activeId={activeId}
+              onSelect={selectThread}
+              query={query}
+              onQueryChange={setQuery}
+              unreadCount={unreadCount}
+            />
+          </div>
 
-          <section className="flex min-h-0 min-w-0 flex-col">
-            <ConversationHeader name={activeThread.name} detail={activeThread.detail} image={activeThread.image} online={activeThread.online} />
+          <section className={`min-h-0 min-w-0 flex-col ${mobileView === "list" ? "hidden lg:flex" : "flex"}`}>
+            <ConversationHeader
+              name={activeThread.name}
+              detail={activeThread.detail}
+              image={activeThread.image}
+              online={activeThread.online}
+              official={activeThread.participant === "team"}
+              onBack={() => setMobileView("list")}
+            />
 
-            <div
-              ref={threadRef}
-              onScroll={(event) => {
-                const el = event.currentTarget;
-                stickToBottom.current = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
-              }}
-              className="min-h-0 flex-1 overflow-y-auto bg-white px-5 py-7 sm:px-8 sm:py-9"
-            >
-              <div className="mx-auto flex max-w-3xl flex-col">
-                <MessageBubble
-                  text="We're excited to see how you make Paper your own. Let us know if you have questions about the product."
-                  meta={`${activeThread.name} · 10:45 AM`}
-                  senderName={activeThread.name}
-                  senderImage={activeThread.image}
-                />
-
-                {/* Everything sent is from you: one run, so bubbles sit close together and only the
-                    last one carries the pointed corner and the timestamp. */}
-                {sent.map((content, index) => {
-                  const isLast = index === sent.length - 1;
-                  return (
-                    <div key={index} className={index === 0 ? "mt-7" : "mt-1"}>
-                      <MessageBubble content={content} meta="You · now" variant="outgoing" showMeta={isLast} tail={isLast} />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+            <ConversationThread
+              threadId={activeThread.id}
+              messages={activeMessages}
+              senderName={activeThread.name}
+              senderImage={activeThread.image}
+            />
 
             <MessageComposer
               value={message}

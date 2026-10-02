@@ -512,6 +512,21 @@ function ReceiptPrinterOutput({
   );
 }
 
+export {
+  ReceiptPrinterHeader,
+  ReceiptPrinterMachine,
+  ReceiptPrinterOutput,
+  ReceiptPrinterPaper,
+  ReceiptPrinterRoot,
+  ReceiptPrinterScreen,
+  ReceiptPrinterStatus,
+};
+
+/**
+ * Compound form for client components. Server components (like the design-system registry)
+ * must import the named parts: properties of an object exported from a "use client" module
+ * arrive as undefined across the server/client boundary.
+ */
 export const ReceiptPrinter = {
   Header: ReceiptPrinterHeader,
   Machine: ReceiptPrinterMachine,

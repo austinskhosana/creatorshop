@@ -3,7 +3,7 @@ import { ExploreSoftwarePage } from "@/components/pages/ExploreSoftwarePage";
 import { MOCK_LISTINGS } from "@/lib/mock-listings";
 
 export const metadata = {
-  title: "Software — Creatorshop",
+  title: "Shop — Creatorshop",
 };
 
 export default function ExplorePage() {

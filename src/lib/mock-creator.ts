@@ -1,55 +1,35 @@
-/**
- * Where a shop is in the barter: pending → approved (upload a draft) → draft (brand reviewing it)
- * → ready (draft approved: post it, then add proof of payment) → posted (brand checking the proof) → active.
- */
-export type ShopState = "pending" | "approved" | "draft" | "ready" | "posted" | "active" | "expired" | "overdue" | "declined" | "withdrawn";
+import type { Shop } from "@/lib/data/schema";
 
-export type CreatorShop = {
-  id: string;
-  product: string;
-  brand: string;
-  description: string;
-  tier: string;
-  value: number;
-  access: string;
-  state: ShopState;
-  deadline?: string;
-  accessEnd?: string;
-  accessCode?: string;
-  redemptionUrl?: string;
-  logo: string;
-};
+export type { ShopState } from "@/lib/data/schema";
+/** A shop as the creator's screens read it. Same row as `Shop`; the alias predates the data model. */
+export type CreatorShop = Shop;
 
 export const CREATOR = {
   name: "Jordan Lee",
   handle: "@jordanmakes",
   initials: "JL",
-  avatar: "/creators/meng-to.png",
+  avatar: "/creators/nova-reyes.png",
   followers: "50K+",
   bio: "Designing a calmer, more capable internet — one tool at a time.",
   niche: "Design & creative tools",
-  niches: ["Design", "Creative tools", "Productivity"],
+  niches: ["Design & creative tools", "Tech & software"],
   rating: "4.9",
   completedShops: 12,
-  platforms: [
-    { name: "Instagram", handle: "@jordanmakes", audience: "28.4K" },
-    { name: "YouTube", handle: "Jordan Makes", audience: "14.2K" },
-    { name: "TikTok", handle: "@jordanmakes", audience: "9.8K" },
-  ],
 };
 
 export const CREATOR_SHOPS: CreatorShop[] = [
-  { id: "paper", product: "Paper Pro", brand: "Paper", description: "An AI-native design canvas where what you draw is real HTML and CSS.", tier: "Instagram carousel", value: 48, access: "3 months", state: "active", accessEnd: "Dec 21, 2026", accessCode: "CS-PAPER-JL26-PRO", redemptionUrl: "https://paper.design", logo: "/logos/paper.jpeg" },
-  { id: "cursor", product: "Cursor Pro", brand: "Cursor", description: "An AI code editor that reads your whole codebase as you write.", tier: "YouTube review", value: 120, access: "6 months", state: "posted", deadline: "Sep 18", logo: "/logos/cursor.jpg" },
-  { id: "notion", product: "Notion Plus", brand: "Notion", description: "Docs, wikis, and project tracking in one connected workspace.", tier: "X thread", value: 120, access: "12 months", state: "active", accessEnd: "Oct 31, 2026", accessCode: "CS-NOTION-JL26-PLUS", redemptionUrl: "https://www.notion.so/product", logo: "/logos/notion.jpg" },
-  { id: "dia", product: "Dia Browser", brand: "Dia", description: "An AI browser that understands your tabs and remembers your context.", tier: "TikTok", value: 60, access: "3 months", state: "expired", logo: "/logos/dia-browser.jpg" },
-  { id: "elevenlabs", product: "ElevenLabs Creator", brand: "ElevenLabs", description: "Lifelike voiceovers and voice cloning built for creators.", tier: "YouTube review", value: 66, access: "3 months", state: "overdue", deadline: "Sep 14", logo: "/logos/elevenlabs.png" },
-  { id: "canva", product: "Canva Pro", brand: "Canva", description: "Design social posts, presentations, and more with ready-made templates.", tier: "TikTok", value: 54, access: "3 months", state: "approved", deadline: "Oct 3", logo: "/logos/canva.jpg" },
-  { id: "higgsfield", product: "Higgsfield Starter", brand: "Higgsfield", description: "Turn a prompt into cinematic AI video, with motion presets and camera control.", tier: "TikTok", value: 57, access: "3 months", state: "ready", deadline: "Oct 6", logo: "/logos/higgsfield.jpg" },
-  { id: "procreate", product: "Procreate", brand: "Procreate", description: "The iPad illustration app, with a full brush engine and animation tools.", tier: "Instagram carousel", value: 13, access: "1 month", state: "draft", deadline: "Oct 8", logo: "/logos/procreate.jpg" },
-  { id: "spotify", product: "Spotify Premium", brand: "Spotify", description: "Ad-free music with offline downloads and unlimited skips.", tier: "TikTok", value: 39, access: "3 months", state: "declined", logo: "/logos/spotify.jpg" },
+  { id: "paper", listingSlug: "paper", product: "Paper Pro", brand: "Paper", description: "An AI-native design canvas where what you draw is real HTML and CSS.", tier: "Instagram carousel", value: 48, access: "3 months", state: "active", accessEnd: "Dec 21, 2026", accessCode: "CS-PAPER-JL26-PRO", redemptionUrl: "https://paper.design", createdAt: "2026-09-02T09:00:00.000Z" },
+  { id: "cursor", listingSlug: "cursor", product: "Cursor Pro", brand: "Cursor", description: "An AI code editor that reads your whole codebase as you write.", tier: "YouTube review", value: 120, access: "6 months", state: "posted", deadline: "Sep 18", createdAt: "2026-08-28T09:00:00.000Z" },
+  { id: "notion", listingSlug: "notion", product: "Notion Plus", brand: "Notion", description: "Docs, wikis, and project tracking in one connected workspace.", tier: "X thread", value: 120, access: "12 months", state: "active", accessEnd: "Oct 31, 2026", accessCode: "CS-NOTION-JL26-PLUS", redemptionUrl: "https://www.notion.so/product", createdAt: "2026-08-14T09:00:00.000Z" },
+  { id: "dia", listingSlug: "dia-browser", product: "Dia Browser", brand: "Dia", description: "An AI browser that understands your tabs and remembers your context.", tier: "TikTok", value: 60, access: "3 months", state: "expired", createdAt: "2026-06-10T09:00:00.000Z" },
+  { id: "elevenlabs", listingSlug: "elevenlabs", product: "ElevenLabs Creator", brand: "ElevenLabs", description: "Lifelike voiceovers and voice cloning built for creators.", tier: "YouTube review", value: 66, access: "3 months", state: "overdue", deadline: "Sep 14", createdAt: "2026-08-30T09:00:00.000Z" },
+  { id: "canva", listingSlug: "canva", product: "Canva Pro", brand: "Canva", description: "Design social posts, presentations, and more with ready-made templates.", tier: "TikTok", value: 54, access: "3 months", state: "approved", deadline: "Oct 3", createdAt: "2026-09-22T09:00:00.000Z" },
+  { id: "higgsfield", listingSlug: "higgsfield", product: "Higgsfield Starter", brand: "Higgsfield", description: "Turn a prompt into cinematic AI video, with motion presets and camera control.", tier: "TikTok", value: 57, access: "3 months", state: "ready", deadline: "Oct 6", createdAt: "2026-09-18T09:00:00.000Z" },
+  { id: "procreate", listingSlug: "procreate", product: "Procreate", brand: "Procreate", description: "The iPad illustration app, with a full brush engine and animation tools.", tier: "Instagram carousel", value: 13, access: "1 month", state: "draft", deadline: "Oct 8", createdAt: "2026-09-20T09:00:00.000Z" },
+  { id: "spotify", listingSlug: "spotify", product: "Spotify Premium", brand: "Spotify", description: "Ad-free music with offline downloads and unlimited skips.", tier: "TikTok", value: 39, access: "3 months", state: "declined", createdAt: "2026-07-05T09:00:00.000Z" },
 ];
 
+/** Static cart for the receipt-printer showcase. The real cart lives in the creator store. */
 export const CART_ITEMS = [
   { id: "cursor", product: "Cursor Pro", brand: "Cursor", tier: "YouTube review", value: 120, access: "6 months", logo: "/logos/cursor.jpg" },
   { id: "higgsfield", product: "Higgsfield Starter", brand: "Higgsfield", tier: "TikTok", value: 57, access: "3 months", logo: "/logos/higgsfield.jpg" },

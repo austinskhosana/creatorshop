@@ -31,19 +31,30 @@ function priceTierMatches(tier: string, retailValue: number) {
   return tier === "over-250" && retailValue > 250;
 }
 
-export function filterListings(listings: Listing[], filters: ExploreFilters) {
+function matchesFilters(listing: Listing, filters: ExploreFilters) {
   const query = filters.search.trim().toLocaleLowerCase();
-  const filtered = listings.filter(
-    (listing) =>
-      (!query || listing.title.toLocaleLowerCase().includes(query) || listing.brandName.toLocaleLowerCase().includes(query)) &&
-      (filters.category === "all" || listing.category === filters.category) &&
-      (filters.platform === "all" || listing.platform === filters.platform) &&
-      (filters.accessLength === "all" || listing.months === Number(filters.accessLength)) &&
-      priceTierMatches(filters.priceTier, listing.retailValue) &&
-      (!filters.inStockOnly || listing.slotsRemaining > 0),
+  return (
+    (!query || listing.title.toLocaleLowerCase().includes(query) || listing.brandName.toLocaleLowerCase().includes(query)) &&
+    (filters.category === "all" || listing.category === filters.category) &&
+    (filters.platform === "all" || listing.platform === filters.platform) &&
+    (filters.accessLength === "all" || listing.months === Number(filters.accessLength)) &&
+    priceTierMatches(filters.priceTier, listing.retailValue) &&
+    (!filters.inStockOnly || listing.slotsRemaining > 0)
   );
+}
+
+export function filterListings(listings: Listing[], filters: ExploreFilters) {
+  const filtered = listings.filter((listing) => matchesFilters(listing, filters));
 
   if (filters.sort === "ending") return [...filtered].sort((a, b) => a.slotsRemaining - b.slotsRemaining);
   if (filters.sort === "popular") return [...filtered].sort((a, b) => b.totalSlots - b.slotsRemaining - (a.totalSlots - a.slotsRemaining));
   return filtered;
+}
+
+/** Counts per category under every active filter except category itself. */
+export function countListingsByCategory(listings: Listing[], filters: ExploreFilters) {
+  const matching = listings.filter((listing) => matchesFilters(listing, { ...filters, category: "all" }));
+  const counts: Record<string, number> = { all: matching.length };
+  for (const label of CATEGORY_LABELS) counts[label] = matching.filter((listing) => listing.category === label).length;
+  return counts;
 }

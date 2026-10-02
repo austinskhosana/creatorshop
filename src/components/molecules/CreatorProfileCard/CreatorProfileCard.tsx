@@ -1,38 +1,8 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 import { UserIcon } from "@heroicons/react/24/solid";
+import { PlatformIcon } from "@/components/atoms/PlatformIcon";
 import { TerminalgraphShader } from "@/components/atoms/TerminalgraphShader";
-
-function InstagramIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="size-5">
-      <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" strokeWidth="2" />
-      <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2" />
-      <circle cx="17.4" cy="6.7" r="1" fill="currentColor" />
-    </svg>
-  );
-}
-
-function TikTokIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="size-5">
-      <path d="M14.4 3c.2 1.7 1.15 3.15 2.55 4.05A6.6 6.6 0 0 0 20 8v3.05a9.55 9.55 0 0 1-5.55-1.8v6.1a5.35 5.35 0 1 1-4.6-5.3v3.08a2.36 2.36 0 1 0 1.55 2.22V3h3Z" />
-    </svg>
-  );
-}
-
-function YoutubeIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="size-5">
-      <path d="M21.6 7.2a2.9 2.9 0 0 0-2.05-2.05C17.75 4.65 12 4.65 12 4.65s-5.75 0-7.55.5A2.9 2.9 0 0 0 2.4 7.2 30 30 0 0 0 1.9 12a30 30 0 0 0 .5 4.8 2.9 2.9 0 0 0 2.05 2.05c1.8.5 7.55.5 7.55.5s5.75 0 7.55-.5a2.9 2.9 0 0 0 2.05-2.05 30 30 0 0 0 .5-4.8 30 30 0 0 0-.5-4.8ZM10 15.15v-6.3L15.45 12 10 15.15Z" />
-    </svg>
-  );
-}
-
-const SOCIAL_ICONS: Record<string, React.ReactNode> = {
-  Instagram: <InstagramIcon />,
-  TikTok: <TikTokIcon />,
-  YouTube: <YoutubeIcon />,
-};
 
 export interface CreatorProfileCardData {
   name: string;
@@ -41,24 +11,29 @@ export interface CreatorProfileCardData {
   followers: string;
   bio: string;
   niches: string[];
-  platforms: { name: string; handle: string; audience: string }[];
+  /** With a `url`, the pill links to that profile. */
+  platforms: { name: string; handle: string; audience?: string; url?: string }[];
 }
 
 interface CreatorProfileCardProps {
   creator: CreatorProfileCardData;
+  /** A preset or uploaded cover. Leave unset for the shader banner. */
+  coverStyle?: CSSProperties | null;
   /** Disable the animated WebGL banner for off-screen/background cards to save GPU work. */
   showShader?: boolean;
   className?: string;
 }
 
-export default function CreatorProfileCard({ creator, showShader = true, className = "" }: CreatorProfileCardProps) {
+export default function CreatorProfileCard({ creator, coverStyle, showShader = true, className = "" }: CreatorProfileCardProps) {
   return (
     <section
       aria-labelledby={`profile-name-${creator.handle}`}
       className={`w-full overflow-hidden rounded-[32px] border border-neutral-200 bg-white p-3 sm:p-3.5 ${className}`}
     >
       <div className="relative h-36 overflow-hidden rounded-[24px] border border-neutral-200 bg-white sm:h-40 sm:rounded-[26px]">
-        {showShader ? (
+        {coverStyle ? (
+          <div className="absolute inset-0 size-full" style={coverStyle} />
+        ) : showShader ? (
           <TerminalgraphShader
             theme="light"
             background={{ dark: "#052e12", light: "#ffffff" }}
@@ -70,8 +45,10 @@ export default function CreatorProfileCard({ creator, showShader = true, classNa
       </div>
 
       <div className="relative mt-3.5 rounded-[24px] border border-neutral-200 bg-white px-5 pt-20 pb-5 sm:rounded-[26px] sm:px-7 sm:pt-[88px] sm:pb-6">
-        <div className="absolute -top-[58px] left-5 size-[104px] rounded-full shadow-sm sm:-top-16 sm:left-7 sm:size-[120px]">
-          <div className="relative size-full overflow-hidden rounded-full border-[5px] border-white bg-neutral-100 sm:border-[6px]">
+        {/* The white ring is padding on a wrapper, not a border on the clipping circle, which would
+            let the photo's edge pixels leak past it. */}
+        <div className="absolute -top-[58px] left-5 size-[104px] rounded-full bg-white p-[5px] shadow-sm sm:-top-16 sm:left-7 sm:size-[120px] sm:p-[6px]">
+          <div className="relative size-full overflow-hidden rounded-full bg-neutral-100">
             <Image
               src={creator.avatar}
               alt={`${creator.name}'s profile photo`}
@@ -107,20 +84,39 @@ export default function CreatorProfileCard({ creator, showShader = true, classNa
           </ul>
         </div>
 
-        <div className="mt-6">
-          <h2 className="text-lg font-bold tracking-tight text-neutral-900">Socials</h2>
-          <ul className="mt-3 flex flex-wrap gap-2.5" aria-label={`${creator.name}'s social profiles`}>
-            {creator.platforms.map((platform) => (
-              <li
-                key={platform.name}
-                className="inline-flex h-11 items-center gap-2.5 rounded-xl border border-neutral-300 bg-white px-4 text-sm font-medium text-neutral-900 shadow-[0_1px_2px_rgba(0,0,0,0.06)] sm:h-10 sm:px-3.5"
-              >
-                {SOCIAL_ICONS[platform.name] ?? null}
-                {platform.name}
-              </li>
-            ))}
-          </ul>
-        </div>
+        {creator.platforms.length > 0 ? (
+          <div className="mt-6">
+            <h2 className="text-lg font-bold tracking-tight text-neutral-900">Socials</h2>
+            <ul className="mt-3 flex flex-wrap gap-2.5" aria-label={`${creator.name}'s social profiles`}>
+              {creator.platforms.map((platform) => {
+                const content = (
+                  <>
+                    <PlatformIcon platform={platform.name} className="size-5" />
+                    {platform.name}
+                  </>
+                );
+                const pillClass = "inline-flex h-11 items-center gap-2.5 rounded-xl border border-neutral-300 bg-white px-4 text-sm font-medium text-neutral-900 shadow-[0_1px_2px_rgba(0,0,0,0.06)] sm:h-10 sm:px-3.5";
+                return (
+                  <li key={platform.name}>
+                    {platform.url ? (
+                      <a
+                        href={platform.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${platform.name}: ${platform.handle} (opens in a new tab)`}
+                        className={`${pillClass} transition-[background-color,border-color,transform] duration-150 hover:border-neutral-400 hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2 active:scale-[0.97]`}
+                      >
+                        {content}
+                      </a>
+                    ) : (
+                      <span className={pillClass}>{content}</span>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ) : null}
       </div>
     </section>
   );

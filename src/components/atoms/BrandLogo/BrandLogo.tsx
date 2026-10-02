@@ -13,6 +13,15 @@ const LOGO_IMAGES: Record<string, string> = {
   procreate: "/logos/procreate.jpg",
   canva: "/logos/canva.jpg",
   spotify: "/logos/spotify.jpg",
+  // Genie Index brands, not on Creatorshop yet.
+  capcut: "/logos/capcut.png",
+  descript: "/logos/descript.png",
+  figma: "/logos/figma.png",
+  framer: "/logos/framer.png",
+  granola: "/logos/granola.png",
+  lightroom: "/logos/lightroom.png",
+  linear: "/logos/linear.png",
+  raycast: "/logos/raycast.png",
 };
 
 interface BrandLogoProps {
@@ -30,10 +39,12 @@ export default function BrandLogo({ slug, name, size = 52, className }: BrandLog
     return (
       <div
         aria-label={`${name} logo`}
-        className={cn("overflow-hidden shadow-[inset_0_0_0_1px_rgba(0,0,0,0.04)]", className)}
+        className={cn("relative overflow-hidden", className)}
         style={{ height: size, width: size, borderRadius: radius }}
       >
         <Image src={image} alt="" width={size} height={size} className="h-full w-full object-cover" />
+        {/* Hairline drawn over the image so white app icons (CapCut, Notion) keep a visible tile edge on white cards. */}
+        <span aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.08)]" />
       </div>
     );
   }

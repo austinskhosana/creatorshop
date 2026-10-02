@@ -1,51 +1,92 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { CART_ITEMS } from "@/lib/mock-creator";
+import { useState } from "react";
+import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import { CreatorBreadcrumb } from "@/components/molecules/CreatorBreadcrumb";
 import { CartLineItem, type CartLineItemData } from "@/components/molecules/CartLineItem";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { CartSummary } from "@/components/organisms/CartSummary";
 import { CreatorShell } from "@/components/templates/CreatorShell";
+import { formatAccess } from "@/lib/listings/offers";
+import { creatorStore, useCart, type CartLine } from "@/lib/store/creator-store";
 
 interface CartPageProps {
-  initialItems?: CartLineItemData[];
+  /** Static items for design-system previews. Omit to show the creator's real cart. */
+  items?: CartLineItemData[];
 }
 
-export default function CartPage({ initialItems = CART_ITEMS }: CartPageProps) {
-  const [items, setItems] = useState(initialItems);
-  const total = useMemo(() => items.reduce((sum, item) => sum + item.value, 0), [items]);
+function toLineItem({ listing, offer }: CartLine): CartLineItemData {
+  return { id: listing.slug, product: listing.title, brand: listing.brandName, tier: offer.label, value: listing.retailValue, access: formatAccess(offer.months) };
+}
 
-  const removeItem = (id: string) => setItems((current) => current.filter((item) => item.id !== id));
+function ClearCartButton({ count }: { count: number }) {
+  const [confirming, setConfirming] = useState(false);
+  const base =
+    "inline-flex min-h-10 items-center rounded-[9px] px-3 text-[13px] font-medium transition-[background-color,color,border-color] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2";
+
+  if (!confirming) {
+    return (
+      <button type="button" onClick={() => setConfirming(true)} className={`${base} text-neutral-500 hover:bg-neutral-100 hover:text-neutral-950 focus-visible:ring-neutral-900`}>
+        Clear cart
+      </button>
+    );
+  }
+
+  return (
+    <div role="group" aria-label="Confirm clearing the cart" className="flex items-center gap-1.5">
+      <span className="mr-1 text-[13px] text-neutral-500">
+        Remove {count} {count === 1 ? "item" : "items"}?
+      </span>
+      <button type="button" onClick={() => setConfirming(false)} className={`${base} border border-neutral-200 text-neutral-700 hover:bg-neutral-50 focus-visible:ring-neutral-900`}>
+        Keep
+      </button>
+      <button
+        type="button"
+        autoFocus
+        onClick={() => {
+          creatorStore.clearCart();
+          setConfirming(false);
+        }}
+        className={`${base} bg-red-50 text-red-600 hover:bg-red-100 focus-visible:ring-red-500`}
+      >
+        Clear
+      </button>
+    </div>
+  );
+}
+
+export default function CartPage({ items: previewItems }: CartPageProps) {
+  const cart = useCart();
+  const items = previewItems ?? cart.lines.map(toLineItem);
+  const total = items.reduce((sum, item) => sum + item.value, 0);
 
   return (
     <CreatorShell>
       <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12">
         <CreatorBreadcrumb items={[{ label: "Shop", href: "/explore" }, { label: "Cart" }]} />
 
-        <div className="mt-6 flex items-end justify-between">
-          <div>
-            <h1 className="text-4xl font-bold tracking-tight">Cart</h1>
-          </div>
+        <div className="mt-6 flex flex-wrap items-end justify-between gap-3">
+          <h1 className="text-4xl font-bold tracking-tight">Cart</h1>
+          {items.length > 0 && !previewItems ? <ClearCartButton count={items.length} /> : null}
         </div>
 
         {items.length ? (
           <div className="mt-9 grid items-start gap-7 lg:grid-cols-[1.45fr_.7fr]">
             <div className="divide-y divide-neutral-100 overflow-hidden rounded-[1.75rem] border border-neutral-200 bg-white">
               {items.map((item) => (
-                <CartLineItem key={item.id} item={item} onRemove={removeItem} />
+                <CartLineItem key={item.id} item={item} onRemove={creatorStore.removeFromCart} />
               ))}
             </div>
             <CartSummary total={total} checkoutHref="/checkout" />
           </div>
         ) : (
-          <div className="mt-9 rounded-[2rem] border border-dashed border-neutral-300 bg-white">
-            <EmptyState
-              title="Your cart is waiting."
-              description="Find software you love and pay with the campaign's required post."
-              action={{ label: "Browse the store", href: "/explore" }}
-            />
-          </div>
+          <EmptyState
+            className="mt-9"
+            icon={<ShoppingCartIcon className="size-5" strokeWidth={1.75} />}
+            title="Your cart is empty"
+            description="Add software from the shop. You'll pay for each one with a post, not money."
+            action={{ label: "Browse the shop", href: "/explore" }}
+          />
         )}
       </div>
     </CreatorShell>

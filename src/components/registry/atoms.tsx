@@ -2,6 +2,7 @@ import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
 import { Textarea } from "@/components/atoms/Textarea";
 import { Badge } from "@/components/atoms/Badge";
+import { OfficialBadge } from "@/components/atoms/OfficialBadge";
 import { Avatar } from "@/components/atoms/Avatar";
 import { Card } from "@/components/atoms/Card";
 import { Skeleton, SkeletonText, SkeletonCard } from "@/components/atoms/Skeleton";
@@ -256,6 +257,22 @@ export const atomsEntries: RegistryEntry[] = [
             <Badge variant="stat" label="1.2k views" />
             <Badge variant="default" label="Default" />
           </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Official badge",
+    level: "atoms",
+    description: "Verified mark beside a Creatorshop team account's name in messages.",
+    variants: [
+      {
+        name: "Beside a name",
+        preview: (
+          <span className="flex items-center gap-1">
+            <span className="text-sm font-semibold text-neutral-900">Austin at Creatorshop</span>
+            <OfficialBadge />
+          </span>
         ),
       },
     ],

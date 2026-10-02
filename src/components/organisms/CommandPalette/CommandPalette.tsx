@@ -29,8 +29,7 @@ type Command = {
 const DESCRIPTIONS: Record<string, string> = {
   shop: "Browse available software drops",
   shops: "Track applications, campaigns, and access",
-  saved: "Return to products you saved",
-  wishlist: "Review products on your wishlist",
+  "genie-index": "Make a wish for software that isn't here yet",
   cart: "Review the software you want to shop",
   messages: "Continue conversations with brands",
   profile: "View your public creator profile",

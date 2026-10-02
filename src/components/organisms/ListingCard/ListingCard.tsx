@@ -1,16 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, useAnimationControls, useReducedMotion } from "framer-motion";
-import { ArrowTopRightOnSquareIcon, BookmarkIcon as BookmarkOutlineIcon, MegaphoneIcon } from "@heroicons/react/24/outline";
-import { BookmarkIcon as BookmarkSolidIcon } from "@heroicons/react/24/solid";
+import { ArrowTopRightOnSquareIcon, MegaphoneIcon } from "@heroicons/react/24/outline";
 import Badge from "@/components/atoms/Badge/Badge";
 import Button from "@/components/atoms/Button/Button";
 import BrandLogo from "@/components/atoms/BrandLogo/BrandLogo";
 import PlatformIcon from "@/components/atoms/PlatformIcon/PlatformIcon";
-import { cn } from "@/lib/utils";
 
 interface ListingCardProps {
   slug: string;
@@ -22,7 +19,6 @@ interface ListingCardProps {
   retailValue: number;
   slotsRemaining: number;
   totalSlots: number;
-  saved?: boolean;
 }
 
 const CONTENT_TYPE_LABELS: Record<string, string> = {
@@ -49,9 +45,7 @@ export default function ListingCard({
   deliverables,
   retailValue,
   slotsRemaining,
-  saved = false,
 }: ListingCardProps) {
-  const [isSaved, setIsSaved] = useState(saved);
   const soldOut = slotsRemaining === 0;
   const displayBrandName = brandName ?? title.split(" ")[0];
   const destination = websiteUrl ?? `/software/${slug}`;
@@ -75,29 +69,15 @@ export default function ListingCard({
         <Link href={`/software/${slug}`} aria-label={`View ${title}`} className="rounded-[19px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2">
           <BrandLogo slug={slug} name={displayBrandName} />
         </Link>
-        <div className="flex items-center gap-2">
-          <a
-            href={destination}
-            target={websiteUrl ? "_blank" : undefined}
-            rel={websiteUrl ? "noreferrer" : undefined}
-            aria-label={websiteUrl ? `Visit ${displayBrandName} website` : `View ${title}`}
-            className="flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 text-neutral-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
-          >
-            <ArrowTopRightOnSquareIcon aria-hidden="true" className="h-3.5 w-3.5" strokeWidth={1.75} />
-          </a>
-          <button
-            type="button"
-            onClick={() => setIsSaved((v) => !v)}
-            aria-pressed={isSaved}
-            aria-label={isSaved ? "Remove from saved" : "Save for later"}
-            className={cn(
-              "flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900",
-              isSaved ? "text-neutral-950" : "text-neutral-400",
-            )}
-          >
-            {isSaved ? <BookmarkSolidIcon aria-hidden="true" className="h-4 w-4" /> : <BookmarkOutlineIcon aria-hidden="true" className="h-4 w-4" strokeWidth={1.75} />}
-          </button>
-        </div>
+        <a
+          href={destination}
+          target={websiteUrl ? "_blank" : undefined}
+          rel={websiteUrl ? "noreferrer" : undefined}
+          aria-label={websiteUrl ? `Visit ${displayBrandName} website` : `View ${title}`}
+          className="flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 text-neutral-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
+        >
+          <ArrowTopRightOnSquareIcon aria-hidden="true" className="h-3.5 w-3.5" strokeWidth={1.75} />
+        </a>
       </div>
 
       <div className="mt-auto pt-5">

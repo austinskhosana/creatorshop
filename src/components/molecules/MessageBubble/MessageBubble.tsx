@@ -20,6 +20,10 @@ interface MessageBubbleProps {
   showMeta?: boolean;
   /** Give the bubble its pointed corner. Only the last message in a run gets one. */
   tail?: boolean;
+  /** Show the sender's avatar on an incoming bubble. Only the last message in a run gets one; the rest keep its space. */
+  showAvatar?: boolean;
+  /** Fade an outgoing bubble in. Turn off for history that was already there when the thread opened. */
+  animateIn?: boolean;
 }
 
 // Photos are the flex item themselves (no wrapper), so the bubble is exactly as wide as the
@@ -90,14 +94,14 @@ function MediaBubble({ content, outgoing, tail }: { content: MessageContent; out
   return null;
 }
 
-export default function MessageBubble({ text, content, meta, variant = "incoming", senderName, senderImage, showMeta = true, tail = true }: MessageBubbleProps) {
+export default function MessageBubble({ text, content, meta, variant = "incoming", senderName, senderImage, showMeta = true, tail = true, showAvatar = true, animateIn = true }: MessageBubbleProps) {
   const reduceMotion = useReducedMotion();
   const resolved: MessageContent = content ?? { type: "text", text: text ?? "" };
 
   if (variant === "outgoing") {
     return (
       <motion.div
-        initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 6 }}
+        initial={!animateIn ? false : reduceMotion ? { opacity: 0 } : { opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.18, ease: "easeOut" }}
         className="ml-auto flex max-w-[min(78%,36rem)] flex-col items-end gap-1.5"
@@ -111,7 +115,11 @@ export default function MessageBubble({ text, content, meta, variant = "incoming
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-end gap-2.5">
-        <ThreadAvatar name={senderName ?? ""} image={senderImage} size="sm" />
+        {showAvatar ? (
+          <ThreadAvatar name={senderName ?? ""} image={senderImage} size="sm" />
+        ) : (
+          <div aria-hidden className="size-9 shrink-0" />
+        )}
         {resolved.type === "text" ? (
           <div className={`max-w-[min(78%,36rem)] rounded-2xl ${tail ? "rounded-bl-[5px]" : ""} bg-neutral-100 px-4 py-2.5 text-sm leading-[1.55] text-neutral-700`}>
             {resolved.text}

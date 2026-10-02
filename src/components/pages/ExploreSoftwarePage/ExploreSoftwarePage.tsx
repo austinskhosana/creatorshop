@@ -2,13 +2,14 @@
 
 import { useMemo } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import AppShell from "@/components/templates/AppShell/AppShell";
 import ListingsToolbar from "@/components/organisms/ListingsToolbar/ListingsToolbar";
 import ListingGrid from "@/components/organisms/ListingGrid/ListingGrid";
 import { StoreSidebarCategoriesView } from "@/components/organisms/StoreSidebarCategories/StoreSidebarCategories";
 import PromoBanner from "@/components/organisms/PromoBanner/PromoBanner";
 import Pagination from "@/components/molecules/Pagination/Pagination";
-import { CATEGORY_LABELS, DEFAULT_EXPLORE_FILTERS, filterListings, type ExploreFilters, type ExploreSort } from "@/lib/listings/explore";
+import { CATEGORY_LABELS, DEFAULT_EXPLORE_FILTERS, countListingsByCategory, filterListings, type ExploreFilters, type ExploreSort } from "@/lib/listings/explore";
 import type { Listing } from "@/lib/listings/types";
 
 const PAGE_SIZE = 9;
@@ -98,51 +99,47 @@ export default function ExploreSoftwarePage({ listings: allListings }: ExploreSo
   const totalPages = Math.max(1, Math.ceil(visibleListings.length / PAGE_SIZE));
   const page = Math.min(Math.max(1, Number(searchParams.get("page")) || 1), totalPages);
   const paginatedListings = visibleListings.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const categories = useMemo(
-    () => [
-      { id: "all", label: "All products", count: allListings.filter((listing) => listing.title.toLocaleLowerCase().includes(filters.search.trim().toLocaleLowerCase()) || listing.brandName.toLocaleLowerCase().includes(filters.search.trim().toLocaleLowerCase())).length },
-      ...CATEGORY_LABELS.map((label) => ({
-        id: label,
-        label,
-        icon: CATEGORY_ICONS[label],
-        count: allListings.filter((listing) => (listing.title.toLocaleLowerCase().includes(filters.search.trim().toLocaleLowerCase()) || listing.brandName.toLocaleLowerCase().includes(filters.search.trim().toLocaleLowerCase())) && listing.category === label).length,
-      })),
-    ],
-    [allListings, filters.search],
-  );
+  const categoryCounts = countListingsByCategory(allListings, filters);
+  const categories = [
+    { id: "all", label: "All products", count: categoryCounts.all },
+    ...CATEGORY_LABELS.map((label) => ({ id: label, label, icon: CATEGORY_ICONS[label], count: categoryCounts[label] })),
+  ];
 
   return (
     <AppShell
       activeHref="/explore"
-      userName="Jordan Lee"
       searchValue={filters.search}
       onSearchChange={(value) => updateFilter("search", value)}
-      cartCount={2}
-      savedCount={7}
-      messagesCount={3}
       sidebarChildren={<StoreSidebarCategoriesView categories={categories} activeId={filters.category} onChange={(value) => updateFilter("category", value)} />}
     >
       <div className="mx-auto flex min-h-full max-w-6xl flex-col gap-10 px-5 py-6 sm:px-8 sm:py-8">
-        <div>
-          <div className="mb-6"><h1 className="text-balance text-2xl font-semibold text-neutral-900">Store</h1></div>
-          <ListingsToolbar
-            resultCount={visibleListings.length}
-            platform={filters.platform}
-            onPlatformChange={(value) => updateFilter("platform", value)}
-            priceTier={filters.priceTier}
-            onPriceTierChange={(value) => updateFilter("priceTier", value)}
-            accessLength={filters.accessLength}
-            onAccessLengthChange={(value) => updateFilter("accessLength", value)}
-            sort={filters.sort}
-            onSortChange={(value) => updateFilter("sort", value as ExploreSort)}
-            inStockOnly={filters.inStockOnly}
-            onInStockOnlyChange={(value) => updateFilter("inStockOnly", value)}
-          />
+        {/* Heading is visually hidden; pt-14 keeps the space its 32px line + 24px margin occupied. */}
+        <div className="pt-14">
+          <h1 className="sr-only">Shop</h1>
+          <PromoBanner eyebrow="No cash. No gifting. A real transaction." title="Pay with a post." description="Shop vetted software from real brands and pay with content. Add products to your cart, check out in one tap, and unlock access when your post goes live." />
         </div>
-        <PromoBanner eyebrow="No cash. No gifting. A real transaction." title="Pay with a post." description="Shop vetted software from real brands and pay with content. Add products to your cart, check out in one tap, and unlock access when your post goes live." />
         <section className="flex flex-1 flex-col">
-          <h2 className="mb-4 text-[16px] font-semibold text-neutral-900">All products</h2>
-          <ListingGrid listings={paginatedListings} />
+          <h2 className="mb-4 text-[16px] font-semibold text-neutral-900">{filters.category === "all" ? "All products" : filters.category}</h2>
+          <div className="mb-6">
+            <ListingsToolbar
+              resultCount={visibleListings.length}
+              platform={filters.platform}
+              onPlatformChange={(value) => updateFilter("platform", value)}
+              priceTier={filters.priceTier}
+              onPriceTierChange={(value) => updateFilter("priceTier", value)}
+              accessLength={filters.accessLength}
+              onAccessLengthChange={(value) => updateFilter("accessLength", value)}
+              sort={filters.sort}
+              onSortChange={(value) => updateFilter("sort", value as ExploreSort)}
+              inStockOnly={filters.inStockOnly}
+              onInStockOnlyChange={(value) => updateFilter("inStockOnly", value)}
+            />
+          </div>
+          <ListingGrid
+            listings={paginatedListings}
+            emptyIcon={<MagnifyingGlassIcon className="size-5" strokeWidth={1.75} />}
+            emptyAction={searchParams.size ? { label: "Clear filters", onClick: () => window.history.replaceState(null, "", pathname) } : undefined}
+          />
           <div className="mt-auto pt-8">
             <Pagination page={page} totalPages={totalPages} onPageChange={goToPage} />
           </div>

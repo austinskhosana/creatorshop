@@ -269,8 +269,10 @@ export default function CreatorArmySection() {
 
   return (
     <section className="relative flex flex-col items-center bg-white px-6 pt-40 sm:px-10 sm:pt-56 lg:px-16 lg:pt-72">
-      <h2 className="max-w-xl text-center text-2xl leading-tight font-medium text-neutral-900 sm:text-3xl">
-        Swipe left or right to manage your creator army
+      <h2 className="max-w-xl text-center text-2xl leading-[1.1] font-medium text-neutral-900 sm:text-3xl">
+        Swipe left or right to build your
+        <br />
+        creator army
       </h2>
       <p className="mt-4 max-w-md text-center text-base leading-6 text-neutral-500 [text-wrap:pretty]">
         Review creators one by one, keep the right fit, and quickly pass on anyone who is not a match.

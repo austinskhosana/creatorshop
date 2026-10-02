@@ -11,5 +11,4 @@ export interface Listing {
   totalSlots: number;
   category?: string | null;
   platform?: string | null;
-  saved?: boolean;
 }

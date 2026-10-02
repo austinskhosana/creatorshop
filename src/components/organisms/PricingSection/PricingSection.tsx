@@ -36,7 +36,7 @@ export default function PricingSection() {
         Simple pricing for every brand
       </motion.h2>
       <motion.p
-        className="mx-auto mt-4 max-w-md leading-relaxed text-neutral-500"
+        className="mx-auto mt-4 max-w-md leading-normal text-neutral-500"
         {...entranceProps(1, reduce)}
       >
         Run your own drops for a flat monthly fee, or hand the whole campaign

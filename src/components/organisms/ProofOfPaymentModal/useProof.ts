@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { resolveContentType } from "@/lib/content-types";
-import { CREATOR, type CreatorShop } from "@/lib/mock-creator";
+import type { CreatorShop } from "@/lib/mock-creator";
 import { checkProofLink } from "@/lib/proof-links";
+import type { SocialPlatform } from "@/lib/socials";
+import { useProfile } from "@/lib/store/creator-store";
 
 export interface ProofController {
   /** Stories have no permanent link, so they take a screenshot instead. */
@@ -28,7 +30,9 @@ export function useProof(shop: CreatorShop): ProofController {
   const contentType = resolveContentType(shop.tier);
   const platform = contentType.platform;
   const kind = contentType.id === "ig-story" ? "screenshot" : "link";
-  const handle = CREATOR.platforms.find((item) => item.name === platform)?.handle ?? CREATOR.handle;
+  const profile = useProfile();
+  const platformHandle = profile.socials[platform as SocialPlatform];
+  const handle = `@${platformHandle || profile.username}`;
   const [link, setLink] = useState("");
   const [screenshot, setScreenshot] = useState(false);
 

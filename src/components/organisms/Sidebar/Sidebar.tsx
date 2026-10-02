@@ -2,17 +2,16 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   ArrowRightStartOnRectangleIcon,
-  BookmarkIcon,
   BuildingOffice2Icon,
   ChatBubbleLeftRightIcon,
   Cog6ToothIcon,
-  HeartIcon,
   InboxIcon,
   MagnifyingGlassIcon,
   MegaphoneIcon,
   ShieldCheckIcon,
   ShoppingBagIcon,
   ShoppingCartIcon,
+  SparklesIcon,
   Squares2X2Icon,
   UserIcon,
   UsersIcon,
@@ -30,14 +29,13 @@ export type NavItem = {
   href: string;
   icon: React.ReactNode;
   roles: Role[];
-  countKey?: "cart" | "saved" | "messages";
+  countKey?: "cart" | "messages";
 };
 
 export const NAV_ITEMS: NavItem[] = [
   { id: "shop", label: "Shop", href: "/explore", icon: <ShoppingBagIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"] },
   { id: "shops", label: "My Shops", href: "/shops", icon: <Squares2X2Icon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"] },
-  { id: "saved", label: "Saved", href: "/saved", icon: <BookmarkIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"], countKey: "saved" },
-  { id: "wishlist", label: "Wishlist", href: "/wishlist", icon: <HeartIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"] },
+  { id: "genie-index", label: "Genie Index", href: "/genie-index", icon: <SparklesIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"] },
   { id: "cart", label: "Cart", href: "/cart", icon: <ShoppingCartIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"], countKey: "cart" },
   { id: "messages", label: "Messages", href: "/messages", icon: <ChatBubbleLeftRightIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BRAND", "BOTH"], countKey: "messages" },
   { id: "profile", label: "Profile", href: "/profile", icon: <UserIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"] },
@@ -87,7 +85,6 @@ interface SidebarProps {
   searchValue?: string;
   onSearchChange?: (value: string) => void;
   cartCount?: number;
-  savedCount?: number;
   messagesCount?: number;
   /** Extra content rendered between the primary nav and the user profile — e.g. a category list on the shop page. */
   children?: ReactNode;
@@ -104,7 +101,6 @@ export default function Sidebar({
   searchValue,
   onSearchChange,
   cartCount,
-  savedCount,
   messagesCount,
   children,
   className,
@@ -112,7 +108,7 @@ export default function Sidebar({
   onOpenCommandPalette,
 }: SidebarProps) {
   const visibleItems = NAV_ITEMS.filter((item) => item.roles.includes(role));
-  const counts: Record<string, number | undefined> = { cart: cartCount, saved: savedCount, messages: messagesCount };
+  const counts: Record<string, number | undefined> = { cart: cartCount, messages: messagesCount };
 
   return (
     <nav className={cn("flex h-full w-64 flex-shrink-0 flex-col border-r border-neutral-200 bg-white px-4 py-6 font-sans", className)}>

@@ -7,7 +7,7 @@ const DEMO_THREADS: ThreadListEntry[] = [
   { id: "paper", name: "Paper", preview: "We're excited to see what you create.", time: "10:42 AM", unread: true, online: true, image: "/logos/paper.jpeg" },
   { id: "canva", name: "Canva", preview: "We left feedback on your draft.", time: "Yesterday", image: "/logos/canva.jpg" },
   { id: "notion", name: "Notion", preview: "Thanks for sending that over!", time: "Tue", image: "/logos/notion.jpg" },
-  { id: "mia", name: "Mia at Creatorshop", preview: "How can we help with your shop?", time: "Fri", online: true },
+  { id: "mia", name: "Mia at Creatorshop", preview: "How can we help with your shop?", time: "Fri", online: true, official: true },
 ];
 
 export default function ThreadListDemo() {

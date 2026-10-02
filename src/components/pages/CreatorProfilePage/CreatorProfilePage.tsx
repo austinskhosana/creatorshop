@@ -5,8 +5,26 @@ import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { CreatorProfileCard } from "@/components/molecules/CreatorProfileCard";
 import { CreatorShell } from "@/components/templates/CreatorShell";
 import { CREATOR } from "@/lib/mock-creator";
+import { getCoverStyle } from "@/lib/profile-covers";
+import { SOCIAL_PLATFORMS, socialProfileUrl } from "@/lib/socials";
+import { useProfile } from "@/lib/store/creator-store";
 
 export default function CreatorProfilePage() {
+  const profile = useProfile();
+  // Follower counts come from connected accounts, which Settings doesn't edit yet.
+  const creator = {
+    name: profile.displayName,
+    handle: `@${profile.username}`,
+    avatar: profile.avatar,
+    bio: profile.bio,
+    niches: profile.niches,
+    followers: CREATOR.followers,
+    platforms: SOCIAL_PLATFORMS.flatMap(({ name }) => {
+      const handle = profile.socials[name];
+      return handle ? [{ name, handle: `@${handle}`, url: socialProfileUrl(name, handle) }] : [];
+    }),
+  };
+
   return (
     <CreatorShell>
       <main className="relative min-h-screen w-full px-4 py-6 sm:px-5 sm:py-8">
@@ -22,7 +40,7 @@ export default function CreatorProfilePage() {
               </Link>
             </div>
 
-            <CreatorProfileCard creator={CREATOR} className="mt-3" />
+            <CreatorProfileCard creator={creator} coverStyle={getCoverStyle(profile.coverId, profile.coverImage)} className="mt-3" />
           </div>
         </div>
       </main>

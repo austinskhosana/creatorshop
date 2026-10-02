@@ -28,7 +28,6 @@ export const MOCK_LISTINGS: Listing[] = [
     totalSlots: 10,
     category: "Dev Tools",
     platform: "YouTube",
-    saved: true,
   },
   {
     slug: "dia-browser",

@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { OfficialBadge } from "@/components/atoms/OfficialBadge";
 import { ThreadAvatar } from "@/components/molecules/ThreadAvatar";
 import { cn } from "@/lib/utils";
 
@@ -10,12 +11,14 @@ interface ThreadListItemProps {
   time: string;
   image?: string;
   online?: boolean;
+  /** Creatorshop team account. */
+  official?: boolean;
   unread?: boolean;
   selected?: boolean;
   onClick?: () => void;
 }
 
-export default function ThreadListItem({ name, preview, time, image, online, unread, selected, onClick }: ThreadListItemProps) {
+export default function ThreadListItem({ name, preview, time, image, online, official, unread, selected, onClick }: ThreadListItemProps) {
   const reduceMotion = useReducedMotion();
 
   return (
@@ -42,7 +45,10 @@ export default function ThreadListItem({ name, preview, time, image, online, unr
       <ThreadAvatar name={name} image={image} online={online} size="sm" />
       <span className="min-w-0 flex-1">
         <span className="flex items-baseline justify-between gap-3">
-          <span className="truncate text-sm font-semibold text-neutral-900">{name}</span>
+          <span className="flex min-w-0 items-center gap-1">
+            <span className="truncate text-sm font-semibold text-neutral-900">{name}</span>
+            {official ? <OfficialBadge /> : null}
+          </span>
           <span className="shrink-0 text-[11px] tabular-nums text-neutral-400">{time}</span>
         </span>
         <span className={cn("mt-1 block truncate text-xs leading-4", unread ? "font-medium text-neutral-700" : "text-neutral-500")}>

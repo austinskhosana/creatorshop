@@ -17,12 +17,8 @@ export default function CreatorShell({ children, breadcrumb }: { children: React
   return (
     <AppShell
       activeHref={pathname}
-      userName="Jordan Lee"
       searchValue=""
       onSearchChange={(query) => router.push(query ? `/explore?q=${encodeURIComponent(query)}` : "/explore")}
-      cartCount={2}
-      savedCount={7}
-      messagesCount={3}
       sidebarChildren={
         <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-neutral-100" aria-label="Loading shop categories" />}>
           <StoreSidebarCategories />

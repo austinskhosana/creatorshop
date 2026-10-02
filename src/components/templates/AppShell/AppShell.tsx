@@ -3,17 +3,20 @@
 import { ReactNode, useEffect, useState } from "react";
 import { CommandPalette } from "@/components/organisms/CommandPalette";
 import Sidebar, { type Role } from "@/components/organisms/Sidebar/Sidebar";
+import { useCart, useProfile } from "@/lib/store/creator-store";
+import { mockThreads } from "@/lib/mock-messages";
 
 
 interface AppShellProps {
   role?: Role;
   activeHref?: string;
+  /** Defaults to the creator's profile name. */
   userName?: string;
   onSignOut?: () => void;
   searchValue?: string;
   onSearchChange?: (value: string) => void;
+  /** Sidebar badges. Each defaults to the creator's live count. */
   cartCount?: number;
-  savedCount?: number;
   messagesCount?: number;
   /** Rendered inside the sidebar, below the primary nav — e.g. a category list on the shop page. */
   sidebarChildren?: ReactNode;
@@ -23,17 +26,19 @@ interface AppShellProps {
 export default function AppShell({
   role = "CREATOR",
   activeHref = "/explore",
-  userName = "Jordan Lee",
+  userName,
   onSignOut,
   searchValue,
   onSearchChange,
-  cartCount = 0,
-  savedCount,
+  cartCount,
   messagesCount,
   sidebarChildren,
   children,
 }: AppShellProps) {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const cart = useCart();
+  const profile = useProfile();
+  const unreadThreads = mockThreads.filter((thread) => thread.unread).length;
 
   useEffect(() => {
     function handleShortcut(event: KeyboardEvent) {
@@ -52,13 +57,12 @@ export default function AppShell({
       <Sidebar
         role={role}
         activeHref={activeHref}
-        userName={userName}
+        userName={userName ?? profile.displayName}
         onSignOut={onSignOut}
         searchValue={searchValue}
         onSearchChange={onSearchChange}
-        cartCount={cartCount}
-        savedCount={savedCount}
-        messagesCount={messagesCount}
+        cartCount={cartCount ?? cart.count}
+        messagesCount={messagesCount ?? unreadThreads}
         onOpenCommandPalette={() => setCommandPaletteOpen(true)}
         className="hidden md:flex"
       >

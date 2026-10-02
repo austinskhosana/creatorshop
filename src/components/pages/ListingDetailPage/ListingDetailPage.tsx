@@ -70,16 +70,12 @@ export default function ListingDetailPage({ listing }: ListingDetailPageProps) {
   return (
     <AppShell
       activeHref="/explore"
-      userName="Jordan Lee"
       searchValue=""
       onSearchChange={(value) => {
         const params = new URLSearchParams();
         if (value) params.set("q", value);
         goToExplore(params);
       }}
-      cartCount={2}
-      savedCount={7}
-      messagesCount={3}
       sidebarChildren={
         <CategoryNavList
           categories={categories}
@@ -125,7 +121,7 @@ export default function ListingDetailPage({ listing }: ListingDetailPageProps) {
                 align="left"
               />
               <div className="w-full max-w-xl">
-                <PayWithCard listing={listing} saved={listing.saved} />
+                <PayWithCard listing={listing} />
               </div>
             </div>
           </div>

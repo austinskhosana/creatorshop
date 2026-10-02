@@ -1,3 +1,4 @@
+import { MakeAWishForm } from "@/components/organisms/MakeAWishForm";
 import { CategoryCard } from "@/components/organisms/CategoryCard";
 import { CreatorDirectoryCard } from "@/components/organisms/CreatorDirectoryCard";
 import { ListingCard } from "@/components/organisms/ListingCard";
@@ -36,9 +37,11 @@ import { HowItWorksSection } from "@/components/organisms/HowItWorksSection";
 import { FAQSection } from "@/components/organisms/FAQSection";
 import { Footer } from "@/components/organisms/Footer";
 import { ConversationHeader } from "@/components/organisms/ConversationHeader";
+import { ConversationThread } from "@/components/organisms/ConversationThread";
+import { mockThreads } from "@/lib/mock-messages";
 import { MessageComposerDemo } from "@/components/organisms/MessageComposer";
 import { ThreadListDemo } from "@/components/organisms/ThreadList";
-import { ReceiptPrinter } from "@/components/organisms/ReceiptPrinter";
+import { ReceiptPrinterHeader, ReceiptPrinterMachine, ReceiptPrinterOutput, ReceiptPrinterPaper, ReceiptPrinterRoot, ReceiptPrinterScreen, ReceiptPrinterStatus } from "@/components/organisms/ReceiptPrinter";
 import type { RegistryEntry } from "./types";
 
 const MOCK_APPLICATION: Application = {
@@ -364,13 +367,13 @@ export const organismsEntries: RegistryEntry[] = [
   {
     name: "Sidebar",
     level: "organisms",
-    description: "Light-mode nav rail — search, role-filtered nav with Saved/Messages counts, an optional category slot, and an account block with a real sign-out control.",
+    description: "Light-mode nav rail — search, role-filtered nav with Cart/Messages counts, an optional category slot, and an account block with a real sign-out control.",
     variants: [
       {
         name: "Creator",
         preview: (
           <div className="h-[600px]">
-            <Sidebar role="CREATOR" activeHref="/explore" userName="Jordan Lee" savedCount={7} messagesCount={3} />
+            <Sidebar role="CREATOR" activeHref="/explore" userName="Jordan Lee" cartCount={2} messagesCount={3} />
           </div>
         ),
       },
@@ -805,6 +808,30 @@ export const organismsEntries: RegistryEntry[] = [
     description: "The active-thread header above the message log — avatar, name, detail line, and search/more actions.",
     variants: [
       { name: "Default", preview: <ConversationHeader name="Paper" detail="Paper Pro · Instagram carousel" image="/logos/paper.jpeg" online /> },
+      { name: "Official", preview: <ConversationHeader name="Austin at Creatorshop" detail="Creatorshop support" image="/Creatorshop Brand Symbol.webp" online official /> },
+    ],
+  },
+  {
+    name: "Conversation thread",
+    level: "organisms",
+    description: "Scrollable message log — groups runs by sender, adds day dividers, and follows the newest message unless you've scrolled up.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="flex h-[28rem] flex-col">
+            <ConversationThread threadId="canva" messages={mockThreads[1].messages} senderName="Canva" senderImage="/logos/canva.jpg" />
+          </div>
+        ),
+      },
+      {
+        name: "Empty",
+        preview: (
+          <div className="flex h-48 flex-col">
+            <ConversationThread threadId="empty" messages={[]} senderName="Paper" />
+          </div>
+        ),
+      },
     ],
   },
   {
@@ -828,64 +855,71 @@ export const organismsEntries: RegistryEntry[] = [
       {
         name: "Processing",
         preview: (
-          <ReceiptPrinter.Root stage="processing">
-            <ReceiptPrinter.Machine>
-              <ReceiptPrinter.Header>
-                <ReceiptPrinter.Status />
-              </ReceiptPrinter.Header>
-              <ReceiptPrinter.Screen>
+          <ReceiptPrinterRoot stage="processing">
+            <ReceiptPrinterMachine>
+              <ReceiptPrinterHeader>
+                <ReceiptPrinterStatus />
+              </ReceiptPrinterHeader>
+              <ReceiptPrinterScreen>
                 <p className="font-mono text-lg text-white">Order #1042</p>
-              </ReceiptPrinter.Screen>
-            </ReceiptPrinter.Machine>
-          </ReceiptPrinter.Root>
+              </ReceiptPrinterScreen>
+            </ReceiptPrinterMachine>
+          </ReceiptPrinterRoot>
         ),
       },
       {
         name: "Complete · light",
         preview: (
-          <ReceiptPrinter.Root stage="complete" tone="light" animate={false}>
-            <ReceiptPrinter.Machine>
-              <ReceiptPrinter.Header>
-                <ReceiptPrinter.Status />
-              </ReceiptPrinter.Header>
-              <ReceiptPrinter.Screen>
+          <ReceiptPrinterRoot stage="complete" tone="light" animate={false}>
+            <ReceiptPrinterMachine>
+              <ReceiptPrinterHeader>
+                <ReceiptPrinterStatus />
+              </ReceiptPrinterHeader>
+              <ReceiptPrinterScreen>
                 <p className="font-mono text-lg">Order #1042</p>
-              </ReceiptPrinter.Screen>
-            </ReceiptPrinter.Machine>
-            <ReceiptPrinter.Output>
-              <ReceiptPrinter.Paper className="text-xs leading-5">
+              </ReceiptPrinterScreen>
+            </ReceiptPrinterMachine>
+            <ReceiptPrinterOutput>
+              <ReceiptPrinterPaper className="text-xs leading-5">
                 <p className="text-center text-[11px] tracking-[0.14em] uppercase">Receipt</p>
                 <div className="mt-4 flex justify-between"><span>Cursor Pro</span><span>$120</span></div>
                 <div className="mt-1 flex justify-between"><span>Higgsfield Starter</span><span>$57</span></div>
                 <div className="mt-4 flex justify-between font-bold"><span>Total</span><span>$177</span></div>
-              </ReceiptPrinter.Paper>
-            </ReceiptPrinter.Output>
-          </ReceiptPrinter.Root>
+              </ReceiptPrinterPaper>
+            </ReceiptPrinterOutput>
+          </ReceiptPrinterRoot>
         ),
       },
       {
         name: "Complete",
         preview: (
-          <ReceiptPrinter.Root stage="complete" animate={false}>
-            <ReceiptPrinter.Machine>
-              <ReceiptPrinter.Header>
-                <ReceiptPrinter.Status />
-              </ReceiptPrinter.Header>
-              <ReceiptPrinter.Screen>
+          <ReceiptPrinterRoot stage="complete" animate={false}>
+            <ReceiptPrinterMachine>
+              <ReceiptPrinterHeader>
+                <ReceiptPrinterStatus />
+              </ReceiptPrinterHeader>
+              <ReceiptPrinterScreen>
                 <p className="font-mono text-lg text-white">Order #1042</p>
-              </ReceiptPrinter.Screen>
-            </ReceiptPrinter.Machine>
-            <ReceiptPrinter.Output>
-              <ReceiptPrinter.Paper className="text-xs leading-5">
+              </ReceiptPrinterScreen>
+            </ReceiptPrinterMachine>
+            <ReceiptPrinterOutput>
+              <ReceiptPrinterPaper className="text-xs leading-5">
                 <p className="text-center text-[11px] tracking-[0.14em] uppercase">Receipt</p>
                 <div className="mt-4 flex justify-between"><span>Cursor Pro</span><span>$120</span></div>
                 <div className="mt-1 flex justify-between"><span>Higgsfield Starter</span><span>$57</span></div>
                 <div className="mt-4 flex justify-between font-bold"><span>Total</span><span>$177</span></div>
-              </ReceiptPrinter.Paper>
-            </ReceiptPrinter.Output>
-          </ReceiptPrinter.Root>
+              </ReceiptPrinterPaper>
+            </ReceiptPrinterOutput>
+          </ReceiptPrinterRoot>
         ),
       },
     ],
   },
+  {
+    name: "Make a wish form",
+    level: "organisms",
+    description: "Promo-banner styled form for wishing for software that isn't on Creatorshop — accepts a name or URL, catches brands already listed or already wished for.",
+    variants: [{ name: "Default", preview: <MakeAWishForm rows={[]} /> }],
+  },
+
 ];

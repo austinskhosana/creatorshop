@@ -8,6 +8,7 @@ export interface ThreadListEntry {
   time: string;
   unread?: boolean;
   online?: boolean;
+  official?: boolean;
   image?: string;
 }
 
@@ -23,7 +24,7 @@ interface ThreadListProps {
 
 export default function ThreadList({ threads, activeId, onSelect, query, onQueryChange, unreadCount, onNewMessage }: ThreadListProps) {
   return (
-    <aside className="flex h-full min-h-0 flex-col border-b border-neutral-200 lg:border-r lg:border-b-0">
+    <aside className="flex h-full min-h-0 flex-col border-neutral-200 lg:border-r">
       <div className="flex h-[72px] shrink-0 items-center justify-between border-b border-neutral-200 px-4">
         <div>
           <h1 className="text-lg font-semibold tracking-[-0.02em] text-neutral-950">Messages</h1>
@@ -71,6 +72,7 @@ export default function ThreadList({ threads, activeId, onSelect, query, onQuery
             time={thread.time}
             image={thread.image}
             online={thread.online}
+            official={thread.official}
             unread={thread.unread}
             selected={thread.id === activeId}
             onClick={() => onSelect(thread.id)}

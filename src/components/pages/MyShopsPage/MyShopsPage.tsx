@@ -1,11 +1,13 @@
 "use client";
 
-import { ArrowPathIcon, CalendarIcon, ChatBubbleLeftEllipsisIcon, ClockIcon, DocumentTextIcon, LinkIcon } from "@heroicons/react/24/outline";
+import { ArrowPathIcon, CalendarIcon, ChatBubbleLeftEllipsisIcon, DocumentTextIcon, LinkIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
 import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { resolveContentType } from "@/lib/content-types";
-import { CREATOR_SHOPS, type CreatorShop, type ShopState } from "@/lib/mock-creator";
+import type { CreatorShop, ShopState } from "@/lib/mock-creator";
+import { creatorStore, useShops } from "@/lib/store/creator-store";
+import { EmptyState } from "@/components/molecules/EmptyState";
 import BrandLogo from "@/components/atoms/BrandLogo/BrandLogo";
 import Badge from "@/components/atoms/Badge/Badge";
 import Button from "@/components/atoms/Button/Button";
@@ -60,7 +62,7 @@ function ShopCard({ shop, onViewCampaign, onAddProof }: { shop: CreatorShop; onV
   return (
     <article className="flex min-h-[260px] flex-col rounded-[20px] border border-neutral-200 bg-white p-4">
       <div className="flex items-start justify-between gap-3">
-        <BrandLogo slug={shop.id === "dia" ? "dia-browser" : shop.id} name={shop.brand} />
+        <BrandLogo slug={shop.listingSlug} name={shop.brand} />
         <ShopStateBadge state={shop.state} />
       </div>
 
@@ -97,11 +99,9 @@ export default function MyShopsPage() {
   const [selected, setSelected] = useState(0);
   const [campaignShop, setCampaignShop] = useState<CreatorShop | null>(null);
   const [proofShop, setProofShop] = useState<CreatorShop | null>(null);
-  // Sending proof moves a card to "Proof in review". Held in memory only — nothing is stored yet.
-  const [sentProof, setSentProof] = useState<string[]>([]);
-  const allShops = CREATOR_SHOPS.map(shop => (sentProof.includes(shop.id) ? { ...shop, state: "posted" as const } : shop));
+  const allShops = useShops();
   const filter = filters[selected];
   const shops = allShops.filter(shop => filter.states.includes(shop.state));
 
-  return <CreatorShell><div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12"><div><h1 className="text-4xl font-bold tracking-tight">My Shops</h1><p className="mt-2 text-sm text-neutral-500">Everything you&apos;ve shopped, in one place.</p></div><Tabs value={String(selected)} onValueChange={value => setSelected(Number(value))} className="mt-9"><TabsList>{filters.map((filter, index) => <TabsTrigger key={filter.label} value={String(index)}>{filter.label}<span className="ml-1.5 text-xs font-medium">{allShops.filter(shop => filter.states.includes(shop.state)).length}</span></TabsTrigger>)}</TabsList><TabsContent value={String(selected)} className="mt-7"><div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{shops.map(shop => <ShopCard key={shop.id} shop={shop} onViewCampaign={setCampaignShop} onAddProof={setProofShop} />)}</div>{shops.length === 0 ? <div className="rounded-[2rem] border border-dashed border-neutral-300 bg-white py-20 text-center"><ClockIcon className="mx-auto size-7 text-neutral-400" /><h2 className="mt-4 text-lg font-bold">Nothing here yet.</h2><p className="mt-1 text-sm text-neutral-500">Your {filter.label.toLowerCase()} shops will appear here.</p></div> : null}</TabsContent></Tabs></div><AnimatePresence>{campaignShop ? <CampaignChoiceModal key="campaign" shop={campaignShop} onClose={() => setCampaignShop(null)} onChat={() => router.push("/messages")} onPayWithPost={() => router.push(`/post-builder/${campaignShop.id}`)} /> : null}{proofShop ? <ProofOfPaymentModal key="proof" shop={proofShop} onClose={() => setProofShop(null)} onSubmit={() => { setSentProof(current => [...current, proofShop.id]); setProofShop(null); }} /> : null}</AnimatePresence></CreatorShell>;
+  return <CreatorShell><div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12"><div><h1 className="text-4xl font-bold tracking-tight">My Shops</h1><p className="mt-2 text-sm text-neutral-500">Everything you&apos;ve shopped, in one place.</p></div><Tabs value={String(selected)} onValueChange={value => setSelected(Number(value))} className="mt-9"><TabsList>{filters.map((filter, index) => <TabsTrigger key={filter.label} value={String(index)}>{filter.label}<span className="ml-1.5 text-xs font-medium">{allShops.filter(shop => filter.states.includes(shop.state)).length}</span></TabsTrigger>)}</TabsList><TabsContent value={String(selected)} className="mt-7"><div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{shops.map(shop => <ShopCard key={shop.id} shop={shop} onViewCampaign={setCampaignShop} onAddProof={setProofShop} />)}</div>{shops.length === 0 ? (allShops.length === 0 ? <EmptyState icon={<Squares2X2Icon className="size-5" strokeWidth={1.75} />} title="No shops yet" description="Check out your cart and each product becomes a shop here, waiting on the brand." action={{ label: "Browse the shop", href: "/explore" }} secondaryAction={{ label: "View cart", href: "/cart" }} /> : <EmptyState icon={<Squares2X2Icon className="size-5" strokeWidth={1.75} />} title={`No ${filter.label.toLowerCase()} shops`} description="Shops move between tabs as brands respond. Check back soon." action={{ label: "See all shops", onClick: () => setSelected(0) }} />) : null}</TabsContent></Tabs></div><AnimatePresence>{campaignShop ? <CampaignChoiceModal key="campaign" shop={campaignShop} onClose={() => setCampaignShop(null)} onChat={() => router.push("/messages")} onPayWithPost={() => router.push(`/post-builder/${campaignShop.id}`)} /> : null}{proofShop ? <ProofOfPaymentModal key="proof" shop={proofShop} onClose={() => setProofShop(null)} onSubmit={() => { creatorStore.setShopState(proofShop.id, "posted"); setProofShop(null); }} /> : null}</AnimatePresence></CreatorShell>;
 }

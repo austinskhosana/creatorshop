@@ -1,26 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, useAnimationControls, useReducedMotion } from "framer-motion";
-import { ArrowTopRightOnSquareIcon, BanknotesIcon, BookmarkIcon as BookmarkOutlineIcon } from "@heroicons/react/24/outline";
-import { BookmarkIcon as BookmarkSolidIcon } from "@heroicons/react/24/solid";
+import { ArrowTopRightOnSquareIcon, BanknotesIcon } from "@heroicons/react/24/outline";
 import { CheckIcon } from "@heroicons/react/24/solid";
 import Button from "@/components/atoms/Button/Button";
 import PaymentOptionRow from "@/components/molecules/PaymentOptionRow/PaymentOptionRow";
-import { cn } from "@/lib/utils";
+import { getListingOffers } from "@/lib/listings/offers";
+import { creatorStore, useCartItem } from "@/lib/store/creator-store";
 import type { Listing } from "@/lib/listings/types";
 
 interface PayWithCardProps {
   listing: Listing;
-  saved?: boolean;
-  onAddToCart?: (deliverableIndex: number) => void;
-  onToggleSave?: (saved: boolean) => void;
-}
-
-function parseDeliverable(deliverable: string) {
-  const [label, durationPart] = deliverable.split(" · ");
-  const months = parseInt(durationPart ?? "", 10) || 1;
-  return { label, months };
+  onAddToCart?: (offerId: string) => void;
 }
 
 function CampaignBrief({ listing }: { listing: Listing }) {
@@ -86,12 +79,17 @@ function CartIcon() {
   );
 }
 
-export default function PayWithCard({ listing, saved = false, onAddToCart, onToggleSave }: PayWithCardProps) {
-  const { deliverables, slotsRemaining } = listing;
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [isSaved, setIsSaved] = useState(saved);
+export default function PayWithCard({ listing, onAddToCart }: PayWithCardProps) {
+  const { slotsRemaining } = listing;
+  const offers = getListingOffers(listing);
+  const cartItem = useCartItem(listing.slug);
+  // Null until the creator picks one, so the selection follows the cart's choice after hydration.
+  const [pickedOfferId, setPickedOfferId] = useState<string | null>(null);
+  const selectedOfferId = pickedOfferId ?? cartItem?.offerId ?? offers[0]?.id;
   const [justAdded, setJustAdded] = useState(false);
+  const router = useRouter();
   const soldOut = slotsRemaining === 0;
+  const inCart = cartItem?.offerId === selectedOfferId;
   const cartIconControls = useAnimationControls();
   const reduceMotion = useReducedMotion();
 
@@ -101,21 +99,21 @@ export default function PayWithCard({ listing, saved = false, onAddToCart, onTog
     return () => clearTimeout(timeout);
   }, [justAdded]);
 
-  function toggleSave() {
-    const next = !isSaved;
-    setIsSaved(next);
-    onToggleSave?.(next);
-  }
-
   async function handleAddToCart() {
+    if (inCart && !justAdded) {
+      router.push("/cart");
+      return;
+    }
+    if (!selectedOfferId) return;
     if (reduceMotion) {
       await cartIconControls.start({ opacity: [1, 0.4, 1], transition: { duration: 0.3, ease: "easeOut" } });
     } else {
       await cartIconControls.start({ scale: 1.3, rotate: -12, transition: { duration: 0.12, ease: [0.23, 1, 0.32, 1] } });
       await cartIconControls.start({ scale: 1, rotate: 0, transition: { type: "spring", duration: 0.4, bounce: 0.3 } });
     }
+    creatorStore.addToCart(listing.slug, selectedOfferId);
     setJustAdded(true);
-    onAddToCart?.(selectedIndex);
+    onAddToCart?.(selectedOfferId);
   }
 
   return (
@@ -125,19 +123,16 @@ export default function PayWithCard({ listing, saved = false, onAddToCart, onTog
       <p className="mt-6 text-[11px] font-semibold tracking-[0.1em] text-neutral-400 uppercase">Pay with</p>
 
       <div role="radiogroup" aria-label="Pay with" className="mt-2.5 flex flex-col gap-2">
-        {deliverables.map((deliverable, index) => {
-          const { label, months } = parseDeliverable(deliverable);
-          return (
-            <PaymentOptionRow
-              key={deliverable}
-              label={label}
-              meta={`Access for ${months} month${months === 1 ? "" : "s"}`}
-              selected={selectedIndex === index}
-              onSelect={() => setSelectedIndex(index)}
-              showPrice={false}
-            />
-          );
-        })}
+        {offers.map((offer) => (
+          <PaymentOptionRow
+            key={offer.id}
+            label={offer.label}
+            meta={`Access for ${offer.months} month${offer.months === 1 ? "" : "s"}`}
+            selected={selectedOfferId === offer.id}
+            onSelect={() => setPickedOfferId(offer.id)}
+            showPrice={false}
+          />
+        ))}
       </div>
 
       <div className="mt-5 flex items-center gap-2">
@@ -171,20 +166,8 @@ export default function PayWithCard({ listing, saved = false, onAddToCart, onTog
             ].join(", "),
           }}
         >
-          {soldOut ? "Sold out" : justAdded ? "Added to cart" : "Add to cart"}
+          {soldOut ? "Sold out" : justAdded ? "Added to cart" : inCart ? "In cart · View cart" : cartItem ? "Update cart" : "Add to cart"}
         </Button>
-        <button
-          type="button"
-          onClick={toggleSave}
-          aria-pressed={isSaved}
-          aria-label={isSaved ? "Remove from saved" : "Save for later"}
-          className={cn(
-            "flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-[9px] border border-neutral-200 transition-colors duration-150 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900",
-            isSaved ? "text-neutral-950" : "text-neutral-400 hover:text-neutral-600",
-          )}
-        >
-          {isSaved ? <BookmarkSolidIcon aria-hidden="true" className="h-5 w-5" /> : <BookmarkOutlineIcon aria-hidden="true" className="h-5 w-5" strokeWidth={1.75} />}
-        </button>
       </div>
     </div>
   );

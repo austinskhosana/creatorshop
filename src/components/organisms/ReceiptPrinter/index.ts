@@ -1,4 +1,13 @@
-export { ReceiptPrinter } from "./ReceiptPrinter";
+export {
+  ReceiptPrinter,
+  ReceiptPrinterHeader,
+  ReceiptPrinterMachine,
+  ReceiptPrinterOutput,
+  ReceiptPrinterPaper,
+  ReceiptPrinterRoot,
+  ReceiptPrinterScreen,
+  ReceiptPrinterStatus,
+} from "./ReceiptPrinter";
 export type {
   ReceiptFeedMotion,
   ReceiptPrinterStage,

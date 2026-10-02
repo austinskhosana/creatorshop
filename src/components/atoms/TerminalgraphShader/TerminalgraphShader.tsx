@@ -2,7 +2,7 @@
 
 "use client";
 
-import { type CSSProperties, useEffect, useRef } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 
 const VERTEX_SHADER = `#version 300 es
 void main() {
@@ -190,6 +190,8 @@ export type ShaderOptions = {
   autoplay?: boolean;
   signal?: AbortSignal;
   onError?: (error: Error) => void;
+  /** Called once, after the first frame is on the canvas. */
+  onFirstFrame?: () => void;
 };
 
 export type ShaderHandle = {
@@ -217,6 +219,9 @@ export function TerminalgraphShader({ theme = "dark", background, time, onError,
   const dark = background?.dark ?? "#090909";
   const light = background?.light ?? "#ffffff";
   const animated = time === undefined;
+  // The WebGL canvas is opaque and shows black until the shader's first frame lands, which can take
+  // a moment on slower GPUs. Keep it invisible until then so the page behind shows instead.
+  const [drawn, setDrawn] = useState(false);
 
   useEffect(() => {
     latestTheme.current = theme;
@@ -242,6 +247,9 @@ export function TerminalgraphShader({ theme = "dark", background, time, onError,
       background: { dark, light },
       autoplay: animated,
       signal: controller.signal,
+      onFirstFrame: () => {
+        if (!controller.signal.aborted) setDrawn(true);
+      },
       onError: (error) => {
         if (controller.signal.aborted) return;
         if (latestOnError.current) latestOnError.current(error);
@@ -262,7 +270,14 @@ export function TerminalgraphShader({ theme = "dark", background, time, onError,
     };
   }, [dark, light, animated]);
 
-  return <canvas ref={canvas} className={className} style={{ display: "block", width: "100%", height: "100%", ...style }} aria-hidden="true" />;
+  return (
+    <canvas
+      ref={canvas}
+      className={className}
+      style={{ display: "block", width: "100%", height: "100%", opacity: drawn ? 1 : 0, transition: "opacity 300ms ease-out", ...style }}
+      aria-hidden="true"
+    />
+  );
 }
 
 const MAX_PIXELS = 2400000;
@@ -288,6 +303,7 @@ function animate(options: ShaderOptions, draw: (time: number, theme: number, pix
   let elapsed = 0;
   let lastTime = 0;
   let previous: number | null = null;
+  let firstFrameSent = false;
 
   function canDraw() {
     return !disposed && !document.hidden && visible && width > 0 && height > 0;
@@ -309,6 +325,10 @@ function animate(options: ShaderOptions, draw: (time: number, theme: number, pix
     if (!canDraw()) return;
     try {
       draw(time, theme, fitCanvas());
+      if (!firstFrameSent) {
+        firstFrameSent = true;
+        options.onFirstFrame?.();
+      }
     } catch (error) {
       destroy();
       const failure = error instanceof Error ? error : new Error(String(error));

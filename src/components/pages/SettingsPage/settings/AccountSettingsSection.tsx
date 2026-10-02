@@ -7,11 +7,13 @@ import {
   KeyIcon,
   LinkIcon,
   LockClosedIcon,
+  ArrowPathIcon,
   ShieldCheckIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import Button from "@/components/atoms/Button/Button";
+import { creatorStore } from "@/lib/store/creator-store";
 import { ModalSecondaryAction, SectionTitle, SettingRow } from "./SettingsPrimitives";
 
 export function AccountSettingsSection() {
@@ -25,6 +27,7 @@ export function AccountSettingsSection() {
   const [deleteMode, setDeleteMode] = useState(false);
   const [deleteText, setDeleteText] = useState("");
   const [passkeyAdded, setPasskeyAdded] = useState(false);
+  const [demoReset, setDemoReset] = useState(false);
 
   function closePasswordModal() {
     setPasswordMode(false);
@@ -51,6 +54,12 @@ export function AccountSettingsSection() {
           <div className="mt-6 space-y-3">
             <SettingRow icon={LinkIcon} label="Connected apps" value="None" />
             <SettingRow icon={ShieldCheckIcon} label="Login activity" value="This device" />
+          </div>
+        </section>
+        <section className="rounded-[20px] bg-white p-5 sm:p-7">
+          <SectionTitle title="Prototype data" description="Your profile, cart, wishes and shops are kept in this browser until accounts go live." />
+          <div className="mt-6 space-y-3">
+            <SettingRow icon={ArrowPathIcon} label="Demo data" value={demoReset ? "Reset to the sample account" : "Profile, cart, wishes and shops"} actionLabel="Reset" onClick={() => { creatorStore.reset(); setDemoReset(true); }} />
           </div>
         </section>
         <section className="rounded-[20px] bg-white p-5 sm:p-7">
@@ -104,7 +113,7 @@ export function AccountSettingsSection() {
           <div role="dialog" aria-modal="true" aria-labelledby="delete-account-title" className="w-full max-w-md rounded-[1.5rem] bg-white p-6 shadow-2xl">
             <span className="grid size-11 place-items-center rounded-2xl bg-red-50 text-red-600"><ExclamationTriangleIcon className="size-6" /></span>
             <h2 id="delete-account-title" className="mt-5 text-xl font-bold tracking-tight">Delete your account?</h2>
-            <p className="mt-2 text-sm leading-6 text-neutral-500">This cannot be undone. You will lose access to your profile, saved products, messages, and shops. Type <strong className="font-semibold text-neutral-900">DELETE</strong> to continue.</p>
+            <p className="mt-2 text-sm leading-6 text-neutral-500">This cannot be undone. You will lose access to your profile, wishes, messages, and shops. Type <strong className="font-semibold text-neutral-900">DELETE</strong> to continue.</p>
             <input value={deleteText} onChange={(event) => setDeleteText(event.target.value)} placeholder="DELETE" className="mt-5 min-h-11 w-full rounded-xl border border-neutral-200 px-3 text-sm outline-none focus:border-red-500" />
             <div className="mt-6 flex justify-end gap-2"><ModalSecondaryAction onClick={() => { setDeleteMode(false); setDeleteText(""); }}>Keep account</ModalSecondaryAction><Button variant="danger" size="sm" disabled={deleteText !== "DELETE"}>Delete account</Button></div>
           </div>
