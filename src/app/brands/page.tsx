@@ -10,7 +10,7 @@ import { Footer } from "@/components/organisms/Footer";
 export default function BrandsPage() {
   return (
     <div>
-      <Navbar />
+      <Navbar cta={{ label: "Get started", href: "/brand/signup" }} signInHref="/brand/signin" />
       <BrandHeroSection />
       <BrandMomentSection />
       <CreatorArmySection />

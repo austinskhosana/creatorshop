@@ -40,8 +40,8 @@ function MediaBubble({ content, outgoing, tail }: { content: MessageContent; out
       <div
         className={
           outgoing
-            ? `rounded-2xl ${tailClassName} bg-neutral-900 px-4 py-2.5 text-sm leading-[1.55] text-white`
-            : `max-w-[min(78%,36rem)] rounded-2xl ${tailClassName} bg-neutral-100 px-4 py-2.5 text-sm leading-[1.55] text-neutral-700`
+            ? `rounded-2xl ${tailClassName} bg-neutral-900 px-4 py-2.5 text-sm leading-[1.55] whitespace-pre-line [overflow-wrap:anywhere] text-white`
+            : `max-w-[min(78%,36rem)] rounded-2xl ${tailClassName} bg-neutral-100 px-4 py-2.5 text-sm leading-[1.55] whitespace-pre-line [overflow-wrap:anywhere] text-neutral-700`
         }
       >
         {content.text}
@@ -121,7 +121,7 @@ export default function MessageBubble({ text, content, meta, variant = "incoming
           <div aria-hidden className="size-9 shrink-0" />
         )}
         {resolved.type === "text" ? (
-          <div className={`max-w-[min(78%,36rem)] rounded-2xl ${tail ? "rounded-bl-[5px]" : ""} bg-neutral-100 px-4 py-2.5 text-sm leading-[1.55] text-neutral-700`}>
+          <div className={`max-w-[min(78%,36rem)] rounded-2xl ${tail ? "rounded-bl-[5px]" : ""} bg-neutral-100 px-4 py-2.5 text-sm leading-[1.55] whitespace-pre-line [overflow-wrap:anywhere] text-neutral-700`}>
             {resolved.text}
           </div>
         ) : (

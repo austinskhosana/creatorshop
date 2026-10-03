@@ -49,7 +49,7 @@ export const MOCK_LISTINGS: Listing[] = [
     websiteUrl: "https://notion.com",
     title: "Notion Plus",
     description: "Docs, wikis, and project tracking in one connected workspace, with AI built into every page.",
-    deliverables: ["X thread · 1mo", "IG Reel · 3mo"],
+    deliverables: ["X thread · 1mo"],
     retailValue: 120,
     months: 12,
     slotsRemaining: 6,

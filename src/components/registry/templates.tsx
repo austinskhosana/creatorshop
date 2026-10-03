@@ -17,5 +17,21 @@ export const templatesEntries: RegistryEntry[] = [
         ),
       },
     ],
-  }
+  },
+  {
+    name: "App shell · brand",
+    level: "templates",
+    description: "The same AppShell with the brand nav: Storefront, Review shoppers, Shops, Creators, Messages, Settings. Brand routes wrap it in BrandShell, which also sends signed-out visitors to /brands.",
+    fullBleed: true,
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <AppShell role="BRAND" activeHref="/brand" userName="Fernpad" reviewCount={6} messagesCount={2}>
+            <div className="flex h-full items-center justify-center p-10 text-sm text-gray-400">Page content goes here</div>
+          </AppShell>
+        ),
+      },
+    ],
+  },
 ];

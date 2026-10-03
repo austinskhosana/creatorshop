@@ -19,21 +19,23 @@ interface CartLineItemProps {
 
 export default function CartLineItem({ item, onRemove }: CartLineItemProps) {
   return (
-    <div className="flex items-center gap-4 p-5 sm:gap-5 sm:p-6">
+    <div className="flex items-center gap-3.5 p-4 sm:gap-5 sm:p-5 sm:px-6">
       <BrandLogo slug={item.id} name={item.brand} size={56} className="shrink-0" />
       <div className="min-w-0 flex-1">
-        <h2 className="truncate text-base font-bold">{item.product}</h2>
-        <div className="mt-3 flex flex-wrap items-center gap-2">
+        <h2 className="truncate text-[15px] font-semibold leading-tight tracking-[-0.01em] text-neutral-950">{item.product}</h2>
+        <p className="mt-0.5 truncate text-[13px] text-neutral-500">{item.brand}</p>
+        <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
           <Badge variant="tag" label={item.tier} icon={<PlatformIcon platform={item.tier} className="h-3 w-3" />} />
           <Badge variant="tag" label={`${item.access} access`} icon={<CalendarIcon className="h-3 w-3" />} />
         </div>
       </div>
-      <div className="flex flex-col items-end gap-3">
-        <p className="font-bold tabular-nums">${item.value}</p>
+      <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+        <p className="text-[15px] font-semibold tabular-nums tracking-[-0.01em] text-neutral-950">${item.value}</p>
         <button
+          type="button"
           onClick={() => onRemove(item.id)}
           aria-label={`Remove ${item.product}`}
-          className="grid size-10 place-items-center rounded-xl border border-neutral-200 text-neutral-400 transition-[background-color,color,border-color] duration-150 hover:border-red-200 hover:bg-red-50 hover:text-red-600 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+          className="grid size-10 place-items-center rounded-xl text-neutral-400 transition-[background-color,color] duration-150 hover:bg-red-50 hover:text-red-600 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
         >
           <TrashIcon className="size-4" strokeWidth={1.75} />
         </button>

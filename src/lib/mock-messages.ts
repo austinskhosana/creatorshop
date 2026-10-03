@@ -23,7 +23,8 @@ export type InboxThread = {
   participant: Participant;
   name: string;
   detail: string;
-  image: string;
+  /** Without one, the thread shows the participant's initials. */
+  image?: string;
   online?: boolean;
   unread?: boolean;
   messages: ChatMessage[];

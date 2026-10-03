@@ -16,11 +16,25 @@ import { BrandFAQItem } from "@/components/molecules/BrandFAQItem";
 import { BrandCardVisual, BrandCardVisualFlip } from "@/components/molecules/BrandCardVisual";
 import { BrandCard3D } from "@/components/molecules/BrandCard3D";
 import { AccessTicket } from "@/components/molecules/AccessTicket";
+import { TicketCard } from "@/components/molecules/TicketCard";
 import { PosterCard } from "@/components/molecules/PosterCard";
 import { FAQItem } from "@/components/molecules/FAQItem";
 import { ThreadAvatar } from "@/components/molecules/ThreadAvatar";
 import { MessageBubble } from "@/components/molecules/MessageBubble";
 import { PaymentOptionPreview, ThreadListItemPreview } from "./interactive-previews";
+import { StatusPill } from "@/components/molecules/StatusPill";
+import { StockMeter } from "@/components/molecules/StockMeter";
+import { PageHeader } from "@/components/molecules/PageHeader";
+import { NoticeBanner } from "@/components/molecules/NoticeBanner";
+import { ActionMenuDemo, CampaignPickerDemo, ConfirmDialogDemo, IntroMessageFieldDemo, PriceTierPickerDemo, RadioCardDemo, SendModePickerDemo } from "./brand-previews";
+import { ShopperPitchDetails } from "@/components/molecules/ShopperPitchDetails";
+import { CreditCardIcon } from "@heroicons/react/24/outline";
+import { SHOPPERS, DEMO_PRODUCTS } from "@/lib/mock-brand";
+import { FacePile } from "@/components/molecules/FacePile";
+import { ReviewQueueCard } from "@/components/molecules/ReviewQueueCard";
+import { AttentionStats } from "@/components/molecules/AttentionStats";
+import { AddItemCard } from "@/components/molecules/AddItemCard";
+import { ToastDemo, ToastPreview } from "@/components/molecules/Toast";
 import type { RegistryEntry } from "./types";
 
 export const moleculesEntries: RegistryEntry[] = [
@@ -32,6 +46,29 @@ export const moleculesEntries: RegistryEntry[] = [
       {
         name: "Default",
         preview: <AccessTicket access="12 months" />,
+      },
+    ],
+  },
+  {
+    name: "Ticket card",
+    level: "molecules",
+    description: "Ticket-cut banner shared by the shop promo and Make a wish — shader face with mono eyebrow and copy, masked notches, a perforated tear line, and a stub with one field, optional art, a barcode, and a serial. Stacks into a boarding-pass layout on mobile.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-full max-w-3xl">
+            <TicketCard
+              icon={<CreditCardIcon strokeWidth={1.75} />}
+              eyebrow="Fictional event"
+              title="Admit the bearer."
+              description="Any face content goes here; pass children to add a form or actions below the copy."
+              admit="Admit one"
+              field={{ label: "Price", value: "1 post" }}
+              serial="NO. 000042"
+            />
+          </div>
+        ),
       },
     ],
   },
@@ -89,7 +126,7 @@ export const moleculesEntries: RegistryEntry[] = [
   {
     name: "Empty state",
     level: "molecules",
-    description: "Icon + title + description, with an optional action button.",
+    description: "Icon + title + description, with an optional action button. Pass `illustration` to replace the icon and its ghost cards with bespoke art, as the cart page does with the dithered empty cart.",
     stage: "before",
     variants: [
       {
@@ -465,6 +502,36 @@ export const moleculesEntries: RegistryEntry[] = [
     ],
   },
   {
+    name: "Radio card",
+    level: "molecules",
+    description: "One bordered option in a radio group, with an optional description and right-aligned detail. A native radio underneath, so arrow keys move between cards.",
+    variants: [{ name: "Default", preview: <RadioCardDemo /> }],
+  },
+  {
+    name: "Send mode picker",
+    level: "molecules",
+    description: "What a right swipe does with a brand's intro: review each one, or send automatically. Shared by the intro modal and Settings → Intro message.",
+    variants: [{ name: "Default", preview: <SendModePickerDemo /> }],
+  },
+  {
+    name: "Campaign picker",
+    level: "molecules",
+    description: "Which live product page goes out with a brand's intro, with spots left on each — or \"Just the intro\". Links to creating a product page when nothing is live.",
+    variants: [
+      { name: "Live campaigns", preview: <CampaignPickerDemo /> },
+      { name: "Nothing live", preview: <CampaignPickerDemo empty /> },
+    ],
+  },
+  {
+    name: "Intro message field",
+    level: "molecules",
+    description: "A brand's swipe-right intro as a template. \"First name\" drops the {first name} token at the caret, and the preview shows the thread as one real creator reads it.",
+    variants: [
+      { name: "Intro only", preview: <IntroMessageFieldDemo /> },
+      { name: "With campaign", preview: <IntroMessageFieldDemo withCampaign /> },
+    ],
+  },
+  {
     name: "Dropdown",
     level: "molecules",
     description: "Custom listbox select used for store filters and sorting. Opens anchored to its trigger, with keyboard navigation and typeahead.",
@@ -476,10 +543,170 @@ export const moleculesEntries: RegistryEntry[] = [
   {
     name: "Wish card",
     level: "molecules",
-    description: "A brand on the Genie Index, built like a listing card — logo and website link up top, name and description, then its category tag and the wish toggle.",
+    description: "A brand on The Genie Index, built like a listing card — logo and website link up top, name and description, then its category tag and the wish toggle.",
     variants: [
       { name: "Not wished", preview: <WishCardDemo /> },
       { name: "Wished", preview: <WishCardDemo wished /> },
+    ],
+  },
+  {
+    name: "Status pill",
+    level: "molecules",
+    description: "Bordered pill with a coloured dot — the status mark on shop and product cards. Tones: waiting, success, progress, danger, muted, neutral.",
+    variants: [
+      {
+        name: "Tones",
+        preview: (
+          <div className="flex flex-wrap gap-2">
+            <StatusPill tone="success" label="Live" />
+            <StatusPill tone="waiting" label="Awaiting post" />
+            <StatusPill tone="progress" label="Proof to review" />
+            <StatusPill tone="danger" label="Post overdue" />
+            <StatusPill tone="muted" label="Paused" />
+            <StatusPill tone="neutral" label="Draft" />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Price tier picker",
+    level: "molecules",
+    description: "A product page's tiers as size-style radio options — the content type, then its access length and retail value kept apart.",
+    variants: [{ name: "Default", preview: <PriceTierPickerDemo /> }],
+  },
+  {
+    name: "Stock meter",
+    level: "molecules",
+    description: "“X of Y spots left” over a thin sold bar, with Almost sold out / Sold out callouts.",
+    variants: [
+      { name: "In stock", preview: <div className="w-64"><StockMeter remaining={10} total={12} /></div> },
+      { name: "Almost sold out", preview: <div className="w-64"><StockMeter remaining={1} total={8} /></div> },
+      { name: "Sold out", preview: <div className="w-64"><StockMeter remaining={0} total={4} /></div> },
+    ],
+  },
+  {
+    name: "Page header",
+    level: "molecules",
+    description: "Bold page title, one quiet line, and optional right-aligned actions — the opening of every creator and brand screen.",
+    variants: [{ name: "Default", preview: <div className="w-full max-w-3xl"><PageHeader title="Shops" description="Every creator you've approved." /></div> }],
+  },
+  {
+    name: "Notice banner",
+    level: "molecules",
+    description: "Grey account notice with an icon, explanation, and one fix — used for subscription and verification blockers.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="w-full max-w-2xl">
+            <NoticeBanner icon={<CreditCardIcon className="size-5" strokeWidth={1.75} />} title="Subscribe to publish" description="Build product pages now. They go live once your $50/month subscription is active." action={{ label: "Subscribe", href: "#" }} />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Action menu",
+    level: "molecules",
+    description: "A ⋯ trigger on the shadcn DropdownMenu (Base UI): portalled, flips to stay on screen, typeahead and arrow keys, destructive items below a divider.",
+    variants: [
+      {
+        name: "Default",
+        preview: <ActionMenuDemo />,
+      },
+    ],
+  },
+  {
+    name: "Shopper pitch details",
+    level: "molecules",
+    description: "Rating, completed shops, example posts and the chosen price tier — the brand-only additions inside a creator profile card during review.",
+    variants: [
+      { name: "With price tier", preview: <div className="w-full max-w-xl"><ShopperPitchDetails shopper={SHOPPERS[1]} tier={DEMO_PRODUCTS[0].tiers[1]} productName={DEMO_PRODUCTS[0].name} /></div> },
+      { name: "New shopper", preview: <div className="w-full max-w-xl"><ShopperPitchDetails shopper={SHOPPERS[4]} /></div> },
+    ],
+  },
+  {
+    name: "Confirm dialog",
+    level: "molecules",
+    description: "shadcn AlertDialog (Base UI) for actions with consequences — closing a product page, cancelling a subscription. Cancel takes first focus; destructive confirms are red.",
+    variants: [{ name: "Destructive", preview: <ConfirmDialogDemo /> }],
+  },
+  {
+    name: "Face pile",
+    level: "molecules",
+    description: "Overlapping avatars for who's waiting: the first few faces, initials when there's no photo, then a +N chip. The ring takes the colour of the surface behind it.",
+    variants: [
+      { name: "On white", preview: <FacePile people={SHOPPERS.slice(0, 6).map((shopper) => ({ name: shopper.name, avatar: shopper.avatar }))} /> },
+      {
+        name: "On lime",
+        preview: (
+          <div className="rounded-2xl bg-[#A3FF38] p-4">
+            <FacePile people={SHOPPERS.slice(2, 8).map((shopper) => ({ name: shopper.name, avatar: shopper.avatar }))} size={36} ringClassName="ring-[#A3FF38]" />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Review queue card",
+    level: "molecules",
+    description: "The brand's first action on the storefront: shoppers waiting for review, with their faces. Lime while anyone is waiting; quiet white pointing to the creator directory once the queue is clear.",
+    variants: [
+      { name: "Waiting", preview: <div className="w-full max-w-sm"><ReviewQueueCard people={SHOPPERS.slice(0, 6).map((shopper) => ({ name: shopper.name, avatar: shopper.avatar }))} href="#" emptyHref="#" /></div> },
+      { name: "Clear", preview: <div className="w-full max-w-sm"><ReviewQueueCard people={[]} href="#" emptyHref="#" /></div> },
+    ],
+  },
+  {
+    name: "Attention stats",
+    level: "molecules",
+    description: "Linked counts, each its own card with a who-or-what line. Zero turns grey so live numbers stand out; the alert tone adds a red dot. Stacks into compact rows below a 32rem container.",
+    variants: [
+      {
+        name: "Storefront",
+        preview: (
+          <div className="w-full max-w-2xl">
+            <AttentionStats
+              stats={[
+                { label: "Proof to review", value: 1, href: "#" },
+                { label: "Shops in progress", value: 5, href: "#" },
+                { label: "Overdue posts", value: 1, href: "#", tone: "alert" },
+              ]}
+            />
+          </div>
+        ),
+      },
+      {
+        name: "All clear",
+        preview: (
+          <div className="w-full max-w-2xl">
+            <AttentionStats
+              stats={[
+                { label: "Proof to review", value: 0, href: "#" },
+                { label: "Shops in progress", value: 0, href: "#" },
+                { label: "Overdue posts", value: 0, href: "#", tone: "alert" },
+              ]}
+            />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Add item card",
+    level: "molecules",
+    description: "Dashed ghost card that ends a grid, sized like the cards beside it — the slot for the next product page.",
+    variants: [{ name: "Default", preview: <div className="w-72"><AddItemCard href="#" label="List a product" description="Set the posts you accept and how many spots you have." /></div> }],
+  },
+  {
+    name: "Toast",
+    level: "molecules",
+    description: "Sonner toast in the bottom-right corner for review decisions. The badge mirrors the swipe button just pressed: lime check to approve, white cross to pass. Hover holds the stack; swipe or × dismisses.",
+    variants: [
+      { name: "Live", preview: <ToastDemo /> },
+      { name: "Approved", preview: <ToastPreview icon="check" title="Approved Lerato Dube" description="Their post is due 17 Oct 2026." action={{ label: "Open thread", href: "#" }} /> },
+      { name: "Passed", preview: <ToastPreview icon="cross" title="Passed on Lerato Dube" /> },
+      { name: "Undone", preview: <ToastPreview icon="undo" title="Decision undone" description="Lerato Dube is back in the queue." /> },
     ],
   },
 ];

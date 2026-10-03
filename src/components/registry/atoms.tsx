@@ -13,6 +13,16 @@ import { PixelTrail } from "@/components/atoms/PixelTrail";
 import { MeshGradientPanel } from "@/components/atoms/MeshGradientPanel";
 import { Fire } from "@/components/atoms/Fire";
 import { AsciiFlame } from "@/components/atoms/AsciiFlame";
+import { GenieLamp } from "@/components/atoms/GenieLamp";
+import { MoneyStack } from "@/components/atoms/MoneyStack";
+import { EmptyCart } from "@/components/atoms/EmptyCart";
+import { EmptyChat } from "@/components/atoms/EmptyChat";
+import { EmptySearch } from "@/components/atoms/EmptySearch";
+import { EmptyBag } from "@/components/atoms/EmptyBag";
+import { EmptyStorefront } from "@/components/atoms/EmptyStorefront";
+import { EmptyBox } from "@/components/atoms/EmptyBox";
+import { EmptyBell } from "@/components/atoms/EmptyBell";
+import { WishingStar } from "@/components/atoms/WishingStar";
 import { LocationTime } from "@/components/atoms/LocationTime";
 import { ScrollIndicator } from "@/components/atoms/ScrollIndicator";
 import { TextScramble } from "@/components/atoms/TextScramble";
@@ -440,6 +450,96 @@ export const atomsEntries: RegistryEntry[] = [
           </div>
         ),
       },
+    ],
+  },
+  {
+    name: "Genie lamp",
+    level: "atoms",
+    description: "A shaded genie lamp ordered-dithered to pure black and white with a 4×4 Bayer matrix, matching the ticket shader's grain, with a dithered wisp of smoke curling up from the spout and a dithered floor shadow fading out beneath it. The lamp is one precomputed SVG path; the smoke steps at 15fps, pauses off screen, and holds a still frame under reduced motion. Printed on the Make a wish ticket stub.",
+    variants: [
+      { name: "Default", preview: <GenieLamp /> },
+      { name: "Large", preview: <GenieLamp className="h-30 w-60 text-neutral-900" /> },
+    ],
+  },
+  {
+    name: "Money stack",
+    level: "atoms",
+    description: "Three strapped bundles of banknotes drawn in the same dithered stub-art style as Genie lamp (shared renderer in lib/dither-art), resting on a dithered floor shadow that fades out around them. Every few seconds a band of light sweeps across the stack and glints off it in two pixel sparkles; it pauses off screen and stays still under reduced motion. Printed on the shop promo ticket stub.",
+    variants: [
+      { name: "Default", preview: <MoneyStack /> },
+      { name: "Large", preview: <MoneyStack className="h-24 w-60 text-neutral-900" /> },
+    ],
+  },
+  {
+    name: "Empty cart",
+    level: "atoms",
+    description: "An empty shopping cart in the dithered stub-art style (shared renderer in lib/dither-art): a wire basket — near wires solid, far wires dotted — over a faint shadowed hollow, with shaded rims, handle, frame and wheels on a fading floor shadow. It's always rolling forward on an endless loop: the shop floor's tile seams slide back beneath it, the wheels turn to match, speed lines stream off behind, and it bumps a pixel over each seam. A mouse over it speeds it up. Pauses off screen; still under reduced motion. Used as the cart page's empty-state illustration.",
+    variants: [
+      { name: "Default", preview: <EmptyCart /> },
+      { name: "Large", preview: <EmptyCart className="h-41 w-60 text-neutral-900" /> },
+    ],
+  },
+  {
+    name: "Empty chat",
+    level: "atoms",
+    description: "A speech bubble in the dithered stub-art style (shared renderer in lib/dither-art): one inflated, paper-white oval with a curling tail blended out of its lower left, floating over a soft dithered shadow. Three glossy ink beads on its face draw out an ellipsis a dot at a time and let it hang — the thread is waiting on you, not someone typing; every frame is precomputed, it pauses off screen, and the dots stay still under reduced motion. Used as the empty message thread's illustration.",
+    variants: [
+      { name: "Default", preview: <EmptyChat /> },
+      { name: "Large", preview: <EmptyChat className="h-44 w-60 text-neutral-900" /> },
+    ],
+  },
+  {
+    name: "Empty search",
+    level: "atoms",
+    description: "A magnifying glass in the dithered stub-art style (shared renderer in lib/dither-art): a bezel-shaded metal ring around a clear lens with a curved glint, a short metal ferrule and a dark grip, floating over a tight dithered shadow. It searches the way you would: holds still to look, lifts a cell, glides to the next spot (centre, right, left), lowers and looks again, its shadow following and softening while it's lifted. Steps at 8fps, pauses off screen, and rests under reduced motion. Used on the no-matches states for products and creators.",
+    variants: [
+      { name: "Default", preview: <EmptySearch /> },
+      { name: "Large", preview: <EmptySearch className="h-44 w-60 text-neutral-900" /> },
+    ],
+  },
+  {
+    name: "Empty bag",
+    level: "atoms",
+    description: "An empty paper shopping bag in the dithered stub-art style, built from flat faces in the cart's oblique view (shared renderer in lib/dither-art): a paper-white front with a folded rim, a dark gusset with a pale crease, a dark open slot, and two thin cord handles. When it first comes into view it's set down — it drops the last few px to the floor and its handles swing from the impact, then settle; a mouse over it sets it down again. It stands on a soft dithered floor like Genie lamp's — a contact shadow inside a wide pool, measured out from its footprint so it wraps evenly all round the bag, behind the gusset too; holds still under reduced motion. Used on the empty My Shops and brand Shops states, and the shopper review's all-caught-up state.",
+    variants: [
+      { name: "Default", preview: <EmptyBag /> },
+      { name: "Large", preview: <EmptyBag className="h-44 w-60 text-neutral-900" /> },
+    ],
+  },
+  {
+    name: "Empty storefront",
+    level: "atoms",
+    description: "A little shop in the dithered stub-art style, built from flat faces in the cart's oblique view (shared renderer in lib/dither-art): a blank sign board, a solid-striped awning with a scalloped valance, an empty window with one bare shelf, and a dark door with a hanging sign, standing on paving slabs out to a kerb with its shadow cast off to the right. When the shop first comes into view a hand-placed pixel blackbird flies in from beyond its left edge, flapping, swoops past the sign board, flares and lands on the roof's edge, looks back over its shoulder twice, then flies off to the right and leaves the shop empty. A mouse over the shop startles a perched bird off early, or brings a gone one back for another visit. Under reduced motion the bird is simply on its perch. Used on the empty and not-found brand storefront states.",
+    variants: [
+      { name: "Default", preview: <EmptyStorefront /> },
+      { name: "Large", preview: <EmptyStorefront className="h-44 w-60 text-neutral-900" /> },
+    ],
+  },
+  {
+    name: "Empty box",
+    level: "atoms",
+    description: "An open, empty cardboard box with a shaded question mark bobbing over it, in the dithered stub-art style (shared renderer in lib/dither-art): light front, dark side, dark hollow, and two flaps folded open. Pauses off screen and holds still under reduced motion. Used on the product-not-found states.",
+    variants: [
+      { name: "Default", preview: <EmptyBox /> },
+      { name: "Large", preview: <EmptyBox className="h-44 w-60 text-neutral-900" /> },
+    ],
+  },
+  {
+    name: "Empty bell",
+    level: "atoms",
+    description: "A service bell on an empty counter in the dithered stub-art style (shared renderer in lib/dither-art): a chrome dome — bright crown, dark horizon band, the pale counter reflected along its rim — on a solid black base with a plunger on top, standing on a light counter ledge in the cart's oblique view. Nobody's waiting; the bell waits for the next one. It's still until a mouse comes over it, or a finger taps it, and then it dings: the plunger dips and two ripples of sound rings spread out to either side and fade. Silent under reduced motion. Used on the swipe deck's that's-everyone state.",
+    variants: [
+      { name: "Default", preview: <EmptyBell /> },
+      { name: "Large", preview: <EmptyBell className="h-44 w-60 text-neutral-900" /> },
+    ],
+  },
+  {
+    name: "Wishing star",
+    level: "atoms",
+    description: "A faceted shooting star in the dithered stub-art style (shared renderer in lib/dither-art): ten flat faces rising to a raised centre, each catching the upper-left light differently. Trails stream back off it, breaking into dashes then dots, and pixel sparkles twinkle round it. Steps at 15fps, pauses off screen, and holds a still frame under reduced motion. Used as the empty My wishes illustration, so it doesn't repeat the Make a wish banner's lamp.",
+    variants: [
+      { name: "Default", preview: <WishingStar /> },
+      { name: "Large", preview: <WishingStar className="h-44 w-60 text-neutral-900" /> },
     ],
   },
   {

@@ -1,5 +1,6 @@
 import { BanknotesIcon } from "@heroicons/react/24/outline";
-import { TerminalgraphShader } from "@/components/atoms/TerminalgraphShader";
+import { MoneyStack } from "@/components/atoms/MoneyStack";
+import { TicketCard } from "@/components/molecules/TicketCard";
 
 interface PromoBannerProps {
   eyebrow: string;
@@ -9,20 +10,16 @@ interface PromoBannerProps {
 
 export default function PromoBanner({ eyebrow, title, description }: PromoBannerProps) {
   return (
-    <div className="relative isolate flex flex-col justify-center gap-4 overflow-hidden rounded-2xl border border-black/10 p-8">
-      <TerminalgraphShader
-        theme="light"
-        background={{ dark: "#052e12", light: "#ffffff" }}
-        className="pointer-events-none absolute inset-0 -z-10"
-      />
-      <div className="max-w-lg">
-        <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-medium text-neutral-700 ring-1 ring-neutral-200">
-          <BanknotesIcon aria-hidden="true" className="h-3.5 w-3.5 text-neutral-900" strokeWidth={1.75} />
-          {eyebrow}
-        </span>
-        <h2 className="text-balance mt-3 text-2xl font-semibold text-neutral-900 sm:text-3xl">{title}</h2>
-        <p className="text-pretty mt-2 text-[14px] leading-relaxed text-neutral-600">{description}</p>
-      </div>
-    </div>
+    <TicketCard
+      icon={<BanknotesIcon strokeWidth={1.75} />}
+      eyebrow={eyebrow}
+      title={title}
+      description={description}
+      admit="Content as cash"
+      art={<MoneyStack />}
+      serial="NO. 000001"
+      sansLabels
+      size="large"
+    />
   );
 }

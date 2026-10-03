@@ -17,6 +17,18 @@ export const CREATOR = {
   completedShops: 12,
 };
 
+/**
+ * The parts of Jordan's public profile they can't type in Settings: audience comes from connected
+ * accounts and example posts from finished shops. Fictional, like the rest of this file.
+ */
+export const CREATOR_TRACK_RECORD = {
+  audience: { Instagram: 31_200, TikTok: 14_800, YouTube: 6_400, X: 2_900 },
+  examplePosts: [
+    { platform: "Instagram", title: "Paper Pro: designing in real HTML", url: "https://example.com/jordanmakes/paper-carousel" },
+    { platform: "X", title: "Thread: the 6 tools on my design desk", url: "https://example.com/jordanmakes/design-desk" },
+  ],
+} as const;
+
 export const CREATOR_SHOPS: CreatorShop[] = [
   { id: "paper", listingSlug: "paper", product: "Paper Pro", brand: "Paper", description: "An AI-native design canvas where what you draw is real HTML and CSS.", tier: "Instagram carousel", value: 48, access: "3 months", state: "active", accessEnd: "Dec 21, 2026", accessCode: "CS-PAPER-JL26-PRO", redemptionUrl: "https://paper.design", createdAt: "2026-09-02T09:00:00.000Z" },
   { id: "cursor", listingSlug: "cursor", product: "Cursor Pro", brand: "Cursor", description: "An AI code editor that reads your whole codebase as you write.", tier: "IG Reel", value: 120, access: "6 months", state: "posted", deadline: "Sep 18", createdAt: "2026-08-28T09:00:00.000Z" },

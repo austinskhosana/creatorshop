@@ -1,7 +1,7 @@
 import { GenieIndexPage } from "@/components/pages/GenieIndexPage";
 
 export const metadata = {
-  title: "Genie Index — Creatorshop",
+  title: "The Genie Index — Creatorshop",
 };
 
 export default function GenieIndex() {

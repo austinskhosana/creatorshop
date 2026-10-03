@@ -1,4 +1,4 @@
-import { TextareaHTMLAttributes, useId } from "react";
+import { Ref, TextareaHTMLAttributes, useId } from "react";
 import { cn } from "@/lib/utils";
 
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -7,6 +7,7 @@ interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   error?: string;
   maxChars?: number;
   currentLength?: number;
+  ref?: Ref<HTMLTextAreaElement>;
 }
 
 export default function Textarea({

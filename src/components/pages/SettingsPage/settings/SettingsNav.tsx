@@ -6,22 +6,28 @@ import {
 import type { ComponentType } from "react";
 import type { SettingsSection } from "./types";
 
-const links: [SettingsSection, string, ComponentType<{ className?: string }>][] = [
+export type SettingsNavLink<Id extends string> = [Id, string, ComponentType<{ className?: string }>];
+
+const creatorLinks: SettingsNavLink<SettingsSection>[] = [
   ["profile", "Profile", UserCircleIcon],
   ["notifications", "Notifications", BellAlertIcon],
   ["account", "Account & security", ShieldCheckIcon],
 ];
 
-export function SettingsNav({
+export function SettingsNav<Id extends string = SettingsSection>({
   active,
   onChange,
+  links = creatorLinks as unknown as SettingsNavLink<Id>[],
 }: {
-  active: SettingsSection;
-  onChange: (section: SettingsSection) => void;
+  active: Id;
+  onChange: (section: Id) => void;
+  /** Defaults to the creator's sections. The brand settings pass their own. */
+  links?: SettingsNavLink<Id>[];
 }) {
   return (
-    <aside className="lg:sticky lg:top-8 lg:self-start lg:pt-7">
-      <div className="flex gap-2 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible">
+    // min-w-0 keeps the scrolling row from widening the page grid on narrow screens.
+    <aside className="min-w-0 lg:sticky lg:top-8 lg:self-start lg:pt-7">
+      <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] lg:flex-col lg:overflow-visible">
         {links.map(([id, label, Icon]) => (
           <button
             key={id}

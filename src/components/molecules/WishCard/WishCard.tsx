@@ -57,7 +57,7 @@ export default function WishCard({ brandKey, brandName, website, description, ca
   }
 
   return (
-    <article className="flex h-full min-h-[240px] flex-col rounded-[20px] border border-neutral-200 bg-white p-4">
+    <article className="flex h-full min-h-[240px] flex-col rounded-[20px] border border-neutral-200 bg-white p-6">
       <div className="flex items-start justify-between">
         <BrandLogo slug={brandKey} name={brandName} />
         {website && (
@@ -80,7 +80,7 @@ export default function WishCard({ brandKey, brandName, website, description, ca
         </p>
       </div>
 
-      <div className="mt-3 flex items-center justify-between gap-3 border-t border-neutral-100 pt-3">
+      <div className="mt-4 flex items-center justify-between gap-3 border-t border-neutral-100 pt-4">
         <Badge variant="tag" label={category ?? "Your wish"} icon={CategoryIcon ? <CategoryIcon className="h-3 w-3" strokeWidth={1.75} /> : undefined} />
         <Button
           variant={wished ? "secondary" : "premium"}

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { SparklesIcon } from "@heroicons/react/24/outline";
+import { WishingStar } from "@/components/atoms/WishingStar";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { WishCard } from "@/components/molecules/WishCard";
 import { MakeAWishForm } from "@/components/organisms/MakeAWishForm";
@@ -26,7 +26,7 @@ export default function GenieIndexPage() {
 
         <section aria-labelledby="genie-index-heading" className="mt-10">
           <h1 id="genie-index-heading" className="text-[20px] font-semibold tracking-[-0.02em] text-neutral-950">
-            Genie Index
+            The Genie Index
           </h1>
           <p className="mt-1 text-sm text-neutral-500">The software creators most want to pay for with a post.</p>
 
@@ -60,7 +60,7 @@ export default function GenieIndexPage() {
                 </ul>
               ) : (
                 <EmptyState
-                  icon={<SparklesIcon className="size-5" strokeWidth={1.75} />}
+                  illustration={<WishingStar />}
                   title="No wishes yet"
                   description="Wish for any brand in the index, or make a wish for one that isn't there."
                   action={{ label: "Browse all", onClick: () => setView("all") }}

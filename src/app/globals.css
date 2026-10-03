@@ -64,22 +64,29 @@ body {
   color: #ffffff !important;
 }
 
-/* Creator-area screens inherit the compact product-card geometry from Explore:
+/* Creator- and brand-area screens inherit the compact product-card geometry from Explore:
    transaction surfaces are 20px, nested controls are 12–14px, and borders
    establish structure without dashboard-style elevation. */
 .creator-page [class~="rounded-[2rem]"],
 .creator-page [class~="rounded-[1.75rem]"],
-.creator-page [class~="rounded-[1.6rem]"] {
+.creator-page [class~="rounded-[1.6rem]"],
+.brand-page [class~="rounded-[2rem]"],
+.brand-page [class~="rounded-[1.75rem]"],
+.brand-page [class~="rounded-[1.6rem]"] {
   border-radius: 20px !important;
 }
 
 .creator-page [class*="shadow-[0_12px_50px"],
 .creator-page [class*="shadow-[0_15px_60px"],
-.creator-page [class*="hover:shadow-[0_12px_40px"] {
+.creator-page [class*="hover:shadow-[0_12px_40px"],
+.brand-page [class*="shadow-[0_12px_50px"],
+.brand-page [class*="shadow-[0_15px_60px"],
+.brand-page [class*="hover:shadow-[0_12px_40px"] {
   box-shadow: none !important;
 }
 
-.creator-page [class~="text-4xl"] {
+.creator-page [class~="text-4xl"],
+.brand-page [class~="text-4xl"] {
   font-size: 1.875rem !important;
   line-height: 1.15 !important;
   letter-spacing: -0.025em !important;

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Button } from "@/components/atoms/Button";
@@ -114,10 +115,15 @@ function entranceProps(index: number, reduce: boolean | null) {
 
 interface NavbarProps {
   variant?: "default" | "compact";
+  /** Where the primary button goes. Without it the button reads "Sign Up" and has no destination yet. */
+  cta?: { label: string; href: string };
+  /** Adds a quiet "Sign in" link beside the primary button. */
+  signInHref?: string;
   className?: string;
 }
 
-export default function Navbar({ variant = "default", className }: NavbarProps) {
+export default function Navbar({ variant = "default", cta, signInHref, className }: NavbarProps) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const reduce = useReducedMotion();
 
@@ -155,6 +161,17 @@ export default function Navbar({ variant = "default", className }: NavbarProps) 
               </Link>
             </motion.div>
 
+          ))}
+          {[signInHref && { label: "Sign in", href: signInHref }, cta].filter((link): link is { label: string; href: string } => Boolean(link)).map((link) => (
+            <motion.div key={link.href} variants={reduce ? linkVariantsReduced : linkVariants} className="w-full max-w-xs">
+              <Link
+                href={link.href}
+                onClick={() => setOpen(false)}
+                className="block w-full rounded-lg px-2 py-3 text-center text-2xl font-medium text-neutral-900 transition-colors hover:bg-neutral-100"
+              >
+                {link.label}
+              </Link>
+            </motion.div>
           ))}
         </motion.nav>
       )}
@@ -215,9 +232,20 @@ export default function Navbar({ variant = "default", className }: NavbarProps) 
           ))}
         </nav>
 
-        <motion.div className="hidden sm:block" {...entranceProps(NAV_LINKS.length + 1, reduce)}>
-          <Button variant="primary" size="md" pill style={{ border: "none", boxShadow: "none" }}>
-            Sign Up
+        <motion.div className="hidden items-center gap-5 sm:flex" {...entranceProps(NAV_LINKS.length + 1, reduce)}>
+          {signInHref ? (
+            <Link href={signInHref} className="text-sm text-neutral-700 transition-colors hover:text-neutral-900">
+              Sign in
+            </Link>
+          ) : null}
+          <Button
+            variant="primary"
+            size="md"
+            pill
+            onClick={cta ? () => router.push(cta.href) : undefined}
+            style={{ border: "none", boxShadow: "none" }}
+          >
+            {cta?.label ?? "Sign Up"}
           </Button>
         </motion.div>
 

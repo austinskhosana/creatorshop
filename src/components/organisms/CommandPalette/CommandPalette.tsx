@@ -34,11 +34,12 @@ const DESCRIPTIONS: Record<string, string> = {
   messages: "Continue conversations with brands",
   profile: "View your public creator profile",
   settings: "Manage your profile and preferences",
-  "brand-profile": "View and edit your brand profile",
-  admin: "Manage billing and account details",
-  applications: "Review creator applications",
-  campaigns: "Create and manage campaigns",
-  influencers: "Discover creators",
+  "brand-storefront": "Manage your product pages and stock",
+  "brand-review": "Approve or pass on creators shopping your products",
+  "brand-shops": "Track deadlines, confirm proof, and release access",
+  "brand-creators": "Browse creator profiles by niche and platform",
+  "brand-messages": "Continue conversations with creators",
+  "brand-settings": "Edit your storefront, billing, and notifications",
 };
 
 export default function CommandPalette({ open, onOpenChange, role = "CREATOR" }: CommandPaletteProps) {
@@ -65,20 +66,28 @@ export default function CommandPalette({ open, onOpenChange, role = "CREATOR" }:
         description: DESCRIPTIONS[item.id] ?? "Open page",
         href: item.href,
         icon: item.icon,
-        current: pathname.startsWith(item.href),
+        current: item.exact ? pathname === item.href : pathname.startsWith(item.href),
       }));
 
     if (!normalizedQuery) return pages;
 
     return [
       ...pages,
-      {
-        id: "search-software",
-        label: `Search software for “${query.trim()}”`,
-        description: "View matching products in Shop",
-        href: `/explore?q=${encodeURIComponent(query.trim())}`,
-        icon: <MagnifyingGlassIcon className="size-[18px]" />,
-      },
+      role === "BRAND"
+        ? {
+            id: "search-creators",
+            label: `Search creators for “${query.trim()}”`,
+            description: "View matching creators in the directory",
+            href: `/brand/creators?q=${encodeURIComponent(query.trim())}`,
+            icon: <MagnifyingGlassIcon className="size-[18px]" />,
+          }
+        : {
+            id: "search-software",
+            label: `Search software for “${query.trim()}”`,
+            description: "View matching products in Shop",
+            href: `/explore?q=${encodeURIComponent(query.trim())}`,
+            icon: <MagnifyingGlassIcon className="size-[18px]" />,
+          },
     ];
   }, [pathname, query, role]);
 

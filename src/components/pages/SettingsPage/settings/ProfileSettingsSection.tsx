@@ -169,7 +169,7 @@ export function ProfileSettingsSection() {
             onClick={() => avatarInputRef.current?.click()}
             className={`block size-24 cursor-pointer rounded-full bg-white p-1 shadow-sm transition-[box-shadow] duration-150 sm:size-28 ${avatarDropping ? "ring-2 ring-neutral-900 ring-offset-2" : ""}`}
           >
-            {/* Padding makes the white ring; see CreatorProfileCard for why it isn't a border. */}
+            {/* Padding makes the white ring; see ShopperReviewCard for why it isn't a border. */}
             <span className="relative block size-full overflow-hidden rounded-full bg-neutral-100">
               <Image src={profile.avatar} alt={`${stored.displayName}'s profile photo`} fill sizes="112px" className="object-cover" draggable={false} />
               <span aria-hidden="true" className={`absolute inset-0 grid place-items-center bg-neutral-950/45 text-[11px] font-semibold text-white transition-opacity duration-150 ${avatarDropping ? "opacity-100" : "opacity-0"}`}>Drop photo</span>

@@ -4,6 +4,7 @@ import { MOCK_LISTINGS } from "@/lib/mock-listings";
 import { GenieIndexPage } from "@/components/pages/GenieIndexPage";
 import { CartPage } from "@/components/pages/CartPage";
 import { MessagesPage } from "@/components/pages/MessagesPage";
+import { BrandAuthPage } from "@/components/pages/BrandAuthPage";
 import type { RegistryEntry } from "./types";
 
 export const pagesEntries: RegistryEntry[] = [
@@ -20,9 +21,9 @@ export const pagesEntries: RegistryEntry[] = [
     ],
   },
   {
-    name: "Genie Index",
+    name: "The Genie Index",
     level: "pages",
-    description: "Creators wish for software that isn't on Creatorshop yet — a Make a wish banner above the Genie Index heading, All / My wishes tabs, and a grid of wish cards.",
+    description: "Creators wish for software that isn't on Creatorshop yet — a Make a wish banner above The Genie Index heading, All / My wishes tabs, and a grid of wish cards.",
     fullBleed: true,
     variants: [
       {
@@ -69,5 +70,15 @@ export const pagesEntries: RegistryEntry[] = [
     description: "Inbox and conversation view — a thread list sidebar next to a message log with a composer, mirroring the shop's DM experience.",
     fullBleed: true,
     variants: [{ name: "Default", preview: <MessagesPage /> }],
-  }
+  },
+  {
+    name: "Brand sign-up",
+    level: "pages",
+    description: "The way into the brand side from the /brands landing page: account → storefront → $50/month subscription, with the landing hero's card visual on the right. Sign-in variant opens the Fernpad demo merchant.",
+    fullBleed: true,
+    variants: [
+      { name: "Sign up", preview: <BrandAuthPage mode="signup" /> },
+      { name: "Sign in", preview: <BrandAuthPage mode="signin" /> },
+    ],
+  },
 ];

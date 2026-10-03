@@ -1,27 +1,37 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ComponentType, type ReactNode } from "react";
 import type { MessageContent } from "@/components/molecules/MessageBubble";
 import { ConversationHeader } from "@/components/organisms/ConversationHeader";
 import { ConversationThread } from "@/components/organisms/ConversationThread";
 import { MessageComposer } from "@/components/organisms/MessageComposer";
 import { ThreadList, type ThreadListEntry } from "@/components/organisms/ThreadList";
 import { CreatorShell } from "@/components/templates/CreatorShell";
-import { inboxTimeFor, mockThreads, previewFor, type ChatMessage } from "@/lib/mock-messages";
+import { inboxTimeFor, mockThreads, previewFor, type ChatMessage, type InboxThread } from "@/lib/mock-messages";
 
 const formatTime = (date: Date) => date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
 
-export default function MessagesPage() {
-  const [activeId, setActiveId] = useState(mockThreads[0].id);
+interface MessagesPageProps {
+  /** Defaults to the creator's inbox. */
+  threads?: InboxThread[];
+  /** The frame around the inbox. Defaults to the creator shell. */
+  shell?: ComponentType<{ children: ReactNode }>;
+  /** Opens this thread first, e.g. after a brand approves a shopper. */
+  initialThreadId?: string;
+}
+
+export default function MessagesPage({ threads = mockThreads, shell: Shell = CreatorShell, initialThreadId }: MessagesPageProps) {
+  const firstId = threads.some((thread) => thread.id === initialThreadId) ? initialThreadId! : threads[0].id;
+  const [activeId, setActiveId] = useState(firstId);
   const [query, setQuery] = useState("");
   const [message, setMessage] = useState("");
   // What you've sent this session, kept per thread so switching conversations doesn't carry it along.
   const [sentByThread, setSentByThread] = useState<Record<string, ChatMessage[]>>({});
   // Below lg the inbox and the conversation are separate screens; this tracks which one is showing.
   const [mobileView, setMobileView] = useState<"list" | "thread">("list");
-  const [readIds, setReadIds] = useState<string[]>([mockThreads[0].id]);
+  const [readIds, setReadIds] = useState<string[]>([firstId]);
 
-  const activeThread = mockThreads.find((thread) => thread.id === activeId) ?? mockThreads[0];
+  const activeThread = threads.find((thread) => thread.id === activeId) ?? threads[0];
   const activeMessages = useMemo(
     () => [...activeThread.messages, ...(sentByThread[activeThread.id] ?? [])],
     [activeThread, sentByThread],
@@ -29,7 +39,7 @@ export default function MessagesPage() {
 
   const filteredThreads = useMemo<ThreadListEntry[]>(() => {
     const needle = query.trim().toLowerCase();
-    return mockThreads.flatMap((thread) => {
+    return threads.flatMap((thread) => {
       const all = [...thread.messages, ...(sentByThread[thread.id] ?? [])];
       const searchText = `${thread.name} ${thread.detail} ${all.map((m) => (m.content.type === "text" ? m.content.text : "")).join(" ")}`;
       if (!searchText.toLowerCase().includes(needle)) return [];
@@ -47,7 +57,7 @@ export default function MessagesPage() {
         },
       ];
     });
-  }, [query, readIds, sentByThread]);
+  }, [query, readIds, sentByThread, threads]);
   const unreadCount = filteredThreads.filter((thread) => thread.unread).length;
 
   function selectThread(id: string) {
@@ -71,8 +81,8 @@ export default function MessagesPage() {
   }
 
   return (
-    <CreatorShell>
-      <div className="flex h-dvh min-h-0 w-full bg-white">
+    <Shell>
+      <div className="flex h-full min-h-0 w-full bg-white">
         <div className="grid h-full min-h-0 w-full grid-cols-[minmax(0,1fr)] overflow-hidden bg-white lg:grid-cols-[21rem_minmax(0,1fr)]">
           <div className={`min-h-0 ${mobileView === "thread" ? "hidden lg:block" : ""}`}>
             <ThreadList
@@ -112,6 +122,6 @@ export default function MessagesPage() {
           </section>
         </div>
       </div>
-    </CreatorShell>
+    </Shell>
   );
 }

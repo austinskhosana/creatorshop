@@ -13,6 +13,7 @@ interface PricingCardProps {
   buttonLabel: string;
   buttonIcon?: ReactNode;
   buttonVariant?: "primary" | "dark" | "secondary";
+  onButtonClick?: () => void;
   /** Wraps the card in the metallic shader background/border instead of a plain white card. */
   featured?: boolean;
 }
@@ -35,6 +36,7 @@ export default function PricingCard({
   buttonLabel,
   buttonIcon,
   buttonVariant = "secondary",
+  onButtonClick,
   featured = false,
 }: PricingCardProps) {
   const content = (
@@ -79,6 +81,7 @@ export default function PricingCard({
               fullWidth
               pressScale={false}
               iconLeft={buttonIcon}
+              onClick={onButtonClick}
               style={{ boxShadow: "none" }}
             >
               {buttonLabel}
@@ -91,6 +94,7 @@ export default function PricingCard({
             pill
             fullWidth
             iconLeft={buttonIcon}
+            onClick={onButtonClick}
             style={{ boxShadow: "none" }}
           >
             {buttonLabel}

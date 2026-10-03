@@ -25,7 +25,7 @@ export default function CreatorShell({ children, breadcrumb }: { children: React
         </Suspense>
       }
     >
-      <div className="creator-page">
+      <div className="creator-page h-full">
         {breadcrumb && <div className="px-5 py-4 sm:px-8">{breadcrumb}</div>}
         {children}
       </div>

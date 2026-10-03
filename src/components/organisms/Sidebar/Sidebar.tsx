@@ -2,13 +2,11 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   ArrowRightStartOnRectangleIcon,
-  BuildingOffice2Icon,
+  BuildingStorefrontIcon,
   ChatBubbleLeftRightIcon,
   Cog6ToothIcon,
-  InboxIcon,
+  InboxStackIcon,
   MagnifyingGlassIcon,
-  MegaphoneIcon,
-  ShieldCheckIcon,
   ShoppingBagIcon,
   ShoppingCartIcon,
   SparklesIcon,
@@ -29,22 +27,25 @@ export type NavItem = {
   href: string;
   icon: React.ReactNode;
   roles: Role[];
-  countKey?: "cart" | "messages";
+  countKey?: "cart" | "messages" | "review";
+  /** Only active on this exact path — for section roots like /brand that prefix every child route. */
+  exact?: boolean;
 };
 
 export const NAV_ITEMS: NavItem[] = [
   { id: "shop", label: "Shop", href: "/explore", icon: <ShoppingBagIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"] },
   { id: "shops", label: "My Shops", href: "/shops", icon: <Squares2X2Icon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"] },
-  { id: "genie-index", label: "Genie Index", href: "/genie-index", icon: <SparklesIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"] },
+  { id: "genie-index", label: "The Genie Index", href: "/genie-index", icon: <SparklesIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"] },
   { id: "cart", label: "Cart", href: "/cart", icon: <ShoppingCartIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"], countKey: "cart" },
-  { id: "messages", label: "Messages", href: "/messages", icon: <ChatBubbleLeftRightIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BRAND", "BOTH"], countKey: "messages" },
+  { id: "messages", label: "Messages", href: "/messages", icon: <ChatBubbleLeftRightIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"], countKey: "messages" },
   { id: "profile", label: "Profile", href: "/profile", icon: <UserIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"] },
-  { id: "settings", label: "Settings", href: "/settings", icon: <Cog6ToothIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BRAND", "BOTH"] },
-  { id: "brand-profile", label: "Profile", href: "/brand-profile", icon: <BuildingOffice2Icon className={SIDEBAR_ICON_CLASS} />, roles: ["BRAND"] },
-  { id: "admin", label: "Admin", href: "/admin", icon: <ShieldCheckIcon className={SIDEBAR_ICON_CLASS} />, roles: ["BRAND"] },
-  { id: "applications", label: "Applications", href: "/applications", icon: <InboxIcon className={SIDEBAR_ICON_CLASS} />, roles: ["BRAND", "BOTH"] },
-  { id: "campaigns", label: "Campaigns", href: "/campaigns", icon: <MegaphoneIcon className={SIDEBAR_ICON_CLASS} />, roles: ["BRAND", "BOTH"] },
-  { id: "influencers", label: "Creators", href: "/influencers", icon: <UsersIcon className={SIDEBAR_ICON_CLASS} />, roles: ["BRAND", "BOTH"] },
+  { id: "settings", label: "Settings", href: "/settings", icon: <Cog6ToothIcon className={SIDEBAR_ICON_CLASS} />, roles: ["CREATOR", "BOTH"] },
+  { id: "brand-storefront", label: "Storefront", href: "/brand", icon: <BuildingStorefrontIcon className={SIDEBAR_ICON_CLASS} />, roles: ["BRAND"], exact: true },
+  { id: "brand-review", label: "Review shoppers", href: "/brand/review", icon: <InboxStackIcon className={SIDEBAR_ICON_CLASS} />, roles: ["BRAND"], countKey: "review" },
+  { id: "brand-shops", label: "Shops", href: "/brand/shops", icon: <Squares2X2Icon className={SIDEBAR_ICON_CLASS} />, roles: ["BRAND"] },
+  { id: "brand-creators", label: "Creators", href: "/brand/creators", icon: <UsersIcon className={SIDEBAR_ICON_CLASS} />, roles: ["BRAND"] },
+  { id: "brand-messages", label: "Messages", href: "/brand/messages", icon: <ChatBubbleLeftRightIcon className={SIDEBAR_ICON_CLASS} />, roles: ["BRAND"], countKey: "messages" },
+  { id: "brand-settings", label: "Settings", href: "/brand/settings", icon: <Cog6ToothIcon className={SIDEBAR_ICON_CLASS} />, roles: ["BRAND"] },
 ];
 
 function getInitials(name: string) {
@@ -86,6 +87,7 @@ interface SidebarProps {
   onSearchChange?: (value: string) => void;
   cartCount?: number;
   messagesCount?: number;
+  reviewCount?: number;
   /** Extra content rendered between the primary nav and the user profile — e.g. a category list on the shop page. */
   children?: ReactNode;
   className?: string;
@@ -102,17 +104,19 @@ export default function Sidebar({
   onSearchChange,
   cartCount,
   messagesCount,
+  reviewCount,
   children,
   className,
   onNavigate,
   onOpenCommandPalette,
 }: SidebarProps) {
   const visibleItems = NAV_ITEMS.filter((item) => item.roles.includes(role));
-  const counts: Record<string, number | undefined> = { cart: cartCount, messages: messagesCount };
+  const counts: Record<string, number | undefined> = { cart: cartCount, messages: messagesCount, review: reviewCount };
+  const homeHref = role === "BRAND" ? "/brand" : "/explore";
 
   return (
     <nav className={cn("flex h-full w-64 flex-shrink-0 flex-col border-r border-neutral-200 bg-white px-4 py-6 font-sans", className)}>
-      <Link href="/explore" onClick={onNavigate} className="mb-8 flex items-center px-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2">
+      <Link href={homeHref} onClick={onNavigate} className="mb-8 flex items-center px-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2">
         <Image src="/Logo.svg" alt="Creatorshop" width={142} height={41} className="h-8 w-auto" priority />
       </Link>
       {onSearchChange && (
@@ -141,7 +145,7 @@ export default function Sidebar({
 
       <ul className="flex flex-col gap-1">
         {visibleItems.map((item) => {
-          const isActive = item.href === "/" ? activeHref === "/" : activeHref.startsWith(item.href);
+          const isActive = item.exact || item.href === "/" ? activeHref === item.href : activeHref.startsWith(item.href);
           const count = item.countKey ? counts[item.countKey] : undefined;
 
           return (

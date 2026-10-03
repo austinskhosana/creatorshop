@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/atoms/Button";
 import { MeshGradientPanel } from "@/components/atoms/MeshGradientPanel";
 import { BrandCardVisual } from "@/components/molecules/BrandCardVisual";
@@ -25,6 +26,7 @@ function entranceProps(index: number, reduce: boolean | null) {
 
 export default function BrandHeroSection() {
   const reduce = useReducedMotion();
+  const router = useRouter();
 
   return (
     <section className="bg-white px-6 pb-6 text-center sm:px-10 sm:pb-10 lg:px-16">
@@ -44,11 +46,11 @@ export default function BrandHeroSection() {
           fees, no retainers.
         </motion.p>
         <div className="mt-8 flex items-center justify-center gap-3">
-          <Button variant="primary" size="md" pill style={{ border: "none", boxShadow: "none" }}>
-            Sign Up
+          <Button variant="primary" size="md" pill onClick={() => router.push("/brand/signup")} style={{ border: "none", boxShadow: "none" }}>
+            Set up your storefront
           </Button>
-          <Button variant="secondary" size="md" pill style={{ boxShadow: "none" }}>
-            Book a Demo
+          <Button variant="secondary" size="md" pill onClick={() => router.push("/brand/signin")} style={{ boxShadow: "none" }}>
+            Sign in
           </Button>
         </div>
       </div>

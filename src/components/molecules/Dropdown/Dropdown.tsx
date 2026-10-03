@@ -17,9 +17,12 @@ interface DropdownProps {
   /** Which edge of the trigger the menu lines up with. */
   align?: "start" | "end";
   disabled?: boolean;
+  /** "field" stretches to the width of a form input and matches its height. */
+  variant?: "toolbar" | "field";
+  id?: string;
 }
 
-export default function Dropdown({ value, onChange, options, ariaLabel, align = "start", disabled = false }: DropdownProps) {
+export default function Dropdown({ value, onChange, options, ariaLabel, align = "start", disabled = false, variant = "toolbar", id }: DropdownProps) {
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -100,9 +103,10 @@ export default function Dropdown({ value, onChange, options, ariaLabel, align = 
   }
 
   return (
-    <div ref={rootRef} className="relative">
+    <div ref={rootRef} className={variant === "field" ? "relative w-full" : "relative"}>
       <button
         ref={triggerRef}
+        id={id}
         type="button"
         disabled={disabled}
         aria-label={ariaLabel}
@@ -112,18 +116,20 @@ export default function Dropdown({ value, onChange, options, ariaLabel, align = 
         onClick={() => (open ? closeMenu() : openMenu())}
         onKeyDown={handleTriggerKeyDown}
         className={[
-          "flex items-center gap-2 rounded-lg border bg-white py-2 pr-2.5 pl-3.5 text-[13px] font-medium text-neutral-700",
+          variant === "field"
+            ? "flex w-full items-center justify-between gap-2 rounded-xl border bg-white py-2.5 pr-3 pl-3.5 text-sm text-neutral-900"
+            : "flex items-center gap-2 rounded-lg border bg-white py-2 pr-2.5 pl-3.5 text-[13px] font-medium text-neutral-700",
           "transition-[border-color,background-color,transform] duration-150 active:scale-[0.98]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2",
           "disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100",
           open ? "border-neutral-300" : "border-neutral-200 hover:border-neutral-300",
         ].join(" ")}
       >
-        <span>{selected?.label}</span>
+        <span className={variant === "field" ? "min-w-0 truncate" : undefined}>{selected?.label}</span>
         <ChevronDownIcon
           aria-hidden="true"
           strokeWidth={2}
-          className={["h-3.5 w-3.5 text-neutral-400 transition-transform duration-200", open ? "rotate-180" : ""].join(" ")}
+          className={["h-3.5 w-3.5 shrink-0 text-neutral-400 transition-transform duration-200", open ? "rotate-180" : ""].join(" ")}
         />
       </button>
 

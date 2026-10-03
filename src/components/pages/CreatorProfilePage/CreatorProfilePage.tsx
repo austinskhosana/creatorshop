@@ -2,34 +2,20 @@
 
 import Link from "next/link";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
-import { CreatorProfileCard } from "@/components/molecules/CreatorProfileCard";
+import { ShopperReviewCard } from "@/components/organisms/ShopperReviewCard";
 import { CreatorShell } from "@/components/templates/CreatorShell";
-import { CREATOR } from "@/lib/mock-creator";
-import { getCoverStyle } from "@/lib/profile-covers";
-import { SOCIAL_PLATFORMS, socialProfileUrl } from "@/lib/socials";
+import { toPublicProfile } from "@/lib/public-profile";
 import { useProfile } from "@/lib/store/creator-store";
 
+/** The creator's own profile, in the same card and from the same data brands review them with. */
 export default function CreatorProfilePage() {
-  const profile = useProfile();
-  // Follower counts come from connected accounts, which Settings doesn't edit yet.
-  const creator = {
-    name: profile.displayName,
-    handle: `@${profile.username}`,
-    avatar: profile.avatar,
-    bio: profile.bio,
-    niches: profile.niches,
-    followers: CREATOR.followers,
-    platforms: SOCIAL_PLATFORMS.flatMap(({ name }) => {
-      const handle = profile.socials[name];
-      return handle ? [{ name, handle: `@${handle}`, url: socialProfileUrl(name, handle) }] : [];
-    }),
-  };
+  const profile = toPublicProfile(useProfile());
 
   return (
     <CreatorShell>
       <main className="relative min-h-screen w-full px-4 py-6 sm:px-5 sm:py-8">
         <div className="flex min-h-[calc(100vh-3rem)] w-full items-center justify-center sm:min-h-[calc(100vh-4rem)]">
-          <div className="w-full max-w-[650px]">
+          <div className="w-full max-w-[34rem]">
             <div className="flex justify-end">
               <Link
                 href="/settings"
@@ -40,7 +26,7 @@ export default function CreatorProfilePage() {
               </Link>
             </div>
 
-            <CreatorProfileCard creator={creator} coverStyle={getCoverStyle(profile.coverId, profile.coverImage)} className="mt-3" />
+            <ShopperReviewCard shopper={profile} full titleAs="h1" className="mt-3" />
           </div>
         </div>
       </main>

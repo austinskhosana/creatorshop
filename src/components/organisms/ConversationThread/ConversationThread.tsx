@@ -1,6 +1,8 @@
 "use client";
 
 import { Fragment, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { EmptyChat } from "@/components/atoms/EmptyChat";
+import { EmptyState } from "@/components/molecules/EmptyState";
 import { MessageBubble } from "@/components/molecules/MessageBubble";
 import type { ChatMessage } from "@/lib/mock-messages";
 
@@ -63,9 +65,10 @@ export default function ConversationThread({ threadId, messages, senderName, sen
       }}
       className="min-h-0 flex-1 overflow-y-auto bg-white px-5 py-7 sm:px-8 sm:py-9"
     >
-      <div className="mx-auto flex max-w-3xl flex-col">
+      {/* min-h-full lets an empty thread centre its empty state in the space above the composer. */}
+      <div className="mx-auto flex min-h-full max-w-3xl flex-col">
         {messages.length === 0 ? (
-          <p className="py-16 text-center text-sm text-neutral-400">No messages yet. Say hi to {senderName}.</p>
+          <EmptyState framed={false} illustration={<EmptyChat />} title="No messages yet" description={`Say hi to ${senderName}.`} className="flex-1 py-0 sm:py-0" />
         ) : null}
 
         {messages.map((message, index) => {

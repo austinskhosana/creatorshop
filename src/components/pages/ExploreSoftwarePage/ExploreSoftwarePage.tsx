@@ -2,7 +2,6 @@
 
 import { useMemo } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import AppShell from "@/components/templates/AppShell/AppShell";
 import ListingsToolbar from "@/components/organisms/ListingsToolbar/ListingsToolbar";
 import ListingGrid from "@/components/organisms/ListingGrid/ListingGrid";
@@ -116,7 +115,7 @@ export default function ExploreSoftwarePage({ listings: allListings }: ExploreSo
         {/* Heading is visually hidden; pt-14 keeps the space its 32px line + 24px margin occupied. */}
         <div className="pt-14">
           <h1 className="sr-only">Shop</h1>
-          <PromoBanner eyebrow="No cash. No gifting. A real transaction." title="Pay with a post." description="Shop vetted software from real brands and pay with content. Add products to your cart, check out in one tap, and unlock access when your post goes live." />
+          <PromoBanner eyebrow="A new way to shop. Built for creators." title="Pay with a post." description="Shop vetted software from real brands and pay with content. Add products to your cart, check out in one tap, and unlock access when your post goes live." />
         </div>
         <section className="flex flex-1 flex-col">
           <h2 className="mb-4 text-[16px] font-semibold text-neutral-900">{filters.category === "all" ? "All products" : filters.category}</h2>
@@ -137,7 +136,6 @@ export default function ExploreSoftwarePage({ listings: allListings }: ExploreSo
           </div>
           <ListingGrid
             listings={paginatedListings}
-            emptyIcon={<MagnifyingGlassIcon className="size-5" strokeWidth={1.75} />}
             emptyAction={searchParams.size ? { label: "Clear filters", onClick: () => window.history.replaceState(null, "", pathname) } : undefined}
           />
           <div className="mt-auto pt-8">

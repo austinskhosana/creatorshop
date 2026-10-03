@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 function CartIcon() {
   return (
@@ -21,24 +22,31 @@ function MenuIcon() {
 
 interface TopBarProps {
   cartCount?: number;
+  /** Brands have no cart. */
+  showCart?: boolean;
+  homeHref?: string;
   onMenuToggle?: () => void;
+  menuOpen?: boolean;
+  className?: string;
 }
 
-export default function TopBar({ cartCount = 0, onMenuToggle }: TopBarProps) {
+/** The mobile header: menu button, logo, and the cart. AppShell shows it below the md breakpoint. */
+export default function TopBar({ cartCount = 0, showCart = true, homeHref = "/", onMenuToggle, menuOpen, className }: TopBarProps) {
   return (
-    <header className="flex h-16 flex-shrink-0 items-center justify-between border-b border-neutral-100 bg-white px-6">
-      <div className="flex items-center gap-3">
-        {onMenuToggle && <button type="button" aria-label="Open navigation" onClick={onMenuToggle} className="flex h-10 w-10 items-center justify-center rounded-lg text-neutral-600 transition-[background-color,color,transform] duration-150 hover:bg-neutral-50 hover:text-neutral-900 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 md:hidden"><MenuIcon /></button>}
-        <Link href="/" className="flex items-center">
+    <header className={cn("flex h-16 flex-shrink-0 items-center justify-between border-b border-neutral-100 bg-white pr-5 pl-3", className)}>
+      <div className="flex items-center gap-2">
+        {onMenuToggle && <button type="button" aria-label="Open navigation" aria-expanded={menuOpen} aria-haspopup="dialog" onClick={onMenuToggle} className="flex h-10 w-10 items-center justify-center rounded-lg text-neutral-600 transition-[background-color,color,transform] duration-150 hover:bg-neutral-50 hover:text-neutral-900 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 md:hidden"><MenuIcon /></button>}
+        <Link href={homeHref} className="flex items-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2">
           <Image src="/Logo.svg" alt="Creatorshop" width={142} height={41} className="h-6 w-auto" priority />
         </Link>
       </div>
 
+      {showCart ? (
       <div className="relative">
         <Link
           href="/cart"
           aria-label={`Cart, ${cartCount} ${cartCount === 1 ? "item" : "items"}`}
-          className="flex h-9 w-9 items-center justify-center rounded-[10px] border border-neutral-200 text-neutral-600 transition-[background-color,color,transform] duration-150 hover:bg-neutral-50 hover:text-neutral-900 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
+          className="flex h-10 w-10 items-center justify-center rounded-[10px] border border-neutral-200 text-neutral-600 transition-[background-color,color,transform] duration-150 hover:bg-neutral-50 hover:text-neutral-900 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
         >
           <CartIcon />
         </Link>
@@ -48,6 +56,7 @@ export default function TopBar({ cartCount = 0, onMenuToggle }: TopBarProps) {
           </span>
         )}
       </div>
+      ) : null}
     </header>
   );
 }

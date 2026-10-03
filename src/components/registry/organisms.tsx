@@ -42,6 +42,12 @@ import { mockThreads } from "@/lib/mock-messages";
 import { MessageComposerDemo } from "@/components/organisms/MessageComposer";
 import { ThreadListDemo } from "@/components/organisms/ThreadList";
 import { ReceiptPrinterHeader, ReceiptPrinterMachine, ReceiptPrinterOutput, ReceiptPrinterPaper, ReceiptPrinterRoot, ReceiptPrinterScreen, ReceiptPrinterStatus } from "@/components/organisms/ReceiptPrinter";
+import { ProductPageCard } from "@/components/organisms/ProductPageCard";
+import { ShopperReviewCard } from "@/components/organisms/ShopperReviewCard";
+import { COVER_OPTIONS } from "@/lib/profile-covers";
+import { BrandShopCardDemo, IntroModalDemo, OutreachSettingsFormDemo, PriceTierEditorDemo, ProductPageCardManageDemo } from "./brand-previews";
+import { DEMO_ACCOUNT as BRAND_DEMO_ACCOUNT, DEMO_PRODUCTS as BRAND_DEMO_PRODUCTS, SHOPPERS as BRAND_SHOPPERS } from "@/lib/mock-brand";
+import { StorefrontCard } from "@/components/organisms/StorefrontCard";
 import type { RegistryEntry } from "./types";
 
 const MOCK_APPLICATION: Application = {
@@ -109,19 +115,41 @@ export const organismsEntries: RegistryEntry[] = [
   {
     name: "Creator directory card",
     level: "organisms",
-    description: "Cover block, niche tags, bio, and view-profile CTA for the creator directory.",
-    stage: "before",
+    description: "A creator in the brand's directory, in the shop card's geometry: avatar, total audience, bio, niche tags, platforms, rating and completed shops. The whole card links to the profile.",
     variants: [
       {
         name: "Default",
         preview: (
-          <div className="w-56">
+          <div className="w-72">
             <CreatorDirectoryCard
-              id="jordan-lee"
-              name="Jordan Lee"
-              bio="Lifestyle and travel content creator working with software brands."
-              niches={["Lifestyle", "Travel"]}
-              coverColor="#FFD6A5"
+              href="#"
+              name="Theo Bramm"
+              handle="theobramm"
+              avatar="/creators/theo-bramm.png"
+              bio="Notion templates and productivity systems for indie hackers."
+              niches={["Productivity", "Indie hacking"]}
+              platforms={["Instagram", "X"]}
+              audience="130.4K"
+              rating={5}
+              completedShops={21}
+            />
+          </div>
+        ),
+      },
+      {
+        name: "New shopper",
+        preview: (
+          <div className="w-72">
+            <CreatorDirectoryCard
+              href="#"
+              name="Kai Okafor"
+              handle="kaibuilds"
+              bio="Shipping small apps in public and reviewing the dev tools that make it possible."
+              niches={["Dev tools", "Building in public"]}
+              platforms={["X", "YouTube"]}
+              audience="35.7K"
+              rating={null}
+              completedShops={0}
             />
           </div>
         ),
@@ -293,14 +321,14 @@ export const organismsEntries: RegistryEntry[] = [
   {
     name: "Promo banner",
     level: "organisms",
-    description: "Full-width store banner — eyebrow pill, headline, and copy on a brand-tinted mesh gradient.",
+    description: "Shop page banner built on Ticket card — pay-with-a-post copy on the shader face, with an admit-one stub carrying the dithered money stack.",
     variants: [
       {
         name: "Default",
         preview: (
           <div className="w-full max-w-3xl">
             <PromoBanner
-              eyebrow="No cash. No gifting. A real transaction."
+              eyebrow="A new way to shop. Built for creators."
               title="Pay with a post."
               description="Shop vetted software from real brands and pay with content. Add products to your cart, check out in one tap, and unlock access when your post goes live."
             />
@@ -918,8 +946,74 @@ export const organismsEntries: RegistryEntry[] = [
   {
     name: "Make a wish form",
     level: "organisms",
-    description: "Promo-banner styled form for wishing for software that isn't on Creatorshop — accepts a name or URL, catches brands already listed or already wished for.",
+    description: "Ticket card form for wishing for software that isn't on Creatorshop — accepts a name or URL, catches brands already listed or already wished for. The stub counts the creator's wishes and carries a dithered genie lamp.",
     variants: [{ name: "Default", preview: <MakeAWishForm rows={[]} /> }],
   },
-
+  {
+    name: "Product page card",
+    level: "organisms",
+    description: "A brand's product page in the ListingCard geometry: status, price tiers, stock meter, retail value. Manage variant adds Review / Edit and an action menu; storefront variant is what creators see.",
+    variants: [
+      { name: "Manage · live", preview: <ProductPageCardManageDemo /> },
+      { name: "Manage · draft", preview: <div className="w-80"><ProductPageCard product={BRAND_DEMO_PRODUCTS[4]} remaining={5} /></div> },
+      { name: "Storefront · sold out", preview: <div className="w-80"><ProductPageCard product={BRAND_DEMO_PRODUCTS[2]} remaining={0} variant="storefront" /></div> },
+    ],
+  },
+  {
+    name: "Storefront card",
+    level: "organisms",
+    description: "A brand's storefront as an object: logo, name, verified mark and tagline over a perforated tear line with cut-out notches, ticket-style facts, and a barcode stub on wide containers. Manage shows open/hidden status and how many pages are in store; public shows the website instead.",
+    variants: [
+      { name: "Manage", preview: <div className="w-full max-w-4xl"><StorefrontCard account={BRAND_DEMO_ACCOUNT} liveCount={3} /></div> },
+      { name: "Public", preview: <div className="w-full max-w-4xl"><StorefrontCard account={BRAND_DEMO_ACCOUNT} liveCount={3} variant="public" /></div> },
+      { name: "Hidden · new brand", preview: <div className="w-full max-w-4xl"><StorefrontCard account={{ ...BRAND_DEMO_ACCOUNT, subscription: "none", rating: null, completedShops: 0 }} liveCount={0} /></div> },
+    ],
+  },
+  {
+    name: "Brand shop card",
+    level: "organisms",
+    description: "One approved shop from the brand's side — the My Shops card geometry with the creator up top, a what's-next line, and Review proof / Message / Receipt actions.",
+    variants: [
+      { name: "Proof to review", preview: <BrandShopCardDemo shopIndex={0} /> },
+      { name: "Overdue", preview: <BrandShopCardDemo shopIndex={2} /> },
+      { name: "Access active", preview: <BrandShopCardDemo shopIndex={3} /> },
+    ],
+  },
+  {
+    name: "Price tier editor",
+    level: "organisms",
+    description: "Rows of price tiers — content type, access duration, retail value — with add/remove. Stacks below a 32rem container, so it fits a narrow form column.",
+    variants: [{ name: "Default", preview: <PriceTierEditorDemo /> }],
+  },
+  {
+    name: "Shopper review card",
+    level: "organisms",
+    description: "The one creator profile card — the creator's own profile, a brand's view of them, shopper review, the directory deck and the landing demo all render it from the same public-profile data. Inset banner (or the creator's chosen cover), track record beside the avatar, niches and audience in one row, two example posts; `full` shows the whole bio and every post for profile pages. Sized to fit one viewport, and grows into a taller slot banner-first. Stats drop under the handle below a 32rem container.",
+    variants: [
+      { name: "Returning shopper", preview: <div className="w-full max-w-[34rem]"><ShopperReviewCard shopper={BRAND_SHOPPERS[1]} showShader={false} /></div> },
+      { name: "New shopper", preview: <div className="w-full max-w-[34rem]"><ShopperReviewCard shopper={BRAND_SHOPPERS[4]} showShader={false} /></div> },
+      { name: "Profile page · full", preview: <div className="w-full max-w-[34rem]"><ShopperReviewCard shopper={BRAND_SHOPPERS[2]} showShader={false} full /></div> },
+      { name: "Custom cover", preview: <div className="w-full max-w-[34rem]"><ShopperReviewCard shopper={{ ...BRAND_SHOPPERS[0], coverId: COVER_OPTIONS.find((option) => !option.shader)?.id }} showShader={false} /></div> },
+    ],
+  },
+  {
+    name: "Intro modal",
+    level: "organisms",
+    description: "The brand's intro in one modal, wherever it comes up. The first right swipe and the deck's auto-send button run the same two steps — write the intro beside a live preview, then pick what a right swipe does and the campaign — ending in send or save. With an intro saved, a right swipe that doesn't auto-send opens it filled in for that creator. Nothing reaches a creator until the brand presses send; cancelling a swipe brings the card back.",
+    variants: [
+      { name: "First swipe · write your intro", preview: <IntroModalDemo /> },
+      { name: "Auto-send button · edit", preview: <IntroModalDemo variant="edit" /> },
+      { name: "Saved intro · review", preview: <IntroModalDemo variant="review" /> },
+      { name: "Auto-send paused", preview: <IntroModalDemo variant="paused" /> },
+    ],
+  },
+  {
+    name: "Outreach settings form",
+    level: "organisms",
+    description: "Everything a right swipe sends, on one page: the intro beside its preview, review-each-one vs send-automatically, and the campaign that follows. Settings → Intro message. Built from the same pieces as the intro modal.",
+    variants: [
+      { name: "Starting draft", preview: <OutreachSettingsFormDemo /> },
+      { name: "Saved · auto-send on", preview: <OutreachSettingsFormDemo saved /> },
+    ],
+  },
 ];

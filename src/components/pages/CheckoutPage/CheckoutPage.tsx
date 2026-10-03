@@ -2,6 +2,7 @@
 
 import { ShieldCheckIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
+import { EmptyCart } from "@/components/atoms/EmptyCart";
 import BrandLogo from "@/components/atoms/BrandLogo/BrandLogo";
 import Button from "@/components/atoms/Button/Button";
 import { darkGradientButtonStyle } from "@/components/atoms/Button/darkGradientStyle";
@@ -46,7 +47,7 @@ export default function CheckoutPage() {
           {breadcrumb}
           <EmptyState
             className="mt-9"
-            icon={<ShoppingCartIcon className="size-5" strokeWidth={1.75} />}
+            illustration={<EmptyCart />}
             title="Nothing to check out"
             description="Your cart is empty. Add software from the shop first."
             action={{ label: "Browse the shop", href: "/explore" }}

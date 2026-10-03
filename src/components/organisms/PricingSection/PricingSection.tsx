@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { BoltIcon, ClipboardIcon, EnvelopeIcon } from "@heroicons/react/24/solid";
 import { PricingCard } from "@/components/molecules/PricingCard";
 
@@ -26,6 +27,7 @@ function entranceProps(index: number, reduce: boolean | null) {
 
 export default function PricingSection() {
   const reduce = useReducedMotion();
+  const router = useRouter();
 
   return (
     <section className="bg-white px-6 pt-40 text-center sm:px-10 sm:pt-56 lg:px-16 lg:pt-72">
@@ -60,6 +62,7 @@ export default function PricingSection() {
           ]}
           buttonLabel="Get started"
           buttonVariant="dark"
+          onButtonClick={() => router.push("/brand/signup")}
           featured
         />
 

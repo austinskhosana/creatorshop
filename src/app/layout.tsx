@@ -8,6 +8,7 @@ import {
 } from "geist/font/pixel";
 import { GeistMono } from "geist/font/mono";
 import { Caveat, Permanent_Marker, Space_Mono } from "next/font/google";
+import { Toaster } from "@/components/molecules/Toast";
 import "./globals.css";
 
 const permanentMarker = Permanent_Marker({
@@ -59,6 +60,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col bg-white">
         <main className="flex-1">{children}</main>
+        <Toaster />
       </body>
     </html>
   );

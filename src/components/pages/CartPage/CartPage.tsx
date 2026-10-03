@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { EmptyCart } from "@/components/atoms/EmptyCart";
 import { CreatorBreadcrumb } from "@/components/molecules/CreatorBreadcrumb";
 import { CartLineItem, type CartLineItemData } from "@/components/molecules/CartLineItem";
 import { EmptyState } from "@/components/molecules/EmptyState";
@@ -62,16 +62,23 @@ export default function CartPage({ items: previewItems }: CartPageProps) {
 
   return (
     <CreatorShell>
-      <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12">
+      <div className="mx-auto flex min-h-full max-w-6xl flex-col px-5 py-8 sm:px-8 sm:py-12">
         <CreatorBreadcrumb items={[{ label: "Shop", href: "/explore" }, { label: "Cart" }]} />
 
         <div className="mt-6 flex flex-wrap items-end justify-between gap-3">
-          <h1 className="text-4xl font-bold tracking-tight">Cart</h1>
+          <div>
+            <h1 className="text-4xl font-bold tracking-tight text-neutral-950">Cart</h1>
+            {items.length > 0 ? (
+              <p className="mt-2 text-sm text-neutral-500">
+                <span className="tabular-nums">{items.length}</span> {items.length === 1 ? "product" : "products"} ready to shop
+              </p>
+            ) : null}
+          </div>
           {items.length > 0 && !previewItems ? <ClearCartButton count={items.length} /> : null}
         </div>
 
         {items.length ? (
-          <div className="mt-9 grid items-start gap-7 lg:grid-cols-[1.45fr_.7fr]">
+          <div className="mt-8 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
             <div className="divide-y divide-neutral-100 overflow-hidden rounded-[1.75rem] border border-neutral-200 bg-white">
               {items.map((item) => (
                 <CartLineItem key={item.id} item={item} onRemove={creatorStore.removeFromCart} />
@@ -80,13 +87,16 @@ export default function CartPage({ items: previewItems }: CartPageProps) {
             <CartSummary total={total} checkoutHref="/checkout" />
           </div>
         ) : (
-          <EmptyState
-            className="mt-9"
-            icon={<ShoppingCartIcon className="size-5" strokeWidth={1.75} />}
-            title="Your cart is empty"
-            description="Add software from the shop. You'll pay for each one with a post, not money."
-            action={{ label: "Browse the shop", href: "/explore" }}
-          />
+          // Fills the rest of the page so the fixed-height empty state sits centred in it.
+          <div className="mt-8 flex flex-1 flex-col justify-center">
+            <EmptyState
+              className="min-h-[28rem] sm:min-h-[36rem]"
+              illustration={<EmptyCart />}
+              title="Your cart is empty"
+              description="Add software from the shop. You'll pay for each one with a post, not money."
+              action={{ label: "Browse the shop", href: "/explore" }}
+            />
+          </div>
         )}
       </div>
     </CreatorShell>

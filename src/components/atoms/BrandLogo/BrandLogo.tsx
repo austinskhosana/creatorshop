@@ -22,6 +22,8 @@ const LOGO_IMAGES: Record<string, string> = {
   lightroom: "/logos/lightroom.png",
   linear: "/logos/linear.png",
   raycast: "/logos/raycast.png",
+  // The brand-side demo merchant. An original mark for a fictional company.
+  fernpad: "/logos/fernpad.svg",
 };
 
 interface BrandLogoProps {

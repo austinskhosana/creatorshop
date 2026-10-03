@@ -12,6 +12,8 @@ interface EmptyStateProps {
   title: string;
   description?: string;
   icon?: ReactNode;
+  /** A bespoke illustration, shown in place of the icon and its ghost cards. */
+  illustration?: ReactNode;
   action?: EmptyStateAction;
   secondaryAction?: EmptyStateAction;
   /** Draws the dashed outline. Turn off when the parent already frames the space. */
@@ -56,7 +58,7 @@ function ActionControl({ action, tone }: { action: EmptyStateAction; tone: keyof
  * Placeholder empty state: a small icon resting on two ghost cards (the shape of a listing card),
  * a title, a line of help, and up to two actions. Intentionally quiet until bespoke ones are designed.
  */
-export default function EmptyState({ title, description, icon, action, secondaryAction, framed = true, className }: EmptyStateProps) {
+export default function EmptyState({ title, description, icon, illustration, action, secondaryAction, framed = true, className }: EmptyStateProps) {
   return (
     <div
       className={cn(
@@ -65,14 +67,20 @@ export default function EmptyState({ title, description, icon, action, secondary
         className,
       )}
     >
-      <div aria-hidden="true" className="relative mb-6 h-14 w-24">
-        <span className="absolute inset-x-5 inset-y-1 -translate-x-4 -rotate-[10deg] rounded-[12px] border border-neutral-200 bg-neutral-100" />
-        <span className="absolute inset-x-5 inset-y-1 translate-x-4 rotate-[10deg] rounded-[12px] border border-neutral-200 bg-neutral-100" />
-        <span className="absolute inset-x-5 inset-y-0 grid place-items-center rounded-[12px] border border-neutral-200 bg-white text-neutral-900 shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
-          {icon ?? <DefaultIcon />}
-          <span className="absolute -top-1 -right-1 size-2.5 rounded-full border-2 border-white bg-[#A3FF38]" />
-        </span>
-      </div>
+      {illustration ? (
+        <div aria-hidden="true" className="mb-6">
+          {illustration}
+        </div>
+      ) : (
+        <div aria-hidden="true" className="relative mb-6 h-14 w-24">
+          <span className="absolute inset-x-5 inset-y-1 -translate-x-4 -rotate-[10deg] rounded-[12px] border border-neutral-200 bg-neutral-100" />
+          <span className="absolute inset-x-5 inset-y-1 translate-x-4 rotate-[10deg] rounded-[12px] border border-neutral-200 bg-neutral-100" />
+          <span className="absolute inset-x-5 inset-y-0 grid place-items-center rounded-[12px] border border-neutral-200 bg-white text-neutral-900 shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
+            {icon ?? <DefaultIcon />}
+            <span className="absolute -top-1 -right-1 size-2.5 rounded-full border-2 border-white bg-[#A3FF38]" />
+          </span>
+        </div>
+      )}
       <h3 className="text-balance text-[15px] font-semibold tracking-[-0.02em] text-neutral-950">{title}</h3>
       {description && <p className="mt-1.5 max-w-[19rem] text-pretty text-[13px] leading-[1.55] text-neutral-500">{description}</p>}
       {(action || secondaryAction) && (
