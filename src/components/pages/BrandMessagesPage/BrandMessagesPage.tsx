@@ -7,6 +7,11 @@ import { useBrandState } from "@/lib/store/brand-store";
 import { getShopper } from "@/lib/mock-brand";
 import type { InboxThread } from "@/lib/mock-messages";
 
+const BRAND_EMPTY = {
+  description: "Approve a shopper or message a creator from their profile, and the thread opens here.",
+  action: { label: "Browse creators", href: "/brand/creators" },
+};
+
 /**
  * S1 for brands — one thread per creator. Swipe-mode invites land in the creator's thread.
  * Opening a creator without a thread yet starts an empty one, so "Message" from a profile or an
@@ -23,5 +28,5 @@ export default function BrandMessagesPage({ threadId }: { threadId?: string }) {
 
   // The inbox picks its open thread once, on mount. Keying on the account remounts it when the stored
   // session loads, so it opens on the top thread rather than the signed-out support-only list.
-  return <MessagesPage key={`${state.account?.slug ?? "signed-out"}:${threadId ?? "inbox"}`} threads={threads} shell={BrandShell} initialThreadId={threadId} />;
+  return <MessagesPage key={`${state.account?.slug ?? "signed-out"}:${threadId ?? "inbox"}`} threads={threads} shell={BrandShell} initialThreadId={threadId} empty={BRAND_EMPTY} />;
 }

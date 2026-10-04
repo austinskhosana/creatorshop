@@ -23,9 +23,13 @@ import { EmptyStorefront } from "@/components/atoms/EmptyStorefront";
 import { EmptyBox } from "@/components/atoms/EmptyBox";
 import { EmptyBell } from "@/components/atoms/EmptyBell";
 import { WishingStar } from "@/components/atoms/WishingStar";
+import { EmptyEnvelope } from "@/components/atoms/EmptyEnvelope";
+import { EmptyCompass } from "@/components/atoms/EmptyCompass";
 import { LocationTime } from "@/components/atoms/LocationTime";
 import { ScrollIndicator } from "@/components/atoms/ScrollIndicator";
 import { TextScramble } from "@/components/atoms/TextScramble";
+import { CornerDots } from "@/components/atoms/CornerDots";
+import { StatusDot } from "@/components/atoms/StatusDot";
 import type { RegistryEntry } from "./types";
 
 export const atomsEntries: RegistryEntry[] = [
@@ -491,7 +495,7 @@ export const atomsEntries: RegistryEntry[] = [
   {
     name: "Empty search",
     level: "atoms",
-    description: "A magnifying glass in the dithered stub-art style (shared renderer in lib/dither-art): a bezel-shaded metal ring around a clear lens with a curved glint, a short metal ferrule and a dark grip, floating over a tight dithered shadow. It searches the way you would: holds still to look, lifts a cell, glides to the next spot (centre, right, left), lowers and looks again, its shadow following and softening while it's lifted. Steps at 8fps, pauses off screen, and rests under reduced motion. Used on the no-matches states for products and creators.",
+    description: "A magnifying glass in the dithered stub-art style (shared renderer in lib/dither-art): a bezel-shaded metal ring around a clear lens with a curved glint, a short metal ferrule and a dark grip, floating over a tight dithered shadow. It searches the way you would: holds still to look, lifts a cell, glides to the next spot (centre, right, left), lowers and looks again, its shadow following and softening while it's lifted. Steps at 8fps, pauses off screen, and rests under reduced motion. Used on the no-matches states for products, creators and conversations.",
     variants: [
       { name: "Default", preview: <EmptySearch /> },
       { name: "Large", preview: <EmptySearch className="h-44 w-60 text-neutral-900" /> },
@@ -543,6 +547,24 @@ export const atomsEntries: RegistryEntry[] = [
     ],
   },
   {
+    name: "Empty envelope",
+    level: "atoms",
+    description: "An open, empty envelope in the stub-art style (shared renderer in lib/dither-art), seen from the back and drawn straight onto the cell grid so every diagonal is an exact two-across, one-down staircase: a solid black hollow squared to the body and narrowing to a V, the bottom flap's folds rising to meet the V's point, and the open flap mirroring the V into one diamond, lined with nested chevrons. It floats over a tight dithered shadow. Every few seconds a hand-placed pixel moth flutters up out of the hollow and off over the flap's shoulder. Steps at 8fps, pauses off screen, and stays still with no moth under reduced motion. Used on the empty inbox.",
+    variants: [
+      { name: "Default", preview: <EmptyEnvelope /> },
+      { name: "Large", preview: <EmptyEnvelope className="h-44 w-60 text-neutral-900" /> },
+    ],
+  },
+  {
+    name: "Empty compass",
+    level: "atoms",
+    description: "A pocket compass in the dithered stub-art style (shared renderer in lib/dither-art): a bezel-shaded metal case with a loop on top, a pale dial ticked at the eight points and shaded under the rim on the lit side, and a faceted needle, dark to the north and pale to the south, on a bright pin. It can't find its bearings: it whirls, wobbles to rest pointing somewhere wrong, holds, and swings off again, all while hovering in an eased two-cell rise and settle over a shadow that shrinks as it lifts. Headings use sqrt-only directions so server and client agree. Steps at 8fps, pauses off screen, and rests just off north under reduced motion. Used on the not-found page.",
+    variants: [
+      { name: "Default", preview: <EmptyCompass /> },
+      { name: "Large", preview: <EmptyCompass className="h-44 w-60 text-neutral-900" /> },
+    ],
+  },
+  {
     name: "Location time",
     level: "atoms",
     description: "Detects the visitor's own timezone and shows their local city and time in Geist Mono — used top-right of the hero heading.",
@@ -584,6 +606,42 @@ export const atomsEntries: RegistryEntry[] = [
             text="Trade posts for software access."
             className="font-mono text-sm text-neutral-600"
           />
+        ),
+      },
+    ],
+  },
+  {
+    name: "Corner dots",
+    level: "atoms",
+    description: "A grey dot grid that fades out from a card's bottom-right corner over a fixed 180px radius, so it stays in the corner at any width. Decorative and behind the content: the card needs `relative isolate`. Used on the brand storefront's overview cards.",
+    variants: [
+      {
+        name: "Default",
+        preview: (
+          <div className="relative isolate h-[148px] w-full max-w-sm rounded-[20px] border border-neutral-200 bg-white p-6">
+            <CornerDots />
+            <p className="text-[13px] font-medium text-neutral-600">Shops in progress</p>
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Status dot",
+    level: "atoms",
+    description: "A coloured dot ringed by a lighter halo of the same tone. Decorative, so always pair it with a label. Used inside the status pill and on the storefront's overdue count.",
+    variants: [
+      {
+        name: "Tones",
+        preview: (
+          <div className="flex flex-wrap items-center gap-4">
+            <StatusDot tone="success" />
+            <StatusDot tone="waiting" />
+            <StatusDot tone="progress" />
+            <StatusDot tone="danger" />
+            <StatusDot tone="muted" />
+            <StatusDot tone="neutral" />
+          </div>
         ),
       },
     ],

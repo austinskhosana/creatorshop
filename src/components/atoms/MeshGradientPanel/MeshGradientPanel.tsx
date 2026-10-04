@@ -16,6 +16,9 @@ interface MeshGradientPanelProps {
   borderWidth?: number;
 }
 
+// The metal shader's base colour, also painted as a flat fallback behind it.
+const METAL_BASE = "#DCDCDE";
+
 export default function MeshGradientPanel({
   children,
   className,
@@ -23,14 +26,20 @@ export default function MeshGradientPanel({
   radius = 32,
   borderWidth = 5,
 }: MeshGradientPanelProps) {
+  // Both shaders mount a beat after hydration. Until then the ring shows a flat
+  // METAL_BASE fill and the centre stays white, so neither shader's arrival can
+  // flash the whole panel grey. The metal canvas then fades in over its fallback.
   return (
-    <div className={cn("relative isolate overflow-hidden", className)} style={{ borderRadius: radius }}>
+    <div
+      className={cn("relative isolate overflow-hidden", className)}
+      style={{ borderRadius: radius, backgroundColor: METAL_BASE }}
+    >
       <LiquidMetal
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-20 h-full w-full"
+        className="pointer-events-none absolute inset-0 -z-20 h-full w-full [&>canvas]:transition-opacity [&>canvas]:duration-600 [&>canvas]:ease-out [&>canvas]:starting:opacity-0"
         shape="none"
         fit="cover"
-        colorBack="#DCDCDE"
+        colorBack={METAL_BASE}
         colorTint="#ffffff"
         repetition={4}
         softness={0.8}
@@ -47,7 +56,7 @@ export default function MeshGradientPanel({
 
       <div
         aria-hidden="true"
-        className="absolute -z-10 overflow-hidden"
+        className="absolute -z-10 overflow-hidden bg-white"
         style={{
           inset: borderWidth,
           borderRadius: Math.max(radius - borderWidth, 0),

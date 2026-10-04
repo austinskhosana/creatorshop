@@ -256,7 +256,7 @@ function SignInFlow() {
       <p className="mt-6 text-center text-sm text-neutral-500">
         New to Creatorshop?{" "}
         <Link href="/brand/signup" className="font-medium text-neutral-950 underline decoration-neutral-300 underline-offset-4 hover:decoration-neutral-900">
-          Set up your storefront
+          Get started
         </Link>
       </p>
       <PreviewNote>Sign-in isn&apos;t connected in this preview — any email opens the Fernpad demo storefront.</PreviewNote>

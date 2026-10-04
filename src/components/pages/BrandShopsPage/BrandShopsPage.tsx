@@ -6,6 +6,7 @@ import { EmptyState } from "@/components/molecules/EmptyState";
 import { FlashMessage, useFlash } from "@/components/molecules/FlashMessage";
 import { PageHeader } from "@/components/molecules/PageHeader";
 import { BrandShopCard } from "@/components/organisms/BrandShopCard";
+import { CloseShopModal } from "@/components/organisms/CloseShopModal";
 import { ProofReviewModal } from "@/components/organisms/ProofReviewModal";
 import { ShopReceiptModal } from "@/components/organisms/ShopReceiptModal";
 import { BrandShell } from "@/components/templates/BrandShell";
@@ -35,6 +36,8 @@ function Shops() {
   const [proofOpen, setProofOpen] = useState(false);
   const [receiptShop, setReceiptShop] = useState<BrandShop | null>(null);
   const [receiptOpen, setReceiptOpen] = useState(false);
+  const [closingShop, setClosingShop] = useState<BrandShop | null>(null);
+  const [closingOpen, setClosingOpen] = useState(false);
   const [flash, showFlash] = useFlash();
 
   if (!account) return null;
@@ -44,10 +47,11 @@ function Shops() {
     .sort((a, b) => URGENCY[a.state] - URGENCY[b.state] || a.deadline.localeCompare(b.deadline));
   const proofShopper = proofShop && getShopper(proofShop.shopperId);
   const receiptShopper = receiptShop && getShopper(receiptShop.shopperId);
+  const closingShopper = closingShop && getShopper(closingShop.shopperId);
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12">
-      <PageHeader title="Shops" description="Every creator you've approved. Approved shops are protected — they can't be cancelled." />
+      <PageHeader title="Shops" description="Every creator you've approved. Approved shops are protected — you can only close one once its post is overdue." />
 
       {shops.length === 0 ? (
         <EmptyState
@@ -73,7 +77,7 @@ function Shops() {
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {visible.map((shop) => {
                   const shopper = getShopper(shop.shopperId);
-                  return shopper ? <BrandShopCard key={shop.id} shop={shop} shopper={shopper} onReviewProof={(item) => { setProofShop(item); setProofOpen(true); }} onViewReceipt={(item) => { setReceiptShop(item); setReceiptOpen(true); }} /> : null;
+                  return shopper ? <BrandShopCard key={shop.id} shop={shop} shopper={shopper} onReviewProof={(item) => { setProofShop(item); setProofOpen(true); }} onViewReceipt={(item) => { setReceiptShop(item); setReceiptOpen(true); }} onCloseShop={(item) => { setClosingShop(item); setClosingOpen(true); }} /> : null;
                 })}
               </div>
             ) : (
@@ -110,6 +114,20 @@ function Shops() {
       ) : null}
       {receiptShop && receiptShopper ? (
         <ShopReceiptModal open={receiptOpen} onClosed={() => setReceiptShop(null)} shop={receiptShop} shopper={receiptShopper} brandName={account.companyName} onClose={() => setReceiptOpen(false)} />
+      ) : null}
+      {closingShop && closingShopper ? (
+        <CloseShopModal
+          open={closingOpen}
+          onClosed={() => setClosingShop(null)}
+          shop={closingShop}
+          shopper={closingShopper}
+          onClose={() => setClosingOpen(false)}
+          onConfirm={(message) => {
+            brandStore.closeShop(closingShop.id, message);
+            setClosingOpen(false);
+            showFlash({ message: `Closed ${closingShopper.name}'s shop and sent your message.`, action: { label: "Open thread", href: `/brand/messages?thread=${closingShopper.id}` } });
+          }}
+        />
       ) : null}
 
       <FlashMessage {...flash} />

@@ -5,6 +5,7 @@ import { GenieIndexPage } from "@/components/pages/GenieIndexPage";
 import { CartPage } from "@/components/pages/CartPage";
 import { MessagesPage } from "@/components/pages/MessagesPage";
 import { BrandAuthPage } from "@/components/pages/BrandAuthPage";
+import { NotFoundPage } from "@/components/pages/NotFoundPage";
 import type { RegistryEntry } from "./types";
 
 export const pagesEntries: RegistryEntry[] = [
@@ -67,9 +68,22 @@ export const pagesEntries: RegistryEntry[] = [
   {
     name: "Messages",
     level: "pages",
-    description: "Inbox and conversation view — a thread list sidebar next to a message log with a composer, mirroring the shop's DM experience.",
+    description: "Inbox and conversation view — a thread list sidebar next to a message log with a composer, mirroring the shop's DM experience. With no threads at all it shows an empty envelope pointing back to the shop.",
     fullBleed: true,
-    variants: [{ name: "Default", preview: <MessagesPage /> }],
+    variants: [
+      { name: "Default", preview: <MessagesPage /> },
+      { name: "Empty", preview: <MessagesPage threads={[]} /> },
+    ],
+  },
+  {
+    name: "Not found",
+    level: "pages",
+    description: "The 404 for missing listings, profiles and shops and for any unknown URL: a lost compass over two ways back. The brand side swaps the actions for its own.",
+    fullBleed: true,
+    variants: [
+      { name: "Default", preview: <NotFoundPage /> },
+      { name: "Brand", preview: <NotFoundPage action={{ label: "Browse creators", href: "/brand/creators" }} secondaryAction={{ label: "Back to storefront", href: "/brand" }} /> },
+    ],
   },
   {
     name: "Brand sign-up",

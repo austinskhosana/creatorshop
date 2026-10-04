@@ -317,6 +317,14 @@ export const brandStore = {
     }));
   },
 
+  /** Ends an overdue shop without releasing access. The note goes to the creator's thread. */
+  closeShop(shopId: string, note: string) {
+    update((current) => ({
+      ...current,
+      shops: current.shops.map((shop) => (shop.id === shopId && shop.state === "overdue" ? { ...shop, state: "incomplete", closeNote: note } : shop)),
+    }));
+  },
+
   /**
    * Swiping right on a creator: the intro, already filled in with their name, goes out with the
    * campaign the brand picked, if any.

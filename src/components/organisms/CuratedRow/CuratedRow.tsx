@@ -30,6 +30,9 @@ interface CuratedRowProps {
 export default function CuratedRow({ icon, title, subtitle, listings }: CuratedRowProps) {
   const railRef = useRef<HTMLDivElement>(null);
 
+  // A row with nothing in it is left out rather than drawn as an empty rail.
+  if (listings.length === 0) return null;
+
   function scroll(direction: "left" | "right") {
     railRef.current?.scrollBy({ left: direction === "left" ? -320 : 320, behavior: "smooth" });
   }

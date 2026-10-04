@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
+import { CornerDots } from "@/components/atoms/CornerDots";
 import { FacePile, type FacePilePerson } from "@/components/molecules/FacePile";
 import { cn } from "@/lib/utils";
 
@@ -33,8 +34,9 @@ export default function ReviewQueueCard({ people, href, emptyHref, label = "Shop
   return (
     <Link
       href={waiting ? href : emptyHref}
-      className="group flex min-h-[148px] flex-col justify-between gap-8 rounded-[20px] border border-neutral-200 bg-white p-6 text-left transition-[border-color,transform] duration-150 hover:border-neutral-300 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
+      className="group relative isolate flex min-h-[148px] flex-col justify-between gap-8 rounded-[20px] border border-neutral-200 bg-white p-6 text-left transition-[border-color,transform] duration-150 hover:border-neutral-300 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
     >
+      <CornerDots />
       <div className="flex items-center justify-between gap-3">
         <p className="text-[13px] font-medium text-neutral-600">{label}</p>
         <span className="flex h-8 items-center gap-1 rounded-full bg-[#A3FF38] pr-2.5 pl-3 text-xs font-medium text-neutral-950">

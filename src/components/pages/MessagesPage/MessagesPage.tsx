@@ -1,6 +1,11 @@
 "use client";
 
 import { useMemo, useState, type ComponentType, type ReactNode } from "react";
+import { EnvelopeIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { EmptyEnvelope } from "@/components/atoms/EmptyEnvelope";
+import type { ActionMenuItem } from "@/components/molecules/ActionMenu";
+import { ConfirmDialog } from "@/components/molecules/ConfirmDialog";
+import { EmptyState } from "@/components/molecules/EmptyState";
 import type { MessageContent } from "@/components/molecules/MessageBubble";
 import { ConversationHeader } from "@/components/organisms/ConversationHeader";
 import { ConversationThread } from "@/components/organisms/ConversationThread";
@@ -18,10 +23,17 @@ interface MessagesPageProps {
   shell?: ComponentType<{ children: ReactNode }>;
   /** Opens this thread first, e.g. after a brand approves a shopper. */
   initialThreadId?: string;
+  /** What an inbox with no threads at all says, and where it points. Defaults to the creator's. */
+  empty?: { description: string; action: { label: string; href: string } };
 }
 
-export default function MessagesPage({ threads = mockThreads, shell: Shell = CreatorShell, initialThreadId }: MessagesPageProps) {
-  const firstId = threads.some((thread) => thread.id === initialThreadId) ? initialThreadId! : threads[0].id;
+const CREATOR_EMPTY = {
+  description: "Check out something you want and the brand's thread opens here, ready to talk through the campaign.",
+  action: { label: "Browse the shop", href: "/explore" },
+};
+
+export default function MessagesPage({ threads: allThreads = mockThreads, shell: Shell = CreatorShell, initialThreadId, empty = CREATOR_EMPTY }: MessagesPageProps) {
+  const firstId = allThreads.some((thread) => thread.id === initialThreadId) ? initialThreadId! : allThreads[0]?.id;
   const [activeId, setActiveId] = useState(firstId);
   const [query, setQuery] = useState("");
   const [message, setMessage] = useState("");
@@ -29,11 +41,18 @@ export default function MessagesPage({ threads = mockThreads, shell: Shell = Cre
   const [sentByThread, setSentByThread] = useState<Record<string, ChatMessage[]>>({});
   // Below lg the inbox and the conversation are separate screens; this tracks which one is showing.
   const [mobileView, setMobileView] = useState<"list" | "thread">("list");
-  const [readIds, setReadIds] = useState<string[]>([firstId]);
+  // Read state you've set this session, by opening a thread or from its menu; anything missing keeps the thread's own.
+  const [unreadById, setUnreadById] = useState<Record<string, boolean>>(firstId ? { [firstId]: false } : {});
+  const [deletedIds, setDeletedIds] = useState<string[]>([]);
+  // The thread awaiting confirmation. It outlives the dialog's open state so the name holds while it closes.
+  const [pendingDelete, setPendingDelete] = useState<{ id: string; name: string } | null>(null);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
-  const activeThread = threads.find((thread) => thread.id === activeId) ?? threads[0];
+  const threads = useMemo(() => allThreads.filter((thread) => !deletedIds.includes(thread.id)), [allThreads, deletedIds]);
+
+  const activeThread: InboxThread | undefined = threads.find((thread) => thread.id === activeId) ?? threads[0];
   const activeMessages = useMemo(
-    () => [...activeThread.messages, ...(sentByThread[activeThread.id] ?? [])],
+    () => (activeThread ? [...activeThread.messages, ...(sentByThread[activeThread.id] ?? [])] : []),
     [activeThread, sentByThread],
   );
 
@@ -53,23 +72,87 @@ export default function MessagesPage({ threads = mockThreads, shell: Shell = Cre
           official: thread.participant === "team",
           preview: previewFor(last),
           time: inboxTimeFor(last),
-          unread: thread.unread && !readIds.includes(thread.id),
+          unread: unreadById[thread.id] ?? Boolean(thread.unread),
         },
       ];
     });
-  }, [query, readIds, sentByThread, threads]);
+  }, [query, unreadById, sentByThread, threads]);
   const unreadCount = filteredThreads.filter((thread) => thread.unread).length;
 
   function selectThread(id: string) {
     if (id !== activeId) setMessage("");
     setActiveId(id);
     setMobileView("thread");
-    setReadIds((ids) => (ids.includes(id) ? ids : [...ids, id]));
+    setUnreadById((byId) => ({ ...byId, [id]: false }));
   }
+
+  function toggleRead(id: string) {
+    const thread = filteredThreads.find((entry) => entry.id === id);
+    setUnreadById((byId) => ({ ...byId, [id]: !thread?.unread }));
+  }
+
+  function deleteThread(id: string) {
+    setDeletedIds((ids) => [...ids, id]);
+    setSentByThread((byThread) => {
+      const next = { ...byThread };
+      delete next[id];
+      return next;
+    });
+    if (id !== activeThread?.id) return;
+    // Deleting the open conversation moves to its neighbour, and back to the list on small screens.
+    const index = threads.findIndex((thread) => thread.id === id);
+    setActiveId((threads[index + 1] ?? threads[index - 1])?.id);
+    setMessage("");
+    setMobileView("list");
+  }
+
+  function requestDelete(id: string) {
+    const thread = threads.find((entry) => entry.id === id);
+    if (!thread) return;
+    setPendingDelete({ id, name: thread.name });
+    setConfirmingDelete(true);
+  }
+
+  // Rendered with the empty inbox too, so deleting the last conversation still lets the dialog close smoothly.
+  const deleteDialog = (
+    <ConfirmDialog
+      open={confirmingDelete}
+      onOpenChange={setConfirmingDelete}
+      title="Delete conversation?"
+      description={`Your conversation with ${pendingDelete?.name} will be removed from your inbox. This can't be undone.`}
+      confirmLabel="Delete"
+      destructive
+      onConfirm={() => {
+        if (pendingDelete) deleteThread(pendingDelete.id);
+      }}
+    />
+  );
+
+  if (!activeThread) {
+    return (
+      <Shell>
+        <div className="flex min-h-full w-full items-center justify-center bg-white px-5 py-12">
+          <h1 className="sr-only">Messages</h1>
+          <EmptyState framed={false} illustration={<EmptyEnvelope />} title="No conversations yet" description={empty.description} action={empty.action} />
+        </div>
+        {deleteDialog}
+      </Shell>
+    );
+  }
+
+  const openId = activeThread.id;
+  const threadActions: ActionMenuItem[] = [
+    {
+      label: filteredThreads.find((entry) => entry.id === openId)?.unread ? "Mark as read" : "Mark as unread",
+      icon: <EnvelopeIcon strokeWidth={1.75} />,
+      onSelect: () => toggleRead(openId),
+    },
+    { label: "Delete conversation", icon: <TrashIcon strokeWidth={1.75} />, tone: "danger", onSelect: () => requestDelete(openId) },
+  ];
 
   function sendContent(content: MessageContent) {
     const sent: ChatMessage = { id: crypto.randomUUID(), from: "you", content, day: "Today", time: formatTime(new Date()) };
-    setSentByThread((byThread) => ({ ...byThread, [activeThread.id]: [...(byThread[activeThread.id] ?? []), sent] }));
+    setSentByThread((byThread) => ({ ...byThread, [openId]: [...(byThread[openId] ?? []), sent] }));
   }
 
   function sendMessage(event: React.FormEvent<HTMLFormElement>) {
@@ -87,11 +170,13 @@ export default function MessagesPage({ threads = mockThreads, shell: Shell = Cre
           <div className={`min-h-0 ${mobileView === "thread" ? "hidden lg:block" : ""}`}>
             <ThreadList
               threads={filteredThreads}
-              activeId={activeId}
+              activeId={activeThread.id}
               onSelect={selectThread}
               query={query}
               onQueryChange={setQuery}
               unreadCount={unreadCount}
+              onToggleRead={toggleRead}
+              onDelete={requestDelete}
             />
           </div>
 
@@ -103,6 +188,7 @@ export default function MessagesPage({ threads = mockThreads, shell: Shell = Cre
               online={activeThread.online}
               official={activeThread.participant === "team"}
               onBack={() => setMobileView("list")}
+              actions={threadActions}
             />
 
             <ConversationThread
@@ -122,6 +208,8 @@ export default function MessagesPage({ threads = mockThreads, shell: Shell = Cre
           </section>
         </div>
       </div>
+
+      {deleteDialog}
     </Shell>
   );
 }

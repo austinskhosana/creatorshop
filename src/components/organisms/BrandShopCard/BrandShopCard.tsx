@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CalendarIcon, ChatBubbleLeftEllipsisIcon, DocumentTextIcon, LinkIcon } from "@heroicons/react/24/outline";
+import { CalendarIcon, ChatBubbleLeftEllipsisIcon, DocumentTextIcon, LinkIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Avatar from "@/components/atoms/Avatar/Avatar";
 import Badge from "@/components/atoms/Badge/Badge";
 import Button from "@/components/atoms/Button/Button";
@@ -16,6 +16,8 @@ interface BrandShopCardProps {
   shopper: Shopper;
   onReviewProof: (shop: BrandShop) => void;
   onViewReceipt: (shop: BrandShop) => void;
+  /** Overdue shops only. Opens the close flow, which messages the creator. */
+  onCloseShop?: (shop: BrandShop) => void;
 }
 
 /** The one line that says what this shop is waiting on. */
@@ -29,7 +31,9 @@ function nextStep(shop: BrandShop, shopper: Shopper) {
     case "posted":
       return `${first} posted. Check the post, then confirm to release access.`;
     case "overdue":
-      return `Post was due ${formatDate(shop.deadline)}, ${relativeDays(shop.deadline)}. The shop stays open — nudge ${first} in your thread.`;
+      return `Post was due ${formatDate(shop.deadline)}, ${relativeDays(shop.deadline)}. Nudge ${first} in your thread, or close the shop.`;
+    case "incomplete":
+      return shop.closeNote ? "You closed this shop after the post went overdue." : "Closed without a post.";
     case "active":
       return shop.accessEnd ? `Access runs until ${formatDate(shop.accessEnd)}.` : "Access is active.";
     case "expired":
@@ -42,7 +46,7 @@ function nextStep(shop: BrandShop, shopper: Shopper) {
 }
 
 /** A brand's view of one protected shop — same geometry as the creator's My Shops card. */
-export default function BrandShopCard({ shop, shopper, onReviewProof, onViewReceipt }: BrandShopCardProps) {
+export default function BrandShopCard({ shop, shopper, onReviewProof, onViewReceipt, onCloseShop }: BrandShopCardProps) {
   const state = BRAND_SHOP_STATE[shop.state];
   const step = nextStep(shop, shopper);
   const receipt = shop.state === "active" || shop.state === "expired" || shop.state === "confirmed";
@@ -86,13 +90,25 @@ export default function BrandShopCard({ shop, shopper, onReviewProof, onViewRece
             Receipt
           </Button>
         ) : (
-          <Link
-            href={`/brand/messages?thread=${shopper.id}`}
-            className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-3.5 text-xs font-medium text-neutral-800 transition-[background-color,border-color,transform] duration-150 hover:border-neutral-300 hover:bg-neutral-50 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
-          >
-            <ChatBubbleLeftEllipsisIcon aria-hidden="true" className="size-3.5" />
-            Message
-          </Link>
+          <div className="flex items-center gap-2">
+            {shop.state === "overdue" && onCloseShop ? (
+              <button
+                type="button"
+                onClick={() => onCloseShop(shop)}
+                className="inline-flex min-h-9 items-center gap-1.5 rounded-lg px-3 text-xs font-medium text-neutral-500 transition-[background-color,color,transform] duration-150 hover:bg-neutral-50 hover:text-neutral-900 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
+              >
+                <XMarkIcon aria-hidden="true" className="size-3.5" />
+                Close shop
+              </button>
+            ) : null}
+            <Link
+              href={`/brand/messages?thread=${shopper.id}`}
+              className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-3.5 text-xs font-medium text-neutral-800 transition-[background-color,border-color,transform] duration-150 hover:border-neutral-300 hover:bg-neutral-50 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
+            >
+              <ChatBubbleLeftEllipsisIcon aria-hidden="true" className="size-3.5" />
+              Message
+            </Link>
+          </div>
         )}
       </div>
     </article>

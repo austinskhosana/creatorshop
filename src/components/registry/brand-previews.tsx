@@ -53,7 +53,7 @@ export function BrandShopCardDemo({ shopIndex }: { shopIndex: number }) {
   const shopper = getShopper(shop.shopperId)!;
   return (
     <div className="w-80">
-      <BrandShopCard shop={shop} shopper={shopper} onReviewProof={noop} onViewReceipt={noop} />
+      <BrandShopCard shop={shop} shopper={shopper} onReviewProof={noop} onViewReceipt={noop} onCloseShop={noop} />
     </div>
   );
 }

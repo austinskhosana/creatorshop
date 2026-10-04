@@ -129,6 +129,8 @@ export interface BrandShop {
   proofUrl?: string;
   /** Why the brand sent the proof back. Cleared when new proof arrives. */
   proofDeclineReason?: string;
+  /** The note the brand sent when closing an overdue shop. */
+  closeNote?: string;
   accessStart?: ISODateString;
   accessEnd?: ISODateString;
 }

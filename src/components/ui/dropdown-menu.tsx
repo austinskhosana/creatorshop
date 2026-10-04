@@ -17,6 +17,10 @@ function DropdownMenuTrigger(props: React.ComponentProps<typeof MenuPrimitive.Tr
   return <MenuPrimitive.Trigger data-slot="dropdown-menu-trigger" {...props} />
 }
 
+/** The popup's surface, shared with the context menu so both read as one family. */
+export const MENU_POPUP_CLASS =
+  "min-w-48 origin-[var(--transform-origin)] rounded-xl border border-neutral-200 bg-white p-1 shadow-[0_8px_24px_rgba(0,0,0,0.08)] outline-none transition-[opacity,transform] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] data-[ending-style]:scale-[0.97] data-[ending-style]:opacity-0 data-[starting-style]:scale-[0.97] data-[starting-style]:opacity-0 motion-reduce:data-[ending-style]:scale-100 motion-reduce:data-[starting-style]:scale-100"
+
 function DropdownMenuContent({
   className,
   side = "bottom",
@@ -29,10 +33,7 @@ function DropdownMenuContent({
       <MenuPrimitive.Positioner side={side} align={align} sideOffset={sideOffset} className="z-50 outline-none">
         <MenuPrimitive.Popup
           data-slot="dropdown-menu-content"
-          className={cn(
-            "min-w-48 origin-[var(--transform-origin)] rounded-xl border border-neutral-200 bg-white p-1 shadow-[0_8px_24px_rgba(0,0,0,0.08)] outline-none transition-[opacity,transform] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] data-[ending-style]:scale-[0.97] data-[ending-style]:opacity-0 data-[starting-style]:scale-[0.97] data-[starting-style]:opacity-0 motion-reduce:data-[ending-style]:scale-100 motion-reduce:data-[starting-style]:scale-100",
-            className as string,
-          )}
+          className={cn(MENU_POPUP_CLASS, className as string)}
           {...props}
         />
       </MenuPrimitive.Positioner>

@@ -1,5 +1,6 @@
 import { ChevronLeftIcon, EllipsisHorizontalIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { OfficialBadge } from "@/components/atoms/OfficialBadge";
+import { ActionMenu, type ActionMenuItem } from "@/components/molecules/ActionMenu";
 import { ThreadAvatar } from "@/components/molecules/ThreadAvatar";
 
 interface ConversationHeaderProps {
@@ -11,11 +12,13 @@ interface ConversationHeaderProps {
   official?: boolean;
   onSearch?: () => void;
   onMore?: () => void;
+  /** Fills the "⋯" button with a menu, in place of onMore. */
+  actions?: ActionMenuItem[];
   /** Back to the inbox. Only shown below the split-view breakpoint, where the list and thread are separate screens. */
   onBack?: () => void;
 }
 
-export default function ConversationHeader({ name, detail, image, online, official, onSearch, onMore, onBack }: ConversationHeaderProps) {
+export default function ConversationHeader({ name, detail, image, online, official, onSearch, onMore, actions, onBack }: ConversationHeaderProps) {
   return (
     <header className={`flex h-[72px] shrink-0 items-center justify-between border-b border-neutral-200 pr-5 sm:pr-6 ${onBack ? "pl-2 lg:pl-6" : "pl-5 sm:pl-6"}`}>
       <div className="flex min-w-0 items-center gap-3">
@@ -47,14 +50,18 @@ export default function ConversationHeader({ name, detail, image, online, offici
         >
           <MagnifyingGlassIcon className="size-[18px]" />
         </button>
-        <button
-          type="button"
-          onClick={onMore}
-          aria-label="More conversation options"
-          className="grid size-10 place-items-center rounded-lg text-neutral-500 transition-[background-color,color,transform] duration-150 hover:bg-neutral-100 hover:text-neutral-900 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
-        >
-          <EllipsisHorizontalIcon className="size-5" />
-        </button>
+        {actions ? (
+          <ActionMenu items={actions} label="More conversation options" appearance="ghost" />
+        ) : (
+          <button
+            type="button"
+            onClick={onMore}
+            aria-label="More conversation options"
+            className="grid size-10 place-items-center rounded-lg text-neutral-500 transition-[background-color,color,transform] duration-150 hover:bg-neutral-100 hover:text-neutral-900 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
+          >
+            <EllipsisHorizontalIcon className="size-5" />
+          </button>
+        )}
       </div>
     </header>
   );
