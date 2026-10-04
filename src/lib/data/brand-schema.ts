@@ -27,6 +27,18 @@ export interface PriceTier {
 
 export type AccessMethod = "promo_code" | "license_key" | "invite_link" | "manual_seat" | "email_invite" | "instructions";
 
+/**
+ * What a creator needs to make the post, for products with no free plan that covers it. It isn't a
+ * trial to try the product: it's released the moment the brand approves a creator, and lasts
+ * through the delivery window. Full access still waits for confirmed proof.
+ */
+export interface CreatorAccess {
+  method: AccessMethod;
+  /** The code, key or link. Empty for methods without one. */
+  payload: string;
+  instructions: string;
+}
+
 /** The merchant's listing — a Shopify-style product page. Table: `product_pages`. */
 export interface ProductPage {
   id: string;
@@ -40,6 +52,8 @@ export interface ProductPage {
   /** The code, key or link. Stored securely and only revealed when a creator's access unlocks. */
   accessPayload: string;
   accessInstructions: string;
+  /** Unset when the product's free plan covers everything the post would show. */
+  creatorAccess?: CreatorAccess;
   /** Creator spots. Required, no default: the brand sets it deliberately. */
   stock: number;
   /** Days from approval to deliver the post. */

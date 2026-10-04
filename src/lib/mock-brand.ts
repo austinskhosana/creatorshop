@@ -170,6 +170,7 @@ export const DEMO_PRODUCTS: ProductPage[] = [
     accessMethod: "license_key",
     accessPayload: "FPAI-7Q2M-K8RD-41XZ",
     accessInstructions: "Paste the key in Settings → License.",
+    creatorAccess: { method: "promo_code", payload: "FPAI-MAKE-CS", instructions: "Redeem at fernpad.example/redeem to record your demo meeting." },
     stock: 8,
     deadlineDays: 21,
     status: "live",

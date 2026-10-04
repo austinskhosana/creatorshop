@@ -3,6 +3,7 @@
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useState } from "react";
+import { CreatorAccessCard } from "@/components/molecules/CreatorAccessCard";
 import { PrintedReceipt } from "@/components/organisms/PrintedReceipt";
 import { CreatorShell } from "@/components/templates/CreatorShell";
 import { CONTENT_TYPES, resolveContentType, type ContentTypeId } from "@/lib/content-types";
@@ -17,7 +18,8 @@ import VideoBuilder from "./VideoBuilder";
  * TikTok videos and Reels, a slide strip for carousels, story frames and
  * stickers for Stories, a multi-post composer for X threads. This step is only
  * the draft, which the brand approves. Proof of payment comes later, from My
- * Shops. `contentTypeId` overrides the shop's own type, for previewing.
+ * Shops. What the creator makes the post with sits above the draft: the brand's creator access, or
+ * the free plan when that covers it. `contentTypeId` overrides the shop's own type, for previewing.
  */
 export default function PostBuilderPage({ shop, contentTypeId }: { shop: CreatorShop; contentTypeId?: ContentTypeId }) {
   const contentType = contentTypeId ? CONTENT_TYPES[contentTypeId] : resolveContentType(shop.tier);
@@ -54,6 +56,9 @@ export default function PostBuilderPage({ shop, contentTypeId }: { shop: Creator
         <h1 className="text-4xl font-bold tracking-tight">Upload your draft</h1>
         <p className="mt-3 text-sm text-neutral-500">Upload a draft of your post, then send it for approval.</p>
       </header>
+      <div className="mt-8">
+        <CreatorAccessCard brand={shop.brand} product={shop.product} deadline={shop.deadline} access={shop.creatorAccess} />
+      </div>
     </>
   );
   const builderProps = { shop, contentType, intro, onPay: () => setSubmitted(true) };

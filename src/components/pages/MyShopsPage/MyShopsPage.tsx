@@ -40,7 +40,7 @@ function nextStep(shop: CreatorShop) {
   const { platform } = resolveContentType(shop.tier);
   switch (shop.state) {
     case "approved":
-      return `Upload your draft for ${shop.brand} to approve.`;
+      return shop.creatorAccess ? "Your creator access is ready. Make your post, then upload the draft." : `Upload your draft for ${shop.brand} to approve.`;
     case "draft":
       return `${shop.brand} is reviewing your draft.`;
     case "ready":

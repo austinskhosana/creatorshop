@@ -79,7 +79,20 @@ export interface Shop {
   accessEnd?: string;
   accessCode?: string;
   redemptionUrl?: string;
+  /**
+   * Access for making the post, released on approval when the product has no free plan that
+   * covers it. Display-ready, copied from the listing like the rest of the deal terms. Unset means
+   * the free plan is enough.
+   */
+  creatorAccess?: ShopCreatorAccess;
   createdAt: ISODateString;
+}
+
+export interface ShopCreatorAccess {
+  /** What `value` is, e.g. "Promo code" or "Invite link". Unset when the access is instructions only. */
+  label?: string;
+  value?: string;
+  instructions: string;
 }
 
 /**

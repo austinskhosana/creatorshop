@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { BanknotesIcon, ChatBubbleLeftEllipsisIcon, DocumentTextIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { MeshGradientPanel } from "@/components/atoms/MeshGradientPanel";
 import { TerminalgraphShader } from "@/components/atoms/TerminalgraphShader";
+import { CreatorAccessCard } from "@/components/molecules/CreatorAccessCard";
 import { resolveContentType } from "@/lib/content-types";
 import type { CreatorShop } from "@/lib/mock-creator";
 
@@ -73,7 +74,11 @@ export default function CampaignChoiceModal({ shop, onClose, onChat, onPayWithPo
               </p>
             </div>
 
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            <div className="mt-6">
+              <CreatorAccessCard brand={shop.brand} product={shop.product} deadline={shop.deadline} access={shop.creatorAccess} />
+            </div>
+
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
               <button
                 type="button"
                 onClick={onChat}

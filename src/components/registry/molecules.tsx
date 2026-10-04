@@ -16,6 +16,7 @@ import { BrandFAQItem } from "@/components/molecules/BrandFAQItem";
 import { BrandCardVisual, BrandCardVisualFlip } from "@/components/molecules/BrandCardVisual";
 import { BrandCard3D } from "@/components/molecules/BrandCard3D";
 import { AccessTicket } from "@/components/molecules/AccessTicket";
+import { CreatorAccessCard } from "@/components/molecules/CreatorAccessCard";
 import { TicketCard } from "@/components/molecules/TicketCard";
 import { PosterCard } from "@/components/molecules/PosterCard";
 import { FAQItem } from "@/components/molecules/FAQItem";
@@ -46,6 +47,37 @@ export const moleculesEntries: RegistryEntry[] = [
       {
         name: "Default",
         preview: <AccessTicket access="12 months" />,
+      },
+    ],
+  },
+  {
+    name: "Creator access card",
+    level: "molecules",
+    description: "What a creator makes the post with once approved, in the post builder and the campaign modal: the brand's creator access for products with no free plan (copyable code, instructions, lasts until the post is due), or a pointer to the free plan.",
+    variants: [
+      {
+        name: "Promo code",
+        preview: (
+          <div className="w-full max-w-md">
+            <CreatorAccessCard brand="Canva" product="Canva Pro" deadline="Oct 3" access={{ label: "Promo code", value: "CS-CANVA-MAKE-14", instructions: "Redeem at canva.example/redeem. It unlocks Pro templates while you make your post." }} />
+          </div>
+        ),
+      },
+      {
+        name: "Instructions only",
+        preview: (
+          <div className="w-full max-w-md">
+            <CreatorAccessCard brand="Fernpad" product="Fernpad Teams" deadline="Oct 18" access={{ instructions: "We'll add your email to a team workspace within one working day of approval." }} />
+          </div>
+        ),
+      },
+      {
+        name: "Free plan",
+        preview: (
+          <div className="w-full max-w-md">
+            <CreatorAccessCard brand="Notion" product="Notion Plus" />
+          </div>
+        ),
       },
     ],
   },
@@ -552,7 +584,7 @@ export const moleculesEntries: RegistryEntry[] = [
   {
     name: "Status pill",
     level: "molecules",
-    description: "Bordered pill with a coloured dot — the status mark on shop and product cards. Tones: waiting, success, progress, danger, muted, neutral.",
+    description: "Bordered pill with a haloed status dot — the status mark on shop and product cards. Tones: waiting, success, progress, danger, muted, neutral.",
     variants: [
       {
         name: "Tones",

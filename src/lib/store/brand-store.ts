@@ -246,10 +246,10 @@ export const brandStore = {
   duplicateProduct(id: string) {
     const source = getSnapshot().products.find((product) => product.id === id);
     if (!source) return;
-    const { name, description, tiers, accessMethod, accessPayload, accessInstructions, stock, deadlineDays } = source;
+    const { name, description, tiers, accessMethod, accessPayload, accessInstructions, creatorAccess, stock, deadlineDays } = source;
     const copyId = crypto.randomUUID();
     brandStore.saveProduct(
-      { name: `${name} (copy)`, description, tiers: tiers.map((tier) => ({ ...tier, id: `${copyId}-${tier.id}` })), accessMethod, accessPayload, accessInstructions, stock, deadlineDays },
+      { name: `${name} (copy)`, description, tiers: tiers.map((tier) => ({ ...tier, id: `${copyId}-${tier.id}` })), accessMethod, accessPayload, accessInstructions, creatorAccess, stock, deadlineDays },
       { publish: false },
     );
   },

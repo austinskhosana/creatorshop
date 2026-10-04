@@ -11,6 +11,7 @@ import Textarea from "@/components/atoms/Textarea/Textarea";
 import { CreatorBreadcrumb } from "@/components/molecules/CreatorBreadcrumb";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { PageHeader } from "@/components/molecules/PageHeader";
+import { RadioCard } from "@/components/molecules/RadioCard";
 import SelectableChip from "@/components/molecules/SelectableChip/SelectableChip";
 import { PriceTierEditor, newTier, retargetTiers, type PriceTierInput } from "@/components/organisms/PriceTierEditor";
 import { ProductPageCard } from "@/components/organisms/ProductPageCard";
@@ -27,13 +28,31 @@ interface FormState {
   accessMethod: AccessMethod;
   accessPayload: string;
   accessInstructions: string;
+  /** Whether creators get access to make the post on approval, because no free plan covers it. */
+  creatorAccessEnabled: boolean;
+  creatorAccessMethod: AccessMethod;
+  creatorAccessPayload: string;
+  creatorAccessInstructions: string;
   stock: string;
   deadlineDays: string;
 }
 
 function toForm(product?: ProductPage): FormState {
   if (!product) {
-    return { name: "", description: "", tiers: [newTier()], accessMethod: "promo_code", accessPayload: "", accessInstructions: "", stock: "", deadlineDays: "14" };
+    return {
+      name: "",
+      description: "",
+      tiers: [newTier()],
+      accessMethod: "promo_code",
+      accessPayload: "",
+      accessInstructions: "",
+      creatorAccessEnabled: false,
+      creatorAccessMethod: "promo_code",
+      creatorAccessPayload: "",
+      creatorAccessInstructions: "",
+      stock: "",
+      deadlineDays: "14",
+    };
   }
   return {
     name: product.name,
@@ -42,6 +61,10 @@ function toForm(product?: ProductPage): FormState {
     accessMethod: product.accessMethod,
     accessPayload: product.accessPayload,
     accessInstructions: product.accessInstructions,
+    creatorAccessEnabled: Boolean(product.creatorAccess),
+    creatorAccessMethod: product.creatorAccess?.method ?? "promo_code",
+    creatorAccessPayload: product.creatorAccess?.payload ?? "",
+    creatorAccessInstructions: product.creatorAccess?.instructions ?? "",
     stock: String(product.stock),
     deadlineDays: String(product.deadlineDays),
   };
@@ -51,6 +74,7 @@ const wholeNumber = (value: string) => (/^\d+$/.test(value.trim()) ? Number(valu
 
 function validate(form: FormState, publishing: boolean) {
   const method = ACCESS_METHODS.find((item) => item.value === form.accessMethod)!;
+  const creatorAccessMethod = ACCESS_METHODS.find((item) => item.value === form.creatorAccessMethod)!;
   const stock = wholeNumber(form.stock);
   const deadline = wholeNumber(form.deadlineDays);
   const tierErrors: Record<string, string> = {};
@@ -65,6 +89,10 @@ function validate(form: FormState, publishing: boolean) {
     deadlineDays: deadline >= 3 && deadline <= 60 ? undefined : "Give creators between 3 and 60 days.",
     accessPayload: !publishing || !method.payloadLabel || form.accessPayload.trim() ? undefined : `Add the ${method.payloadLabel.toLowerCase()} creators receive.`,
     accessInstructions: !publishing || method.payloadLabel || form.accessInstructions.trim() ? undefined : "Tell creators how they'll get access.",
+    creatorAccessPayload:
+      !publishing || !form.creatorAccessEnabled || !creatorAccessMethod.payloadLabel || form.creatorAccessPayload.trim() ? undefined : `Add the ${creatorAccessMethod.payloadLabel.toLowerCase()} creators use to make the post.`,
+    creatorAccessInstructions:
+      !publishing || !form.creatorAccessEnabled || creatorAccessMethod.payloadLabel || form.creatorAccessInstructions.trim() ? undefined : "Tell creators how they'll get access to make the post.",
   };
   const ok = Object.values(errors).every((error) => !error) && Object.keys(tierErrors).length === 0;
   return { errors, tierErrors, ok };
@@ -100,6 +128,7 @@ function Editor({ productId }: { productId?: string }) {
 
   const set = <Key extends keyof FormState>(key: Key, value: FormState[Key]) => setForm((current) => ({ ...current, [key]: value }));
   const method = ACCESS_METHODS.find((item) => item.value === form.accessMethod)!;
+  const creatorAccessMethod = ACCESS_METHODS.find((item) => item.value === form.creatorAccessMethod)!;
   const isLive = existing && existing.status !== "draft";
   const publishable = canPublish(account);
   const { errors, tierErrors } = validate(form, attempt === "publish");
@@ -121,6 +150,13 @@ function Editor({ productId }: { productId?: string }) {
         accessMethod: form.accessMethod,
         accessPayload: method.payloadLabel ? form.accessPayload.trim() : "",
         accessInstructions: form.accessInstructions.trim(),
+        creatorAccess: form.creatorAccessEnabled
+          ? {
+              method: form.creatorAccessMethod,
+              payload: creatorAccessMethod.payloadLabel ? form.creatorAccessPayload.trim() : "",
+              instructions: form.creatorAccessInstructions.trim(),
+            }
+          : undefined,
         stock: Number(form.stock),
         deadlineDays: Number(form.deadlineDays),
       },
@@ -227,6 +263,59 @@ function Editor({ productId }: { productId?: string }) {
                 error={shown.accessInstructions}
               />
             </div>
+          </FormSection>
+
+          <FormSection
+            title="Creator access"
+            description="Creators can't make a post about a product they can't use. If your free plan doesn't cover what they'd show, give them access the moment you approve them. It lasts through the delivery window."
+          >
+            <div className="grid gap-2 sm:grid-cols-2" role="radiogroup" aria-label="Creator access">
+              <RadioCard
+                name="creator-access"
+                value="off"
+                checked={!form.creatorAccessEnabled}
+                onChange={() => set("creatorAccessEnabled", false)}
+                title="Not needed"
+                description="Your free plan covers everything they'd show."
+              />
+              <RadioCard
+                name="creator-access"
+                value="on"
+                checked={form.creatorAccessEnabled}
+                onChange={() => set("creatorAccessEnabled", true)}
+                title="Give creator access"
+                description="Unlocks on approval, so they can make the post."
+              />
+            </div>
+            {form.creatorAccessEnabled ? (
+              <div className="mt-5 space-y-4">
+                <div className="flex flex-wrap gap-2" role="group" aria-label="Creator access delivery method">
+                  {ACCESS_METHODS.map((item) => (
+                    <SelectableChip key={item.value} label={item.label} selected={form.creatorAccessMethod === item.value} onClick={() => set("creatorAccessMethod", item.value)} />
+                  ))}
+                </div>
+                {creatorAccessMethod.payloadLabel ? (
+                  <Input
+                    label={`Creator access ${creatorAccessMethod.payloadLabel.toLowerCase()}`}
+                    value={form.creatorAccessPayload}
+                    onChange={(event) => set("creatorAccessPayload", event.target.value)}
+                    placeholder={creatorAccessMethod.placeholder}
+                    autoComplete="off"
+                    iconLeft={<LockClosedIcon className="size-4" />}
+                    hint="Revealed when you approve a creator. Full access still waits for their proof."
+                    error={shown.creatorAccessPayload}
+                  />
+                ) : null}
+                <Textarea
+                  label={creatorAccessMethod.payloadLabel ? "Creator access instructions (optional)" : "Creator access instructions"}
+                  rows={3}
+                  value={form.creatorAccessInstructions}
+                  onChange={(event) => set("creatorAccessInstructions", event.target.value)}
+                  placeholder="e.g. Redeem at yourproduct.com/redeem. It unlocks every feature you'd like in the post."
+                  error={shown.creatorAccessInstructions}
+                />
+              </div>
+            ) : null}
           </FormSection>
 
           <FormSection title="Stock and delivery" description="How many creators can shop this page, and how long they have to post once approved.">
