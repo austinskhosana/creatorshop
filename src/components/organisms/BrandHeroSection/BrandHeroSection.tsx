@@ -47,10 +47,10 @@ export default function BrandHeroSection() {
         </motion.p>
         <div className="mt-8 flex items-center justify-center gap-3">
           <Button variant="primary" size="md" pill onClick={() => router.push("/brand/signup")} style={{ border: "none", boxShadow: "none" }}>
-            Get started
+            Join waitlist
           </Button>
-          <Button variant="secondary" size="md" pill onClick={() => router.push("/brand/signin")} style={{ boxShadow: "none" }}>
-            Sign in
+          <Button variant="secondary" size="md" pill onClick={() => router.push("/")} style={{ boxShadow: "none" }}>
+            Contact Us
           </Button>
         </div>
       </div>

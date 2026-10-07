@@ -113,9 +113,17 @@ function entranceProps(index: number, reduce: boolean | null) {
   };
 }
 
+function logoEntranceProps(reduce: boolean | null) {
+  return {
+    initial: false,
+    animate: { opacity: 1, transform: "translateY(0px)" },
+    transition: { duration: reduce ? 0 : 0 },
+  };
+}
+
 interface NavbarProps {
   variant?: "default" | "compact";
-  /** Where the primary button goes. Without it the button reads "Sign Up" and has no destination yet. */
+  /** Where the primary button goes. Without it the button reads "Join waitlist" and has no destination yet. */
   cta?: { label: string; href: string };
   /** Adds a quiet "Sign in" link beside the primary button. */
   signInHref?: string;
@@ -216,7 +224,7 @@ export default function Navbar({ variant = "default", cta, signInHref, className
   return (
     <header className={cn("relative z-50 px-6 py-6 sm:px-10 lg:px-16", className)}>
       <div className="flex items-center justify-between">
-        <motion.div {...entranceProps(0, reduce)}>
+        <motion.div {...logoEntranceProps(reduce)}>
           <Link href="/" onClick={() => setOpen(false)}>
             <Image src="/Logo.svg" alt="Creatorshop" width={142} height={41} className="h-9 w-auto" priority />
           </Link>
@@ -245,7 +253,7 @@ export default function Navbar({ variant = "default", cta, signInHref, className
             onClick={cta ? () => router.push(cta.href) : undefined}
             style={{ border: "none", boxShadow: "none" }}
           >
-            {cta?.label ?? "Sign Up"}
+            {cta?.label ?? "Join waitlist"}
           </Button>
         </motion.div>
 

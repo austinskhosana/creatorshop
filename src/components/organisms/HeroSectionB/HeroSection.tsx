@@ -49,9 +49,9 @@ export default function HeroSectionB() {
           />
         </div>
 
-        <Link href="/explore" className="pointer-events-auto">
+        <Link href="/waitlist" className="pointer-events-auto">
           <Button variant="dark" size="md" pill className="min-w-[150px]" style={{ boxShadow: "none" }}>
-            Sign Up
+            Join waitlist
           </Button>
         </Link>
 

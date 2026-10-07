@@ -60,7 +60,7 @@ export default function PricingSection() {
             "Pay in access, not cash",
             "Email support",
           ]}
-          buttonLabel="Get started"
+          buttonLabel="Join waitlist"
           buttonVariant="dark"
           onButtonClick={() => router.push("/brand/signup")}
           featured

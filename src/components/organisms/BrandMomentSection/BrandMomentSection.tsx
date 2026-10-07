@@ -1,8 +1,13 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/atoms/Button";
 import { Fire } from "@/components/atoms/Fire";
 import { Logo3D } from "@/components/atoms/Logo3D";
 
 export default function BrandMomentSection() {
+  const router = useRouter();
+
   return (
     <section className="relative isolate flex min-h-screen flex-col items-center justify-center overflow-hidden bg-white px-6 text-center sm:px-10 lg:px-16">
       <div className="flex w-full max-w-5xl flex-col items-center gap-8">
@@ -20,9 +25,10 @@ export default function BrandMomentSection() {
             size="md"
             pill
             className="mt-10"
+            onClick={() => router.push("/brand/signup")}
             style={{ border: "none", boxShadow: "none" }}
           >
-            Sign Up
+            Join waitlist
           </Button>
         </div>
       </div>

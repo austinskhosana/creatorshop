@@ -26,9 +26,9 @@ export default function NextSection() {
         Apply to software subscription listings and if brands approve, you can pay
         using content you create for the brand. No cash required.
       </p>
-      <Link href="/explore" className="pointer-events-auto mt-6 sm:mt-8">
-        <Button variant="dark" size="lg" pill className="min-w-[160px]" style={{ boxShadow: "none", color: "#A3FF38" }}>
-          Sign Up
+      <Link href="/waitlist" className="pointer-events-auto mt-6 sm:mt-8">
+        <Button variant="dark" size="lg" pill className="min-w-[160px]" style={{ boxShadow: "none" }}>
+          Join waitlist
         </Button>
       </Link>
     </section>
