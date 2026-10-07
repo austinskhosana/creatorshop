@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Button } from "@/components/atoms/Button";
@@ -14,6 +14,8 @@ const NAV_LINKS = [
   { label: "For creators", href: "/" },
   { label: "For brands", href: "/brands" },
 ];
+
+const IN_PAGE_HOW_IT_WORKS_ROUTES = new Set(["/", "/lp-b", "/brands"]);
 
 const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 
@@ -132,6 +134,7 @@ interface NavbarProps {
 
 export default function Navbar({ variant = "default", cta, signInHref, className }: NavbarProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const reduce = useReducedMotion();
 
@@ -144,6 +147,24 @@ export default function Navbar({ variant = "default", cta, signInHref, className
     };
   }, [open]);
 
+  function getNavHref(link: (typeof NAV_LINKS)[number]) {
+    if (link.href !== "#how-it-works") return link.href;
+    return IN_PAGE_HOW_IT_WORKS_ROUTES.has(pathname) ? link.href : `/${link.href}`;
+  }
+
+  function handleNavClick(event: React.MouseEvent<HTMLAnchorElement>, href: string) {
+    setOpen(false);
+
+    if (!href.startsWith("#")) return;
+
+    const target = document.getElementById(href.slice(1));
+    if (!target) return;
+
+    event.preventDefault();
+    window.history.pushState(null, "", href);
+    target.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
+  }
+
   const mobileOverlay = (
     <AnimatePresence>
       {open && (
@@ -154,22 +175,25 @@ export default function Navbar({ variant = "default", cta, signInHref, className
           exit="exit"
           className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-2 bg-white sm:hidden"
         >
-          {NAV_LINKS.map((link) => (
-            <motion.div
-              key={link.label}
-              variants={reduce ? linkVariantsReduced : linkVariants}
-              className="w-full max-w-xs"
-            >
-              <Link
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="block w-full rounded-lg px-2 py-3 text-center text-2xl font-medium text-neutral-900 transition-colors hover:bg-neutral-100"
-              >
-                {link.label}
-              </Link>
-            </motion.div>
+          {NAV_LINKS.map((link) => {
+            const href = getNavHref(link);
 
-          ))}
+            return (
+              <motion.div
+                key={link.label}
+                variants={reduce ? linkVariantsReduced : linkVariants}
+                className="w-full max-w-xs"
+              >
+                <Link
+                  href={href}
+                  onClick={(event) => handleNavClick(event, href)}
+                  className="block w-full rounded-lg px-2 py-3 text-center text-2xl font-medium text-neutral-900 transition-colors hover:bg-neutral-100"
+                >
+                  {link.label}
+                </Link>
+              </motion.div>
+            );
+          })}
           {[signInHref && { label: "Sign in", href: signInHref }, cta].filter((link): link is { label: string; href: string } => Boolean(link)).map((link) => (
             <motion.div key={link.href} variants={reduce ? linkVariantsReduced : linkVariants} className="w-full max-w-xs">
               <Link
@@ -190,20 +214,28 @@ export default function Navbar({ variant = "default", cta, signInHref, className
     return (
       <div className={cn("relative z-50 flex items-center justify-end", className)}>
         <nav className="hidden items-center gap-8 font-geist-mono text-xs text-neutral-700 sm:flex">
-          {NAV_LINKS.map((link, index) => (
-            <motion.div key={link.label} {...entranceProps(index, reduce)}>
-              <Link href={link.href} className="transition-colors hover:text-neutral-900">
-                <TextScramble
-                  text={link.label}
-                  chars={SCRAMBLE_CHARS_ALPHANUMERIC}
-                  delay={entranceDelayMs(index)}
-                  duration={450}
-                  scrambleDuration={180}
-                  lockWidth
-                />
-              </Link>
-            </motion.div>
-          ))}
+          {NAV_LINKS.map((link, index) => {
+            const href = getNavHref(link);
+
+            return (
+              <motion.div key={link.label} {...entranceProps(index, reduce)}>
+                <Link
+                  href={href}
+                  onClick={(event) => handleNavClick(event, href)}
+                  className="transition-colors hover:text-neutral-900"
+                >
+                  <TextScramble
+                    text={link.label}
+                    chars={SCRAMBLE_CHARS_ALPHANUMERIC}
+                    delay={entranceDelayMs(index)}
+                    duration={450}
+                    scrambleDuration={180}
+                    lockWidth
+                  />
+                </Link>
+              </motion.div>
+            );
+          })}
         </nav>
 
         <button
@@ -231,13 +263,21 @@ export default function Navbar({ variant = "default", cta, signInHref, className
         </motion.div>
 
         <nav className="hidden items-center gap-8 text-sm text-neutral-700 sm:flex">
-          {NAV_LINKS.map((link, index) => (
-            <motion.div key={link.label} {...entranceProps(index + 1, reduce)}>
-              <Link href={link.href} className="transition-colors hover:text-neutral-900">
-                {link.label}
-              </Link>
-            </motion.div>
-          ))}
+          {NAV_LINKS.map((link, index) => {
+            const href = getNavHref(link);
+
+            return (
+              <motion.div key={link.label} {...entranceProps(index + 1, reduce)}>
+                <Link
+                  href={href}
+                  onClick={(event) => handleNavClick(event, href)}
+                  className="transition-colors hover:text-neutral-900"
+                >
+                  {link.label}
+                </Link>
+              </motion.div>
+            );
+          })}
         </nav>
 
         <motion.div className="hidden items-center gap-5 sm:flex" {...entranceProps(NAV_LINKS.length + 1, reduce)}>

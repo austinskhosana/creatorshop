@@ -50,7 +50,7 @@ export default function FeatureGridSection() {
   const reduce = useReducedMotion();
 
   return (
-    <section className="bg-white px-6 pt-40 text-center sm:px-10 sm:pt-56 lg:px-16 lg:pt-72">
+    <section id="how-it-works" className="bg-white px-6 pt-40 text-center sm:px-10 sm:pt-56 lg:px-16 lg:pt-72">
       <div className="mx-auto max-w-2xl">
         <motion.h2
           className="text-2xl leading-tight font-medium tracking-tight text-neutral-900 sm:text-3xl"
