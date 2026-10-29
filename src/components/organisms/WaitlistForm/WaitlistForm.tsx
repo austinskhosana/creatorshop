@@ -47,14 +47,14 @@ const COPY = {
     title: "Put your product in the next drop",
     description: "Join the first software teams trading subscription access for creator distribution.",
     button: "Join waitlist",
-    success: "Your brand access request is in.",
+    success: "You’re on the brand list.",
     toast: "Brand access request saved.",
   },
   creator: {
     title: "Ditch the subscription pay with a post instead",
     description: "Join the first creators using posts to pay for software.",
     button: "Join waitlist",
-    success: "Your creator access request is in.",
+    success: "You’re on the creator list.",
     toast: "Creator access request saved.",
   },
 } satisfies Record<WaitlistAudience, Record<string, string>>;
@@ -66,12 +66,14 @@ const formChrome = {
 
 function WaitlistSuccess({ audience }: { audience: WaitlistAudience }) {
   return (
-    <div className={cn("rounded-[20px] border-2 p-5", formChrome[audience])}>
-      <div className="flex items-start gap-3">
-        <CheckCircleIcon className="mt-0.5 size-6 shrink-0 text-neutral-950" />
-        <div>
-          <p className="font-semibold text-neutral-950">{COPY[audience].success}</p>
-          <p className="mt-1 text-sm leading-6 text-neutral-500">
+    <div className="rounded-[16px] border-2 border-neutral-950 bg-white p-6 shadow-[6px_6px_0_#A3FF38]">
+      <div className="flex items-start gap-4">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#A3FF38] text-neutral-950">
+          <CheckCircleIcon className="size-5" />
+        </span>
+        <div className="pt-0.5">
+          <p className="text-lg font-medium tracking-[-0.02em] text-neutral-950">{COPY[audience].success}</p>
+          <p className="mt-1.5 text-sm leading-6 text-neutral-500">
             We&apos;ll send the key when the next access batch opens.
           </p>
         </div>
