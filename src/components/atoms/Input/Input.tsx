@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
+  labelIcon?: ReactNode;
   hint?: string;
   error?: string;
   iconLeft?: ReactNode;
@@ -11,6 +12,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export default function Input({
   label,
+  labelIcon,
   hint,
   error,
   iconLeft,
@@ -27,13 +29,16 @@ export default function Input({
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
-        <label htmlFor={id} className="text-sm font-medium text-neutral-800">
-          {label}
-          {props.required && (
-            <span aria-hidden="true" className="ml-0.5 text-red-500">
-              *
-            </span>
-          )}
+        <label htmlFor={id} className="flex items-center gap-1.5 text-sm font-medium text-neutral-800">
+          {labelIcon ? <span aria-hidden="true" className="text-neutral-400">{labelIcon}</span> : null}
+          <span>
+            {label}
+            {props.required && (
+              <span aria-hidden="true" className="ml-0.5 text-red-500">
+                *
+              </span>
+            )}
+          </span>
         </label>
       )}
 

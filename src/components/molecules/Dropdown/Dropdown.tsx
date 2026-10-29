@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 export interface DropdownOption {
   value: string;
   label: string;
+  icon?: ReactNode;
 }
 
 interface DropdownProps {
@@ -125,7 +126,10 @@ export default function Dropdown({ value, onChange, options, ariaLabel, align = 
           open ? "border-neutral-300" : "border-neutral-200 hover:border-neutral-300",
         ].join(" ")}
       >
-        <span className={variant === "field" ? "min-w-0 truncate" : undefined}>{selected?.label}</span>
+        <span className={["flex min-w-0 items-center gap-2", variant === "field" ? "truncate" : ""].join(" ")}>
+          {selected?.icon ? <span className="shrink-0 text-neutral-700">{selected.icon}</span> : null}
+          <span className="truncate">{selected?.label}</span>
+        </span>
         <ChevronDownIcon
           aria-hidden="true"
           strokeWidth={2}
@@ -169,6 +173,7 @@ export default function Dropdown({ value, onChange, options, ariaLabel, align = 
                     isSelected ? "font-medium text-neutral-900" : "text-neutral-600",
                   ].join(" ")}
                 >
+                  {option.icon ? <span className="mr-2 shrink-0 text-neutral-700">{option.icon}</span> : null}
                   {option.label}
                 </li>
               );

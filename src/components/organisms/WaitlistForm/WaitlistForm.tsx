@@ -1,10 +1,11 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useState, type FormEvent } from "react";
-import { ArrowRightIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
+import { useRef, useState, type FormEvent } from "react";
+import { CheckCircleIcon, PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Button from "@/components/atoms/Button/Button";
 import Input from "@/components/atoms/Input/Input";
+import PlatformIcon from "@/components/atoms/PlatformIcon/PlatformIcon";
 import { Fire } from "@/components/atoms/Fire";
 import Dropdown from "@/components/molecules/Dropdown/Dropdown";
 import { BrandCardVisual } from "@/components/molecules/BrandCardVisual";
@@ -14,21 +15,24 @@ import { validateWaitlistPayload, type WaitlistAudience, type WaitlistFieldError
 import { cn } from "@/lib/utils";
 
 const CREATOR_PLATFORMS = ["Instagram", "TikTok", "YouTube", "X", "LinkedIn", "Newsletter"];
-const AUDIENCE_SIZES = ["Under 5K", "5K-25K", "25K-100K", "100K-500K", "500K+"];
 
 type WaitlistFormState = {
   email: string;
   name: string;
   companyName: string;
   website: string;
-  socialHandle: string;
+};
+
+type SocialHandle = {
+  id: number;
   platform: string;
-  audienceSize: string;
+  handle: string;
 };
 
 type WaitlistFormProps = {
   audience: WaitlistAudience;
   compact?: boolean;
+  showIntro?: boolean;
 };
 
 const INITIAL_FORM: WaitlistFormState = {
@@ -36,23 +40,20 @@ const INITIAL_FORM: WaitlistFormState = {
   name: "",
   companyName: "",
   website: "",
-  socialHandle: "",
-  platform: CREATOR_PLATFORMS[0],
-  audienceSize: AUDIENCE_SIZES[1],
 };
 
 const COPY = {
   brand: {
     title: "Put your product in the next drop",
     description: "Join the first software teams trading subscription access for creator distribution.",
-    button: "Request brand access",
+    button: "Join waitlist",
     success: "Your brand access request is in.",
     toast: "Brand access request saved.",
   },
   creator: {
-    title: "Shop software with social capital",
-    description: "Join the first creators using posts as buying power for software drops.",
-    button: "Request creator access",
+    title: "Ditch the subscription pay with a post instead",
+    description: "Join the first creators using posts to pay for software.",
+    button: "Join waitlist",
     success: "Your creator access request is in.",
     toast: "Creator access request saved.",
   },
@@ -79,9 +80,13 @@ function WaitlistSuccess({ audience }: { audience: WaitlistAudience }) {
   );
 }
 
-export default function WaitlistForm({ audience, compact = false }: WaitlistFormProps) {
+export default function WaitlistForm({ audience, compact = false, showIntro = true }: WaitlistFormProps) {
   const pathname = usePathname();
   const [form, setForm] = useState<WaitlistFormState>(INITIAL_FORM);
+  const [socialHandles, setSocialHandles] = useState<SocialHandle[]>([
+    { id: 0, platform: CREATOR_PLATFORMS[0], handle: "" },
+  ]);
+  const nextSocialHandleId = useRef(1);
   const [errors, setErrors] = useState<WaitlistFieldError>({});
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -93,19 +98,39 @@ export default function WaitlistForm({ audience, compact = false }: WaitlistForm
     setMessage("");
   };
 
+  const updateSocialHandle = (id: number, update: Partial<Omit<SocialHandle, "id">>) => {
+    setSocialHandles((current) => current.map((item) => (item.id === id ? { ...item, ...update } : item)));
+    setErrors((current) => ({ ...current, socialHandle: undefined }));
+    setMessage("");
+  };
+
+  const addSocialHandle = () => {
+    const id = nextSocialHandleId.current++;
+    setSocialHandles((current) => [
+      ...current,
+      { id, platform: CREATOR_PLATFORMS[0], handle: "" },
+    ]);
+  };
+
+  const removeSocialHandle = (id: number) => {
+    setSocialHandles((current) => current.filter((item) => item.id !== id));
+  };
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setMessage("");
 
+    const completedSocialHandles = socialHandles.filter((item) => item.handle.trim());
     const payload = {
       audience,
       email: form.email,
       name: form.name,
       companyName: form.companyName,
       website: form.website,
-      socialHandle: form.socialHandle,
-      platform: form.platform,
-      audienceSize: form.audienceSize,
+      socialHandle: completedSocialHandles
+        .map((item) => `${item.platform}: ${item.handle.trim()}`)
+        .join(", "),
+      platform: completedSocialHandles.map((item) => item.platform).join(", "),
       sourcePath: pathname,
     };
     const validation = validateWaitlistPayload(payload);
@@ -151,41 +176,78 @@ export default function WaitlistForm({ audience, compact = false }: WaitlistForm
       onSubmit={submit}
       noValidate
       className={cn(
+        "w-full",
         compact ? "space-y-4" : "rounded-[24px] border-2 p-5 sm:p-6",
+        "[&_button]:rounded-lg [&_input]:rounded-lg",
         !compact && formChrome[audience],
       )}
     >
-      <div>
-        <h2 className="mt-2 text-2xl font-semibold leading-tight text-neutral-950">{COPY[audience].title}</h2>
-        <p className="mt-2 text-sm leading-6 text-neutral-500">{COPY[audience].description}</p>
-      </div>
+      {showIntro ? (
+        <div className={cn(audience === "creator" && "text-center")}>
+          <h2 className="mt-2 text-2xl font-medium leading-tight text-neutral-950">
+            {audience === "creator" ? (
+              <>
+                Ditch the subscription, pay with
+                <br />
+                a post instead
+              </>
+            ) : COPY[audience].title}
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-neutral-500">{COPY[audience].description}</p>
+        </div>
+      ) : null}
 
-      <div className="mt-5 space-y-4">
+      <div className={cn("space-y-4", showIntro && (audience === "creator" ? "mt-8" : "mt-5"))}>
         {audience === "creator" ? (
           <>
             <Input label="Your name" autoComplete="name" value={form.name} onChange={(event) => set("name")(event.target.value)} error={errors.name} required />
-            <Input label="Social handle" placeholder="@yourhandle" value={form.socialHandle} onChange={(event) => set("socialHandle")(event.target.value)} error={errors.socialHandle} required />
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="flex flex-col gap-1.5">
-                <span className="text-sm font-medium text-neutral-800">Main platform</span>
-                <Dropdown
-                  variant="field"
-                  ariaLabel="Primary platform"
-                  value={form.platform}
-                  onChange={set("platform")}
-                  options={CREATOR_PLATFORMS.map((platform) => ({ label: platform, value: platform }))}
-                />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <span className="text-sm font-medium text-neutral-800">Audience size</span>
-                <Dropdown
-                  variant="field"
-                  ariaLabel="Audience size"
-                  value={form.audienceSize}
-                  onChange={set("audienceSize")}
-                  options={AUDIENCE_SIZES.map((size) => ({ label: size, value: size }))}
-                />
-              </div>
+            <div className="space-y-2.5">
+              <span className="text-sm font-medium text-neutral-800">
+                Social handles<span aria-hidden="true" className="ml-0.5 text-red-500">*</span>
+              </span>
+              {socialHandles.map((item, index) => (
+                <div key={item.id} className="grid grid-cols-[minmax(150px,0.65fr)_minmax(0,1fr)] items-start gap-2">
+                  <Dropdown
+                    variant="field"
+                    ariaLabel={`Platform for social handle ${index + 1}`}
+                    value={item.platform}
+                    onChange={(platform) => updateSocialHandle(item.id, { platform })}
+                    options={CREATOR_PLATFORMS.map((platform) => ({
+                      label: platform,
+                      value: platform,
+                      icon: <PlatformIcon platform={platform} className="size-4" />,
+                    }))}
+                  />
+                  <div className="relative">
+                    <Input
+                      aria-label={`Social handle ${index + 1}`}
+                      placeholder="@yourhandle"
+                      value={item.handle}
+                      onChange={(event) => updateSocialHandle(item.id, { handle: event.target.value })}
+                      error={index === 0 ? errors.socialHandle : undefined}
+                      className={index > 0 ? "pr-10" : undefined}
+                    />
+                    {index > 0 ? (
+                      <button
+                        type="button"
+                        aria-label={`Remove ${item.platform} handle`}
+                        onClick={() => removeSocialHandle(item.id)}
+                        className="absolute top-1 right-1 flex size-8.5 items-center justify-center rounded-lg text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
+                      >
+                        <XMarkIcon className="size-4" />
+                      </button>
+                    ) : null}
+                  </div>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={addSocialHandle}
+                className="inline-flex items-center gap-1.5 rounded-lg py-1 text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
+              >
+                <PlusIcon className="size-4" />
+                Add another handle
+              </button>
             </div>
           </>
         ) : (
@@ -201,7 +263,7 @@ export default function WaitlistForm({ audience, compact = false }: WaitlistForm
 
       {message ? <p className="mt-4 text-sm leading-6 text-red-500">{message}</p> : null}
 
-      <Button type="submit" variant="dark" size="lg" fullWidth loading={loading} iconRight={<ArrowRightIcon className="size-4" />} className="mt-5" style={{ boxShadow: "none" }}>
+      <Button type="submit" variant="dark" size="lg" fullWidth loading={loading} className="mt-5" style={{ borderRadius: 12, boxShadow: "none" }}>
         {COPY[audience].button}
       </Button>
     </form>

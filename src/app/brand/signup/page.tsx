@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { WaitlistForm } from "@/components/organisms/WaitlistForm";
-import { MeshGradientPanel } from "@/components/atoms/MeshGradientPanel";
+import { TerminalgraphShader } from "@/components/atoms/TerminalgraphShader";
 import { BrandCardVisual } from "@/components/molecules/BrandCardVisual";
 
 export const metadata = { title: "Join the brand waitlist — Creatorshop for brands" };
@@ -17,10 +17,15 @@ export default function Page() {
           <WaitlistForm audience="brand" compact />
         </div>
       </div>
-      <div className="hidden p-4 lg:block">
-        <MeshGradientPanel className="flex h-full items-center justify-center px-12">
+      <div className="relative hidden min-h-screen items-center justify-center overflow-hidden lg:flex">
+        <TerminalgraphShader
+          theme="light"
+          background={{ dark: "#052e12", light: "#ffffff" }}
+          className="pointer-events-none absolute inset-0 h-full w-full"
+        />
+        <div className="relative z-10 w-full max-w-md px-12">
           <BrandCardVisual />
-        </MeshGradientPanel>
+        </div>
       </div>
     </div>
   );
